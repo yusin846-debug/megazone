@@ -62,7 +62,7 @@ PAF는 AWS의 '생성형 AI 파트너 혁신 얼라이언스(PIA)'에 속한 소
 - **NorthBay Solutions (데이터·AI 분석 전문 기업)**: Agentic Financial Intelligence Engine(금융 분석), Retail AI Agentic Platform(리테일 특화 에이전트)
 - **CI&T (브라질 기반 글로벌 디지털 전환 기업)**: Conversational Banking Solution(은행용 대화형 에이전트)
 
-AWS 마켓플레이스 블로그는 2026년 6월에 "4개 파트너의 에이전트 솔루션 7종"이 마켓플레이스에 올라왔다고 소개했다. 문서 번역, 영상 분석, AI 거버넌스, 고객 응대, 금융, 리테일, 임상 문서 분야다. 위 목록의 메가존, Nubiral, Loka, NorthBay 솔루션과 정확히 겹친다. CI&T의 은행용 에이전트는 이후 별도로 소개됐다.
+AWS 마켓플레이스 블로그는 2026년 6월에 "4개 파트너의 에이전트 솔루션 7종"이 마켓플레이스에 올라왔다고 소개했다. 문서 번역, 영상 분석, AI 거버넌스, 고객 응대, 금융, 리테일, 임상 문서 분야다. 위 목록의 메가존, Nubiral, Loka, NorthBay 솔루션과 정확히 겹친다. CI&T의 은행용 에이전트는 AWS 파트너 블로그에서 별도로 소개됐다.
 
 이 명단에서 업계 사람이 읽어야 할 신호는 세 가지다.
 
