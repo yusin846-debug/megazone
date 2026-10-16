@@ -424,6 +424,60 @@ Studio 사례에 ‘영업’ 칸이 비어 있다</h3>
         [세일즈포스 Agentforce]   [세일즈포스 데이터: 거래처·기회·활동]
                                   ▲
                     Apex: 버튼 클릭 → 에이전트 호출, 결과를 기회에 기록</code></pre>
+<h3 id="사용자-화면ui-전략-새로-만들기보다-붙이기">사용자 화면(UI) 전략:
+새로 만들기보다 붙이기</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>화면</th>
+<th>누가</th>
+<th>방식</th>
+<th>개발 필요</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>AIR Studio AI Assistant</td>
+<td>영업 담당자 (PoC 초기)</td>
+<td>AIR Studio 기본 대화 화면을 그대로 사용</td>
+<td>거의 없음</td>
+</tr>
+<tr class="even">
+<td>세일즈포스 기회 화면의 버튼·패널</td>
+<td>영업 담당자 (데모 핵심)</td>
+<td>Quick Action 또는 LWC → Apex Callout으로 에이전트 호출</td>
+<td>작게 (Apex·LWC)</td>
+</tr>
+<tr class="odd">
+<td>메신저 (Slack·Teams)</td>
+<td>영업 담당자 (확장)</td>
+<td>메신저 봇으로 연결</td>
+<td>중간</td>
+</tr>
+<tr class="even">
+<td>AIR Studio 관리 콘솔</td>
+<td>IT·보안, 영업 관리자</td>
+<td>Governance·Ops 화면 그대로 사용</td>
+<td>없음</td>
+</tr>
+<tr class="odd">
+<td>별도 웹 화면 (React 등)</td>
+<td>특별한 요구가 있을 때만</td>
+<td>직접 개발</td>
+<td>큼</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>원칙: 영업 담당자가 새 화면을 배우지 않게 한다. 관리 화면은 AIR
+Studio 것을 그대로 쓴다.</p>
+</blockquote>
 <hr />
 <h2 id="세일즈포스-agentforce와의-관계-경쟁이-아니라-역할-분담">7.
 세일즈포스 Agentforce와의 관계: 경쟁이 아니라 역할 분담</h2>
@@ -649,6 +703,9 @@ Studio가 필요합니다. Agentforce도 AIR Studio에서 함께 관리할 수
 <li><label><input type="checkbox" />Agentforce를 AIR Studio에
 <strong>외부 에이전트로 등록</strong>할 때 감사 로그를 어느 수준까지
 받을 수 있는지</label></li>
+<li><label><input type="checkbox" />AIR Studio에 배포한 에이전트를
+<strong>외부에서 API로 호출</strong>할 수 있는지, 웹에 넣을 수 있는
+<strong>대화창 위젯</strong>을 주는지</label></li>
 <li><label><input type="checkbox" />AIR Studio 배포 방식 (SaaS, 고객
 클라우드 설치, 폐쇄망 설치)</label></li>
 <li><label><input type="checkbox" />AIR Studio 가격 구조 (홈페이지에
