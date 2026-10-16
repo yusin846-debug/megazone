@@ -162,7 +162,7 @@
       vertical-align: middle;
     }
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
-  table{border-collapse:collapse;width:100%;font-size:15px;margin:16px 0}th,td{border:1px solid var(--rule);padding:6px 10px;text-align:left}ul.task-list{list-style:none;padding-left:8px}</style>
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:16px 0}th,td{border:1px solid var(--rule);padding:6px 10px;text-align:left}ul.task-list{list-style:none;padding-left:8px}pre{white-space:pre-wrap;background:rgba(127,127,127,.1);padding:14px;border-radius:6px;font-size:14px;line-height:1.6}</style>
   <style>
   :root{--bg:#fdfcf9;--fg:#222;--muted:#666;--accent:#00a59a;--rule:#e5e2da}
   @media (prefers-color-scheme: dark){:root{--bg:#1c1c1e;--fg:#e8e6e1;--muted:#a09d96;--accent:#3cc7bc;--rule:#3a3a3c}}
@@ -179,68 +179,127 @@
 </head>
 <body>
 
-<h1 id="나의-공부-이정표-메가존클라우드-ai-에이전트-엔지니어">나의 공부
-이정표: 메가존클라우드 AI 에이전트 엔지니어</h1>
+<h1 id="나의-공부-이정표-ai-poc-엔지니어">나의 공부 이정표: AI PoC
+엔지니어</h1>
 <blockquote>
 <p>기준: 메가존클라우드 AI-Native 부트캠프 「AI 에이전트 엔지니어
 양성과정」(2026.10.06 개강, 984시간·약 6개월, 과천 캠퍼스) 작성일:
-2026-10-16</p>
+2026-10-16 · 목표 직무 확정: 2026-10-16 (AI PoC 엔지니어)</p>
 </blockquote>
 <hr />
 <h2 id="목표-한-줄">0. 목표 한 줄</h2>
-<p><strong>고객 요구를 듣고, 에이전트를 만들고, AWS에 배포·운영까지 할
-수 있는 “AI 에이전트 구축 엔지니어”가 된다.</strong> 그리고 메가존이 왜
-이 일을 하는지 아는 사람으로 보이게 한다.</p>
+<p><strong>고객의 말을 요구사항으로 바꾸고, 2~4주 안에 동작하는 AI
+에이전트 시제품을 만들어 시연하고, 계약으로 이어지게 하는 “AI PoC
+엔지니어”가 된다.</strong></p>
+<p>나의 강점은 <strong>B2B 영업 경험 + 세일즈포스 자격(Salesforce
+Certified Platform Administrator) + AI 에이전트 개발 능력</strong>의
+조합이다. 이 셋을 하나의 이야기로 묶는 것이 6개월의 목표다.</p>
 <hr />
-<h2 id="메가존이-나에게-기대하는-역할">1. 메가존이 나에게 기대하는
-역할</h2>
+<h2 id="목표-직무-ai-poc-엔지니어">1. 목표 직무: AI PoC 엔지니어</h2>
+<h3 id="하는-일">하는 일</h3>
+<ul>
+<li>영업과 함께 고객을 만나 <strong>문제와 요구사항을 파악</strong>한다
+(디스커버리)</li>
+<li>짧은 기간 안에 <strong>동작하는 시제품</strong>을 만든다 (AIR
+Studio, LangGraph, RAG)</li>
+<li>고객 앞에서 <strong>시연하고</strong>, “업무 시간 몇 % 절감” 같은
+<strong>효과를 숫자로 설명</strong>한다</li>
+<li>PoC가 성공하면 본 구축팀에 <strong>넘길 수 있게 문서와 구조를
+정리</strong>한다</li>
+</ul>
+<h3 id="왜-내게-맞나">왜 내게 맞나</h3>
 <table>
 <colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
+<col style="width: 50%" />
+<col style="width: 50%" />
 </colgroup>
 <thead>
 <tr class="header">
-<th>순서</th>
-<th>역할</th>
+<th>내 경험</th>
+<th>PoC 엔지니어 업무와 연결</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>B2B 영업, 파이프라인 관리</td>
+<td>고객의 말에서 진짜 문제를 찾고, 계약까지 가는 흐름을 안다</td>
+</tr>
+<tr class="even">
+<td>세일즈포스 관리자 자격</td>
+<td>CRM 데이터 구조와 영업·고객서비스 업무 흐름을 안다</td>
+</tr>
+<tr class="odd">
+<td>풀퍼널 GTM 경험</td>
+<td>시제품이 “사고 싶은 제품”이 되려면 무엇이 필요한지 안다</td>
+</tr>
+<tr class="even">
+<td>AI 에이전트 과정 (지금)</td>
+<td>실제로 만들 수 있는 손을 갖춘다</td>
+</tr>
+</tbody>
+</table>
+<h3 id="메가존-기준으로-왜-필요한-사람인가">메가존 기준으로 왜 필요한
+사람인가</h3>
+<ul>
+<li>메가존은 AIR Studio v3를 내놓고 고객 사례를 빠르게 늘려야 한다.
+<strong>PoC가 계약의 입구</strong>다.</li>
+<li>고객사에는 세일즈포스 Agentforce 같은 SaaS 에이전트와 자체
+에이전트가 섞여 있다. 메가존의 “멀티 에이전트 지휘자” 전략에는
+<strong>둘 다 이해하는 사람</strong>이 쓸모 있다.</li>
+<li>과정 Step 10의 과제(업무 비서, 고객 티켓 자동화)가 바로 내가 잘 아는
+CRM 업무 영역이다.</li>
+</ul>
+<h3 id="나중에-넓혀-갈-수-있는-길">나중에 넓혀 갈 수 있는 길</h3>
+<p>PoC 엔지니어 → 솔루션 아키텍트 / 프리세일즈 리드 → AI 사업
+개발(BD)</p>
+<hr />
+<h2 id="포트폴리오-주제-확정안">2. 포트폴리오 주제 (확정안)</h2>
+<h3
+id="영업crm-에이전트-세일즈포스-데이터와-연동하는-영업-지원-멀티-에이전트">“영업·CRM
+에이전트” — 세일즈포스 데이터와 연동하는 영업 지원 멀티 에이전트</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>에이전트</th>
 <th>하는 일</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>1 (가장 유력)</td>
-<td>AI 에이전트 구축 엔지니어</td>
-<td>고객사 AI 프로젝트에 투입돼 RAG와 에이전트를 개발. AIR Studio 기반
-구축 포함</td>
+<td>리드 분석 에이전트</td>
+<td>CRM의 리드·기회 데이터를 읽고 우선순위와 다음 행동을 추천</td>
 </tr>
 <tr class="even">
-<td>2</td>
-<td>AI 솔루션·PoC 엔지니어</td>
-<td>영업과 함께 고객을 만나 빠르게 시제품을 만들고 시연</td>
+<td>미팅 준비 에이전트</td>
+<td>고객사 정보, 과거 거래 기록, 제안서를 RAG로 찾아 미팅 브리핑
+작성</td>
 </tr>
 <tr class="odd">
-<td>3</td>
-<td>클라우드 네이티브 AI 개발자</td>
-<td>에이전트를 AWS·쿠버네티스 환경에 배포하고 운영</td>
+<td>티켓 응대 에이전트</td>
+<td>고객 문의를 분류하고 답변 초안 작성, 필요하면 담당자에게 넘김</td>
 </tr>
 <tr class="even">
-<td>4 (경력을 쌓은 뒤)</td>
-<td>에이전트 운영(AgentOps)·거버넌스</td>
-<td>에이전트의 권한, 비용, 모니터링, 보안 관리</td>
+<td>지휘(오케스트레이터)</td>
+<td>요청을 이해해 알맞은 에이전트에 일을 나눠줌 (LangGraph)</td>
 </tr>
 </tbody>
 </table>
-<p><strong>왜 이 과정을 운영하나 (내가 이해하고 있어야 할 배경)</strong>
-- 메가존은 클라우드 재판매 회사에서 AI 회사로 바뀌는 중이다. 2025년
-AI·보안 매출이 약 4,400억 원이다. - AIR Studio v3를 내놓았고, 한미약품
-품질보증 에이전트 같은 고객 사례를 늘려야 한다. 그러려면 구축 인력이
-많이 필요하다. - AWS와 PAF 프로그램으로 에이전트를 공동 개발한다.
-메가존이 내건 전략은 “멀티 에이전트 지휘자”다. - 이 과정은 메가존이
-6개월 동안 지켜보고 검증한 신입을 확보하는 채용 통로다.</p>
+<p><strong>넣을 거버넌스 기능 (메가존 전략과 연결)</strong> - 에이전트별
+권한 제한 (어떤 CRM 객체를 읽고 쓸 수 있는지) - 호출별 토큰·비용 추적 -
+실행 로그와 모니터링 화면</p>
+<p><strong>PoC 엔지니어로서 보여줄 것</strong> - “영업 담당자의 미팅
+준비 시간을 ○○분 → ○○분으로” 같은 효과 측정 - 실제 PoC처럼 <strong>문제
+정의서 → 시제품 → 시연 → 결과 보고서</strong> 순서로 정리</p>
+<blockquote>
+<p>주의: 실제 회사의 고객 데이터는 쓰지 말고, 세일즈포스 무료 개발자
+환경(Developer Edition)과 가짜 데이터로 만든다.</p>
+</blockquote>
 <hr />
-<h2 id="월별-이정표-과정-일정에-맞춤">2. 월별 이정표 (과정 일정에
-맞춤)</h2>
+<h2 id="월별-이정표">3. 월별 이정표</h2>
 <h3 id="개월-차-2026.10-공통-ai-기초-바이브-코딩">1개월 차 (2026.10) —
 공통 AI 기초, 바이브 코딩</h3>
 <ul class="task-list">
@@ -251,11 +310,15 @@ AI·보안 매출이 약 4,400억 원이다. - AIR Studio v3를 내놓았고, �
 (Zero-shot, Few-shot, CoT)</label></li>
 <li><label><input type="checkbox" />Step 3 AI 바이브 코딩 (요구사항 분석
 → 화면 설계 → MVP)</label></li>
-<li><label><input type="checkbox" /><strong>포트폴리오용 업종 하나
-정하기</strong> (예: 제약 품질문서, 금융 상담, 제조 설비
-매뉴얼)</label></li>
+<li><label><input type="checkbox" checked="" /><strong>포트폴리오 주제
+정하기</strong> → 영업·CRM 에이전트 (2026-10-16 확정)</label></li>
+<li><label><input type="checkbox" />세일즈포스 Developer Edition 계정
+만들고 가짜 영업 데이터 넣어 두기</label></li>
 <li><label><input type="checkbox" />AWS 자격증 바우처 받는 방법과 시기
 확인하기</label></li>
+<li><label><input type="checkbox" />링크드인: 헤드라인 수정, 학력에 과정
+추가, 기술 추가 (Generative AI, LLM, Prompt Engineering, AI Agents,
+Python, AWS)</label></li>
 </ul>
 <h3 id="개월-차-2026.1112-전공-심화">2~3개월 차 (2026.11~12) — 전공
 심화</h3>
@@ -270,68 +333,86 @@ Calling, Output Parser)</label></li>
 상태관리, 멀티 에이전트)</label></li>
 <li><label><input type="checkbox" />Step 8 클라우드 네이티브 배포
 (Docker, Kubernetes, AWS, GitOps)</label></li>
-<li><label><input type="checkbox" /><strong>과정 밖 개인 공부: Amazon
-Bedrock과 AgentCore</strong> (메가존의 PAF 에이전트가 이 기술로
-만들어졌다)</label></li>
+<li><label><input type="checkbox" /><strong>개인 공부: 세일즈포스 API
+연동</strong> (REST API로 리드·기회 데이터 읽고 쓰기)</label></li>
+<li><label><input type="checkbox" /><strong>개인 공부: Amazon Bedrock과
+AgentCore</strong></label></li>
+<li><label><input type="checkbox" /><strong>개인 공부: 세일즈포스
+Agentforce 구조 이해</strong> (Trailhead 무료 강의). 경쟁하고 연동할
+대상을 알아야 한다</label></li>
 <li><label><input type="checkbox" /><strong>AWS 자격증 하나
-취득</strong> (예: AI Practitioner → Developer 또는 Solutions Architect
-Associate)</label></li>
+취득</strong> (예: AI Practitioner → Solutions Architect Associate. PoC
+엔지니어는 설계를 설명할 일이 많아 SA가 유리)</label></li>
+<li><label><input type="checkbox" />링크드인 기술 추가: FastAPI, REST
+APIs, Docker, LangChain, RAG, Vector Databases, LangGraph,
+Kubernetes</label></li>
 </ul>
 <h3 id="개월-차-2027.01-실무-프로젝트-착수">4개월 차 (2027.01) — 실무
 프로젝트 착수</h3>
 <ul class="task-list">
 <li><label><input type="checkbox" />Step 9 바이브 코딩 MVP 프로젝트 (PRD
 작성, UI·DB 연동, 배포)</label></li>
-<li><label><input type="checkbox" />1개월 차에 정한 <strong>업종 특화
-에이전트</strong>로 프로젝트 주제 잡기</label></li>
-<li><label><input type="checkbox" />프로젝트에 <strong>거버넌스
-기능</strong> 넣기</label>
+<li><label><input type="checkbox" />영업·CRM 에이전트 <strong>문제
+정의서</strong> 작성 (누구의, 어떤 문제를, 어떻게 측정할지)</label></li>
+<li><label><input type="checkbox" />2주 안에 첫 시제품 만들기 연습 (PoC
+속도 감각 익히기)</label></li>
+<li><label><input type="checkbox" />거버넌스 기능 넣기</label>
 <ul class="task-list">
-<li><label><input type="checkbox" />에이전트별 권한 제한 (어떤 도구와
-데이터에 접근할 수 있는지)</label></li>
+<li><label><input type="checkbox" />에이전트별 권한 제한</label></li>
 <li><label><input type="checkbox" />호출별 토큰과 비용 추적</label></li>
 <li><label><input type="checkbox" />실행 로그와 모니터링
 화면</label></li>
 </ul></li>
+<li><label><input type="checkbox" />링크드인 기술 추가: MVP Development,
+PRD</label></li>
 </ul>
 <h3 id="개월-차-2027.02-현업-연계-프로젝트-품평회">5개월 차 (2027.02) —
 현업 연계 프로젝트, 품평회</h3>
 <ul class="task-list">
 <li><label><input type="checkbox" />Step 10 기업형 AI 에이전트 플랫폼
-(업무 비서, 고객 티켓 자동화, 채용 서류 검토)</label></li>
+(업무 비서, 고객 티켓 자동화) → <strong>내 강점 영역, 팀에서 고객 관점
+역할 맡기</strong></label></li>
 <li><label><input type="checkbox" /><strong>품평회 = 사실상 채용
-면접</strong>이라 생각하고 준비하기</label></li>
-<li><label><input type="checkbox" />발표에 “이 에이전트가 고객사 업무
-시간을 얼마나 줄이는가” 같은 숫자 넣기</label></li>
-<li><label><input type="checkbox" />현업 멘토에게 메가존 실제 프로젝트
-방식 질문하기</label></li>
+면접</strong>. 영업할 때처럼 “고객에게 제안하는 발표”로
+준비</label></li>
+<li><label><input type="checkbox" />발표에 효과 숫자 넣기 (시간 절감,
+처리량, 비용)</label></li>
+<li><label><input type="checkbox" />현업 멘토에게 메가존의 실제 PoC 진행
+방식 질문하기 (기간, 성공 기준, 영업과의 협업 방식)</label></li>
+<li><label><input type="checkbox" />시연 영상 2~3분짜리 만들기
+(링크드인·GitHub에 올릴 용도)</label></li>
 </ul>
 <h3 id="개월-차-2027.03-수료-취업">6개월 차 (2027.03) — 수료, 취업</h3>
 <ul class="task-list">
 <li><label><input type="checkbox" />Step 11 포트폴리오 완성, 기술 면접
 준비</label></li>
+<li><label><input type="checkbox" />포트폴리오를 <strong>PoC 결과 보고서
+형식</strong>으로 정리 (문제 → 해결 → 효과 → 다음 단계)</label></li>
 <li><label><input type="checkbox" />메가존 인턴십·TECH BRIDGE 채용
-프로그램 지원</label></li>
-<li><label><input type="checkbox" />면접에서 말할 이야기 정리: 메가존
-사업 방향(AIR Studio, PAF, 멀티 에이전트 지휘자)과 내 프로젝트를
-연결하기</label></li>
+프로그램 지원. 지원 직무는 PoC·솔루션·프리세일즈 엔지니어
+쪽으로</label></li>
+<li><label><input type="checkbox" />면접 이야기 정리: “영업을 해 봤기
+때문에 고객이 사는 시제품을 만든다” + 메가존 사업 방향(AIR Studio, 멀티
+에이전트 지휘자)과 연결</label></li>
+<li><label><input type="checkbox" />링크드인 기술 추가: AI Governance,
+Technical Presentations / 추천 항목에 시연 영상 걸기</label></li>
 </ul>
 <hr />
-<h2 id="끝까지-지킬-원칙-5가지">3. 끝까지 지킬 원칙 5가지</h2>
+<h2 id="끝까지-지킬-원칙-5가지">4. 끝까지 지킬 원칙 5가지</h2>
 <ol type="1">
-<li><strong>AIR Studio를 깊이 익힌다.</strong> 메가존 채용에서 가장
-직접적인 차별점이다.</li>
-<li><strong>업종 하나를 정해 끝까지 판다.</strong> 시장은 범용 챗봇이
-아니라 업종 특화 에이전트로 가고 있다.</li>
-<li><strong>Bedrock과 AgentCore를 따로 공부한다.</strong> 메가존과 AWS의
-관계를 생각하면 실무에서 거의 확실히 쓰게 된다.</li>
-<li><strong>거버넌스 관점을 프로젝트에 넣는다.</strong> 권한, 비용,
-로그를 넣으면 “메가존이 왜 이 일을 하는지 아는 지원자”로 보인다.</li>
-<li><strong>현업 연계 프로젝트와 품평회에 공을 들인다.</strong> 메가존
-현업자가 직접 보는 자리다.</li>
+<li><strong>AIR Studio를 깊이 익힌다.</strong> 메가존 PoC는 AIR Studio로
+시작할 가능성이 높다.</li>
+<li><strong>영업·CRM 한 분야를 끝까지 판다.</strong> 내 경력과 새 기술이
+이어지는 유일한 지점이다.</li>
+<li><strong>빨리 만들고 숫자로 말한다.</strong> PoC 엔지니어의 가치는
+완벽함이 아니라 속도와 설득력이다.</li>
+<li><strong>거버넌스 관점을 넣는다.</strong> 권한, 비용, 로그가 있으면
+“고객사에 실제로 들일 수 있는 시제품”이 된다.</li>
+<li><strong>모든 발표를 영업처럼 한다.</strong> 품평회, 면접, 시연 모두
+“고객에게 제안하는 자리”로 준비한다.</li>
 </ol>
 <hr />
-<h2 id="과정에서-덜-다루는-부분-스스로-채울-것">4. 과정에서 덜 다루는
+<h2 id="과정에서-덜-다루는-부분-스스로-채울-것">5. 과정에서 덜 다루는
 부분 (스스로 채울 것)</h2>
 <table>
 <colgroup>
@@ -348,29 +429,34 @@ Associate)</label></li>
 </thead>
 <tbody>
 <tr class="odd">
+<td>세일즈포스 API·Agentforce</td>
+<td>포트폴리오 연동 대상이자, 고객사에 섞여 있을 에이전트</td>
+<td>Trailhead, Salesforce Developer Edition</td>
+</tr>
+<tr class="even">
 <td>Amazon Bedrock, AgentCore</td>
 <td>메가존 PAF 에이전트의 기반 기술</td>
 <td>AWS 공식 문서, AWS Skill Builder</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>에이전트 거버넌스 (권한·비용·감사 로그)</td>
 <td>메가존 전략의 핵심 (AAG)</td>
-<td>개인 프로젝트에 직접 구현</td>
-</tr>
-<tr class="odd">
-<td>AI 보안 (프롬프트 인젝션, 데이터 유출 방지)</td>
-<td>메가존 보안 브랜드 HALO와 연결</td>
-<td>OWASP LLM Top 10</td>
+<td>포트폴리오에 직접 구현</td>
 </tr>
 <tr class="even">
-<td>업종 지식</td>
-<td>업종 특화 에이전트의 경쟁력</td>
-<td>정한 업종의 실제 업무 문서와 규정 읽기</td>
+<td>AI 보안 (프롬프트 인젝션, 데이터 유출 방지)</td>
+<td>고객 데이터를 다루는 PoC라면 반드시 질문받음</td>
+<td>OWASP LLM Top 10</td>
+</tr>
+<tr class="odd">
+<td>PoC 진행 방법론</td>
+<td>성공 기준 정하기, 범위 관리, 결과 보고</td>
+<td>현업 멘토 인터뷰, AWS·세일즈포스의 PoC 가이드</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="참고로-이해해-둘-메가존-배경">5. 참고로 이해해 둘 메가존
+<h2 id="참고로-이해해-둘-메가존-배경">6. 참고로 이해해 둘 메가존
 배경</h2>
 <ul>
 <li>2025년 매출 1조 7,496억 원, 영업이익 2.3억 원. 창사 첫 흑자지만
@@ -384,10 +470,16 @@ Associate)</label></li>
 세일즈포스(Agentforce, 일부 영역)</li>
 </ul>
 <p>자세한 분석은 이 저장소의 <code>brunch_megazone_2026.md</code>,
-<code>brunch_msp_agent_era.md</code> 참고.</p>
+<code>brunch_msp_agent_era.md</code> 참고. 링크드인 문구는
+<code>LINKEDIN_PROFILE.md</code> 참고.</p>
 <hr />
 <h2 id="진행-기록">진행 기록</h2>
 <table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th>날짜</th>
@@ -400,6 +492,12 @@ Associate)</label></li>
 <td>2026-10-16</td>
 <td>이정표 작성</td>
 <td></td>
+</tr>
+<tr class="even">
+<td>2026-10-16</td>
+<td>목표 직무를 AI PoC 엔지니어로 확정, 포트폴리오 주제를 영업·CRM
+에이전트로 확정</td>
+<td>B2B 영업 + 세일즈포스 자격 + AI 에이전트 조합을 강점으로</td>
 </tr>
 </tbody>
 </table>

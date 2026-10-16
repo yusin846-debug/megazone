@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>������������ ��������� ������</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:16px 0}th,td{border:1px solid var(--rule);padding:6px 10px;text-align:left}ul.task-list{list-style:none;padding-left:8px}pre{white-space:pre-wrap;background:rgba(127,127,127,.1);padding:14px;border-radius:6px;font-size:14px;line-height:1.6}</style>
+  <style>
+  :root{--bg:#fdfcf9;--fg:#222;--muted:#666;--accent:#00a59a;--rule:#e5e2da}
+  @media (prefers-color-scheme: dark){:root{--bg:#1c1c1e;--fg:#e8e6e1;--muted:#a09d96;--accent:#3cc7bc;--rule:#3a3a3c}}
+  body{background:var(--bg);color:var(--fg);font-family:"Noto Serif KR","Nanum Myeongjo",Georgia,serif;line-height:1.9;font-size:17px;max-width:680px;margin:0 auto;padding:40px 16px 80px;word-break:keep-all}
+  h1{font-size:30px;line-height:1.4;margin:0 0 8px}
+  h3{font-weight:normal;color:var(--muted);font-size:18px;margin-top:0}
+  h2{font-size:21px;margin-top:56px;border-left:4px solid var(--accent);padding-left:12px}
+  blockquote{margin:32px 0;padding:4px 20px;border-left:3px solid var(--accent);color:var(--muted);font-style:italic}
+  hr{border:0;border-top:1px solid var(--rule);margin:40px 0}
+  li{margin:6px 0}
+  strong{color:var(--fg)}
+  em{color:var(--muted);font-size:15px}
+  </style>
+</head>
+<body>
+
+<h1 id="링크드인-프로필-문구-영어">링크드인 프로필 문구 (영어)</h1>
+<blockquote>
+<p>목표 직무: AI PoC 엔지니어 · 작성일: 2026-10-16</p>
+</blockquote>
+<hr />
+<h2 id="헤드라인-headline">헤드라인 (Headline)</h2>
+<p><strong>추천 (PoC 엔지니어 방향)</strong></p>
+<pre><code>AI Solutions &amp; PoC Engineer in the making | B2B Sales → AI Agents | Salesforce Certified Platform Administrator | LangGraph · RAG · AWS</code></pre>
+<p><strong>다른 선택지</strong></p>
+<pre><code>B2B Sales → AI Agent Engineer | Salesforce Certified Platform Administrator | Building AI Agents with LangGraph, RAG &amp; AWS | CRM · GTM</code></pre>
+<blockquote>
+<p>기존: B2B Sales &amp; Pipeline Development | Salesforce Certified
+Platform Administrator | CRM, Data &amp; AI | Full-Funnel GTM</p>
+</blockquote>
+<hr />
+<h2 id="소개-about">소개 (About)</h2>
+<pre><code>I turn business problems into working AI agents, fast.
+
+My background is in B2B sales and pipeline development, where I learned how customers make decisions and what it takes to move a deal forward. As a Salesforce Certified Platform Administrator, I also know CRM data and the sales and service workflows built on top of it.
+
+I&#39;m now in Megazone Cloud&#39;s AI Agent Engineer Program, a 6-month, full-time bootcamp, building hands-on skills in:
+· LLM applications with LangChain and multi-agent systems with LangGraph
+· Retrieval-Augmented Generation (RAG) with vector databases
+· Backend development with FastAPI and cloud-native deployment on AWS and Kubernetes
+· AIR Studio, Megazone Cloud&#39;s enterprise AI platform
+
+My goal is to work as an AI PoC / Solutions Engineer: sitting with customers to understand the real problem, building a working prototype in weeks, and showing its impact in numbers.
+
+Current project: a multi-agent sales assistant connected to Salesforce, covering lead prioritization, meeting prep, and ticket triage, with access control, cost tracking, and monitoring built in.
+
+Always happy to connect with people working on enterprise AI agents, pre-sales, or CRM.</code></pre>
+<blockquote>
+<p>“Current project” 문단은 프로젝트를 실제로 시작한 뒤에 넣으세요. 그
+전에는 지우거나 “Upcoming project”로 바꾸세요.</p>
+</blockquote>
+<hr />
+<h2 id="학력-education">학력 (Education)</h2>
+<table>
+<thead>
+<tr class="header">
+<th>항목</th>
+<th>입력할 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>School</td>
+<td>Megazone Cloud</td>
+</tr>
+<tr class="even">
+<td>Degree</td>
+<td>Bootcamp</td>
+</tr>
+<tr class="odd">
+<td>Field of study</td>
+<td>AI Agent Engineering</td>
+</tr>
+<tr class="even">
+<td>Start date</td>
+<td>Oct 2026</td>
+</tr>
+<tr class="odd">
+<td>End date (expected)</td>
+<td>Mar 2027</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Description</strong></p>
+<pre><code>AI Agent Engineer Program – Megazone Cloud AI-Native Bootcamp (984 hours, 6 months, full-time)
+
+· LLM fundamentals &amp; prompt engineering, hands-on with AIR Studio (Megazone Cloud&#39;s enterprise AI platform)
+· Backend development with FastAPI, Pydantic, and SQLAlchemy
+· LLM applications with LangChain (LCEL, tool calling, output parsers)
+· Vector databases &amp; RAG (chunking, embeddings, hybrid search, reranking)
+· AI agents with LangGraph (ReAct, state management, multi-agent systems)
+· Cloud-native deployment with Docker, Kubernetes, AWS, and GitOps
+· Enterprise AI agent projects and an industry-partnered capstone (upcoming)</code></pre>
+<hr />
+<h2 id="대표-기술-top-skills-5개">대표 기술 (Top skills, 5개)</h2>
+<ol type="1">
+<li>AI Agents</li>
+<li>Salesforce (기존 자격과 연결)</li>
+<li>Retrieval-Augmented Generation (RAG)</li>
+<li>B2B Sales</li>
+<li>Amazon Web Services (AWS)</li>
+</ol>
+<blockquote>
+<p>PoC 엔지니어는 기술과 영업을 함께 보여줘야 해서, 개발 기술만이 아니라
+Salesforce와 B2B Sales를 대표 기술에 넣었습니다.</p>
+</blockquote>
+<h2 id="기술-추가-시점">기술 추가 시점</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>시기</th>
+<th>추가할 기술</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>지금 (2026.10)</td>
+<td>Generative AI, Large Language Models (LLM), Prompt Engineering, AI
+Agents, Python, Amazon Web Services (AWS)</td>
+</tr>
+<tr class="even">
+<td>2026.11~12</td>
+<td>FastAPI, REST APIs, Docker, LangChain, RAG, Vector Databases,
+LangGraph, Multi-Agent Systems, Kubernetes, GitOps</td>
+</tr>
+<tr class="odd">
+<td>2027.01</td>
+<td>MVP Development, Product Requirements Documents (PRD)</td>
+</tr>
+<tr class="even">
+<td>2027.02~03</td>
+<td>AI Governance, Technical Presentations, Solution Architecture</td>
+</tr>
+</tbody>
+</table>
+<p>기존 영업·CRM 기술(B2B Sales, Pipeline Management, Salesforce, CRM,
+Go-to-Market Strategy)은 <strong>지우지 말고 유지</strong>하세요. PoC
+엔지니어에게는 강점입니다.</p>
+<hr />
+<h2 id="시작-알림-게시물-post">시작 알림 게시물 (Post)</h2>
+<pre><code>After years in B2B sales and working with Salesforce, I&#39;ve started a new chapter: the AI Agent Engineer Program at Megazone Cloud.
+
+In sales, I saw how often great technology stalls between &quot;interesting demo&quot; and &quot;signed contract.&quot; I want to be the person who closes that gap: someone who understands the customer&#39;s problem and can build the AI agent that solves it.
+
+Over the next six months, I&#39;ll be learning LLMs, RAG, and multi-agent systems with LangGraph, and deploying what I build on AWS. My capstone idea: a multi-agent sales assistant connected to Salesforce.
+
+I&#39;ll share what I learn along the way. If you work in AI pre-sales, solutions engineering, or enterprise AI, I&#39;d love to connect!
+
+#AIAgents #PreSales #SolutionsEngineering #Salesforce #LangGraph #RAG #AWS #MegazoneCloud</code></pre>
+</body>
+</html>
