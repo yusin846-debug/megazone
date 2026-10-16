@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>������ ���������</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:16px 0}th,td{border:1px solid var(--rule);padding:6px 10px;text-align:left}ul.task-list{list-style:none;padding-left:8px}</style>
+  <style>
+  :root{--bg:#fdfcf9;--fg:#222;--muted:#666;--accent:#00a59a;--rule:#e5e2da}
+  @media (prefers-color-scheme: dark){:root{--bg:#1c1c1e;--fg:#e8e6e1;--muted:#a09d96;--accent:#3cc7bc;--rule:#3a3a3c}}
+  body{background:var(--bg);color:var(--fg);font-family:"Noto Serif KR","Nanum Myeongjo",Georgia,serif;line-height:1.9;font-size:17px;max-width:680px;margin:0 auto;padding:40px 16px 80px;word-break:keep-all}
+  h1{font-size:30px;line-height:1.4;margin:0 0 8px}
+  h3{font-weight:normal;color:var(--muted);font-size:18px;margin-top:0}
+  h2{font-size:21px;margin-top:56px;border-left:4px solid var(--accent);padding-left:12px}
+  blockquote{margin:32px 0;padding:4px 20px;border-left:3px solid var(--accent);color:var(--muted);font-style:italic}
+  hr{border:0;border-top:1px solid var(--rule);margin:40px 0}
+  li{margin:6px 0}
+  strong{color:var(--fg)}
+  em{color:var(--muted);font-size:15px}
+  </style>
+</head>
+<body>
+
+<h1 id="나의-공부-이정표-메가존클라우드-ai-에이전트-엔지니어">나의 공부
+이정표: 메가존클라우드 AI 에이전트 엔지니어</h1>
+<blockquote>
+<p>기준: 메가존클라우드 AI-Native 부트캠프 「AI 에이전트 엔지니어
+양성과정」(2026.10.06 개강, 984시간·약 6개월, 과천 캠퍼스) 작성일:
+2026-10-16</p>
+</blockquote>
+<hr />
+<h2 id="목표-한-줄">0. 목표 한 줄</h2>
+<p><strong>고객 요구를 듣고, 에이전트를 만들고, AWS에 배포·운영까지 할
+수 있는 “AI 에이전트 구축 엔지니어”가 된다.</strong> 그리고 메가존이 왜
+이 일을 하는지 아는 사람으로 보이게 한다.</p>
+<hr />
+<h2 id="메가존이-나에게-기대하는-역할">1. 메가존이 나에게 기대하는
+역할</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>순서</th>
+<th>역할</th>
+<th>하는 일</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1 (가장 유력)</td>
+<td>AI 에이전트 구축 엔지니어</td>
+<td>고객사 AI 프로젝트에 투입돼 RAG와 에이전트를 개발. AIR Studio 기반
+구축 포함</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>AI 솔루션·PoC 엔지니어</td>
+<td>영업과 함께 고객을 만나 빠르게 시제품을 만들고 시연</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>클라우드 네이티브 AI 개발자</td>
+<td>에이전트를 AWS·쿠버네티스 환경에 배포하고 운영</td>
+</tr>
+<tr class="even">
+<td>4 (경력을 쌓은 뒤)</td>
+<td>에이전트 운영(AgentOps)·거버넌스</td>
+<td>에이전트의 권한, 비용, 모니터링, 보안 관리</td>
+</tr>
+</tbody>
+</table>
+<p><strong>왜 이 과정을 운영하나 (내가 이해하고 있어야 할 배경)</strong>
+- 메가존은 클라우드 재판매 회사에서 AI 회사로 바뀌는 중이다. 2025년
+AI·보안 매출이 약 4,400억 원이다. - AIR Studio v3를 내놓았고, 한미약품
+품질보증 에이전트 같은 고객 사례를 늘려야 한다. 그러려면 구축 인력이
+많이 필요하다. - AWS와 PAF 프로그램으로 에이전트를 공동 개발한다.
+메가존이 내건 전략은 “멀티 에이전트 지휘자”다. - 이 과정은 메가존이
+6개월 동안 지켜보고 검증한 신입을 확보하는 채용 통로다.</p>
+<hr />
+<h2 id="월별-이정표-과정-일정에-맞춤">2. 월별 이정표 (과정 일정에
+맞춤)</h2>
+<h3 id="개월-차-2026.10-공통-ai-기초-바이브-코딩">1개월 차 (2026.10) —
+공통 AI 기초, 바이브 코딩</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Step 1 생성형 AI·LLM 기초.
+<strong>AIR Studio 실습은 메모를 남기며 깊이
+익히기</strong></label></li>
+<li><label><input type="checkbox" />Step 2 프롬프트 엔지니어링
+(Zero-shot, Few-shot, CoT)</label></li>
+<li><label><input type="checkbox" />Step 3 AI 바이브 코딩 (요구사항 분석
+→ 화면 설계 → MVP)</label></li>
+<li><label><input type="checkbox" /><strong>포트폴리오용 업종 하나
+정하기</strong> (예: 제약 품질문서, 금융 상담, 제조 설비
+매뉴얼)</label></li>
+<li><label><input type="checkbox" />AWS 자격증 바우처 받는 방법과 시기
+확인하기</label></li>
+</ul>
+<h3 id="개월-차-2026.1112-전공-심화">2~3개월 차 (2026.11~12) — 전공
+심화</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Step 4 FastAPI 백엔드 (Pydantic,
+SQLAlchemy, Docker)</label></li>
+<li><label><input type="checkbox" />Step 5 LangChain (LCEL, Tool
+Calling, Output Parser)</label></li>
+<li><label><input type="checkbox" />Step 6 Vector DB와 RAG (청킹,
+임베딩, Hybrid Search, Reranking)</label></li>
+<li><label><input type="checkbox" />Step 7 LangGraph 에이전트 (ReAct,
+상태관리, 멀티 에이전트)</label></li>
+<li><label><input type="checkbox" />Step 8 클라우드 네이티브 배포
+(Docker, Kubernetes, AWS, GitOps)</label></li>
+<li><label><input type="checkbox" /><strong>과정 밖 개인 공부: Amazon
+Bedrock과 AgentCore</strong> (메가존의 PAF 에이전트가 이 기술로
+만들어졌다)</label></li>
+<li><label><input type="checkbox" /><strong>AWS 자격증 하나
+취득</strong> (예: AI Practitioner → Developer 또는 Solutions Architect
+Associate)</label></li>
+</ul>
+<h3 id="개월-차-2027.01-실무-프로젝트-착수">4개월 차 (2027.01) — 실무
+프로젝트 착수</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Step 9 바이브 코딩 MVP 프로젝트 (PRD
+작성, UI·DB 연동, 배포)</label></li>
+<li><label><input type="checkbox" />1개월 차에 정한 <strong>업종 특화
+에이전트</strong>로 프로젝트 주제 잡기</label></li>
+<li><label><input type="checkbox" />프로젝트에 <strong>거버넌스
+기능</strong> 넣기</label>
+<ul class="task-list">
+<li><label><input type="checkbox" />에이전트별 권한 제한 (어떤 도구와
+데이터에 접근할 수 있는지)</label></li>
+<li><label><input type="checkbox" />호출별 토큰과 비용 추적</label></li>
+<li><label><input type="checkbox" />실행 로그와 모니터링
+화면</label></li>
+</ul></li>
+</ul>
+<h3 id="개월-차-2027.02-현업-연계-프로젝트-품평회">5개월 차 (2027.02) —
+현업 연계 프로젝트, 품평회</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Step 10 기업형 AI 에이전트 플랫폼
+(업무 비서, 고객 티켓 자동화, 채용 서류 검토)</label></li>
+<li><label><input type="checkbox" /><strong>품평회 = 사실상 채용
+면접</strong>이라 생각하고 준비하기</label></li>
+<li><label><input type="checkbox" />발표에 “이 에이전트가 고객사 업무
+시간을 얼마나 줄이는가” 같은 숫자 넣기</label></li>
+<li><label><input type="checkbox" />현업 멘토에게 메가존 실제 프로젝트
+방식 질문하기</label></li>
+</ul>
+<h3 id="개월-차-2027.03-수료-취업">6개월 차 (2027.03) — 수료, 취업</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Step 11 포트폴리오 완성, 기술 면접
+준비</label></li>
+<li><label><input type="checkbox" />메가존 인턴십·TECH BRIDGE 채용
+프로그램 지원</label></li>
+<li><label><input type="checkbox" />면접에서 말할 이야기 정리: 메가존
+사업 방향(AIR Studio, PAF, 멀티 에이전트 지휘자)과 내 프로젝트를
+연결하기</label></li>
+</ul>
+<hr />
+<h2 id="끝까지-지킬-원칙-5가지">3. 끝까지 지킬 원칙 5가지</h2>
+<ol type="1">
+<li><strong>AIR Studio를 깊이 익힌다.</strong> 메가존 채용에서 가장
+직접적인 차별점이다.</li>
+<li><strong>업종 하나를 정해 끝까지 판다.</strong> 시장은 범용 챗봇이
+아니라 업종 특화 에이전트로 가고 있다.</li>
+<li><strong>Bedrock과 AgentCore를 따로 공부한다.</strong> 메가존과 AWS의
+관계를 생각하면 실무에서 거의 확실히 쓰게 된다.</li>
+<li><strong>거버넌스 관점을 프로젝트에 넣는다.</strong> 권한, 비용,
+로그를 넣으면 “메가존이 왜 이 일을 하는지 아는 지원자”로 보인다.</li>
+<li><strong>현업 연계 프로젝트와 품평회에 공을 들인다.</strong> 메가존
+현업자가 직접 보는 자리다.</li>
+</ol>
+<hr />
+<h2 id="과정에서-덜-다루는-부분-스스로-채울-것">4. 과정에서 덜 다루는
+부분 (스스로 채울 것)</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>주제</th>
+<th>이유</th>
+<th>공부 방법</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Amazon Bedrock, AgentCore</td>
+<td>메가존 PAF 에이전트의 기반 기술</td>
+<td>AWS 공식 문서, AWS Skill Builder</td>
+</tr>
+<tr class="even">
+<td>에이전트 거버넌스 (권한·비용·감사 로그)</td>
+<td>메가존 전략의 핵심 (AAG)</td>
+<td>개인 프로젝트에 직접 구현</td>
+</tr>
+<tr class="odd">
+<td>AI 보안 (프롬프트 인젝션, 데이터 유출 방지)</td>
+<td>메가존 보안 브랜드 HALO와 연결</td>
+<td>OWASP LLM Top 10</td>
+</tr>
+<tr class="even">
+<td>업종 지식</td>
+<td>업종 특화 에이전트의 경쟁력</td>
+<td>정한 업종의 실제 업무 문서와 규정 읽기</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="참고로-이해해-둘-메가존-배경">5. 참고로 이해해 둘 메가존
+배경</h2>
+<ul>
+<li>2025년 매출 1조 7,496억 원, 영업이익 2.3억 원. 창사 첫 흑자지만
+이익률은 약 0.01%다.</li>
+<li>2026년 안에 코스피 상장을 목표로 준비하고 있다.</li>
+<li>AWS 국내 최대 파트너다. 2025년 1월 전략적 협력 협약(SCA)을 맺었고,
+2026년 국내 최초로 PAF에 참여했다.</li>
+<li>AIR Studio v3(2026.10)는 Data, Agent, Ops, Governance 4개 모듈로
+나뉜다.</li>
+<li>경쟁사: 베스핀글로벌(헬프나우), SK AX(AXgenticWire),
+세일즈포스(Agentforce, 일부 영역)</li>
+</ul>
+<p>자세한 분석은 이 저장소의 <code>brunch_megazone_2026.md</code>,
+<code>brunch_msp_agent_era.md</code> 참고.</p>
+<hr />
+<h2 id="진행-기록">진행 기록</h2>
+<table>
+<thead>
+<tr class="header">
+<th>날짜</th>
+<th>한 일</th>
+<th>메모</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2026-10-16</td>
+<td>이정표 작성</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
