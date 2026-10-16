@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>AIR Deal Desk ���������</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:16px 0}th,td{border:1px solid var(--rule);padding:6px 10px;text-align:left;vertical-align:top}ul.task-list{list-style:none;padding-left:8px}pre{white-space:pre;overflow-x:auto;background:rgba(127,127,127,.1);padding:14px;border-radius:6px;font-size:13px;line-height:1.5}</style>
+  <style>
+  :root{--bg:#fdfcf9;--fg:#222;--muted:#666;--accent:#00a59a;--rule:#e5e2da}
+  @media (prefers-color-scheme: dark){:root{--bg:#1c1c1e;--fg:#e8e6e1;--muted:#a09d96;--accent:#3cc7bc;--rule:#3a3a3c}}
+  body{background:var(--bg);color:var(--fg);font-family:"Noto Serif KR","Nanum Myeongjo",Georgia,serif;line-height:1.9;font-size:17px;max-width:680px;margin:0 auto;padding:40px 16px 80px;word-break:keep-all}
+  h1{font-size:30px;line-height:1.4;margin:0 0 8px}
+  h3{font-weight:normal;color:var(--muted);font-size:18px;margin-top:0}
+  h2{font-size:21px;margin-top:56px;border-left:4px solid var(--accent);padding-left:12px}
+  blockquote{margin:32px 0;padding:4px 20px;border-left:3px solid var(--accent);color:var(--muted);font-style:italic}
+  hr{border:0;border-top:1px solid var(--rule);margin:40px 0}
+  li{margin:6px 0}
+  strong{color:var(--fg)}
+  em{color:var(--muted);font-size:15px}
+  </style>
+</head>
+<body>
+
+<h1 id="air-deal-desk-제품-기획서-초안">AIR Deal Desk — 제품 기획서
+(초안)</h1>
+<blockquote>
+<p>AIR Studio 위에서 돌아가는 B2B 영업 조직용 멀티 에이전트 패키지 작성:
+2026-10-16 · 작성 관점: AI PoC 솔루션 엔지니어</p>
+</blockquote>
+<hr />
+<h2 id="한-줄-요약">1. 한 줄 요약</h2>
+<p><strong>“미팅 준비부터 견적, CRM 입력까지. 영업 담당자의 잡무는
+에이전트가 하고, 회사는 AIR Studio로 통제한다.”</strong></p>
+<p>세일즈포스를 쓰는 B2B 영업 조직을 위한 에이전트 묶음이다. 세일즈포스
+데이터와 사내 문서(제안서, 계약서, 제품 자료)를 함께 쓰고, 모든
+에이전트를 AIR Studio의 운영·거버넌스 아래에서 관리한다.</p>
+<hr />
+<h2 id="왜-이-제품인가">2. 왜 이 제품인가</h2>
+<h3 id="기회-1.-air-studio-사례에-영업-칸이-비어-있다">기회 1. AIR
+Studio 사례에 ‘영업’ 칸이 비어 있다</h3>
+<p>AIR Studio 홈페이지의 고객 사례는 대부분 <strong>금융권 지식 검색과
+거버넌스</strong>다.</p>
+<table>
+<thead>
+<tr class="header">
+<th>고객</th>
+<th>사례</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>JB우리캐피탈</td>
+<td>여신 심사 자동화</td>
+</tr>
+<tr class="even">
+<td>M사(금융)</td>
+<td>업무지식 검색, 금융권 수준 거버넌스</td>
+</tr>
+<tr class="odd">
+<td>코리안리</td>
+<td>내부망 지식 표준화 RAG</td>
+</tr>
+<tr class="even">
+<td>S사(금융)</td>
+<td>창구 업무 지식 RAG</td>
+</tr>
+<tr class="odd">
+<td>S사(에너지)</td>
+<td>사내 업무지원 챗봇</td>
+</tr>
+<tr class="even">
+<td>아모레퍼시픽</td>
+<td>AI 거버넌스, 업무 시스템 연계</td>
+</tr>
+</tbody>
+</table>
+<p><strong>매출을 직접 만드는 부서(영업)를 위한 사례가 없다.</strong>
+영업은 효과를 숫자(미팅 수, 견적 속도, 수주율)로 보여주기 쉽고, 효과가
+보이면 예산 결정이 빠른 부서다.</p>
+<h3 id="기회-2.-영업-현장의-시간은-대부분-팔지-않는-일에-쓰인다">기회 2.
+영업 현장의 시간은 대부분 ’팔지 않는 일’에 쓰인다</h3>
+<ul>
+<li>미팅 전: 고객사 정보, 과거 거래, 지난 제안서를 여기저기서
+찾는다</li>
+<li>미팅 후: 회의록을 정리해 CRM에 다시 입력한다</li>
+<li>견적: 제품팀, 가격 정책, 승인 담당자를 오가며 며칠을 쓴다</li>
+</ul>
+<h3 id="기회-3.-내가-제일-잘-아는-영역이다">기회 3. 내가 제일 잘 아는
+영역이다</h3>
+<p>B2B 영업 경험 + 세일즈포스 관리자 자격 + Apex 개발 경험. 고객의 말을
+요구사항으로 바꾸고, 세일즈포스 양쪽 연동을 직접 만들 수 있다.</p>
+<hr />
+<h2 id="누가-쓰고-누가-사는가">3. 누가 쓰고, 누가 사는가</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>페르소나</th>
+<th>지금의 불만</th>
+<th>원하는 것</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>영업 담당자</strong> (사용자)</td>
+<td>CRM 입력과 미팅 준비에 시간을 뺏긴다</td>
+<td>고객 앞에 있는 시간을 늘리고 싶다</td>
+</tr>
+<tr class="even">
+<td><strong>영업 관리자·Sales Ops</strong> (사용자이자 추천자)</td>
+<td>CRM 데이터가 늦고 부정확해서 예측이 안 맞는다</td>
+<td>정확한 파이프라인, 표준화된 영업 방식</td>
+</tr>
+<tr class="odd">
+<td><strong>IT·보안 담당</strong> (구매 승인자)</td>
+<td>부서마다 AI 도구를 따로 써서 데이터 유출과 비용이 걱정이다</td>
+<td>한곳에서 권한, 비용, 기록을 통제하고 싶다</td>
+</tr>
+<tr class="even">
+<td><strong>경영진</strong> (최종 결정자)</td>
+<td>AI에 돈을 썼는데 성과가 안 보인다</td>
+<td>매출 지표로 보이는 성과</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>영업 담당자를 설득하고, IT·보안 담당을 안심시키는 제품이어야 계약이
+된다. AIR Studio의 강점은 후자에서 빛난다.</p>
+</blockquote>
+<hr />
+<h2 id="제품-구성-에이전트-4개-지휘자-1개">4. 제품 구성: 에이전트 4개 +
+지휘자 1개</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>에이전트</th>
+<th>하는 일</th>
+<th>쓰는 데이터</th>
+<th>AIR Studio 모듈</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>미팅 브리핑</strong></td>
+<td>미팅 전날 고객사 요약, 과거 거래, 지난 제안 내용, 예상 질문을 한
+장으로</td>
+<td>세일즈포스(거래처·기회·활동) + 사내 제안서·계약서</td>
+<td>Data(RAG), Agent(커넥터)</td>
+</tr>
+<tr class="even">
+<td><strong>견적·제안 초안</strong></td>
+<td>요구 조건을 받아 가격 정책과 과거 유사 견적을 참고해 견적서·제안서
+초안 작성. 할인율이 기준을 넘으면 사람 승인</td>
+<td>가격표, 제품 문서, 과거 견적</td>
+<td>Data, Agent</td>
+</tr>
+<tr class="odd">
+<td><strong>딜 코치</strong></td>
+<td>기회별 위험 신호(오래 멈춘 단계, 의사결정자 미접촉 등)를 찾고 다음
+행동 추천</td>
+<td>세일즈포스 기회·활동 이력</td>
+<td>Agent</td>
+</tr>
+<tr class="even">
+<td><strong>CRM 자동 입력</strong></td>
+<td>미팅 메모나 녹취 요약을 받아 활동·다음 단계·금액 변경을 세일즈포스에
+기록 (담당자가 확인 후 저장)</td>
+<td>미팅 메모</td>
+<td>Agent(쓰기 권한은 최소로)</td>
+</tr>
+<tr class="odd">
+<td><strong>지휘자</strong></td>
+<td>영업 담당자의 요청을 이해해 알맞은 에이전트에 일을 나눠줌</td>
+<td>—</td>
+<td>Agent(코드형, LangGraph)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>모든 에이전트 공통 (AIR Studio Ops·Governance)</strong> -
+에이전트별 권한: 어떤 세일즈포스 객체를 읽고 쓰는지 제한 - 팀·사용자별
+토큰 한도와 사용 리포트 - 모든 실행의 감사 로그 - 문제가 생기면 원클릭
+중지·롤백</p>
+<hr />
+<h2 id="air-studio-강점이-이-제품에서-어떻게-보이나">5. AIR Studio
+강점이 이 제품에서 어떻게 보이나</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>홈페이지가 내세우는 강점</th>
+<th>AIR Deal Desk에서 보이는 모습</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Data</strong>: 문서를 파싱·청킹해 지식 자산으로</td>
+<td>흩어진 제안서, 계약서, 제품 자료가 검색 가능한 영업 지식이 된다</td>
+</tr>
+<tr class="even">
+<td><strong>Agent</strong>: 70여 종 프리빌트 커넥터, MCP 서버</td>
+<td>세일즈포스, 메일, 캘린더, 파일 저장소를 코드 없이 또는 적은 코드로
+연결</td>
+</tr>
+<tr class="odd">
+<td><strong>Agent</strong>: 노코드·로우코드 + 외부 SDK 기반 코드형
+에이전트 수용</td>
+<td>단순한 브리핑은 노코드로 빠르게, 복잡한 지휘 흐름은 LangGraph 코드로
+만들어 등록</td>
+</tr>
+<tr class="even">
+<td><strong>Ops</strong>: 배포, 버전 관리, 롤백, AgentOps</td>
+<td>견적 규칙이 바뀌어도 새 버전 배포와 되돌리기가 쉽다. 오류율·응답
+지연을 실시간으로 본다</td>
+</tr>
+<tr class="odd">
+<td><strong>Governance</strong>: 사용자·부서별 토큰 한도</td>
+<td>영업팀 전체 AI 비용을 예산 안에서 통제</td>
+</tr>
+<tr class="even">
+<td><strong>Governance</strong>: Virtual Key</td>
+<td>영업 담당자가 AI 키를 직접 다루지 않아 키 유출 위험이 없다</td>
+</tr>
+<tr class="odd">
+<td><strong>Governance</strong>: 외부 에이전트까지 감사 로그 수집</td>
+<td><strong>세일즈포스 Agentforce도 등록해 같은 기준으로
+기록·통제</strong></td>
+</tr>
+<tr class="even">
+<td><strong>모듈형 도입</strong></td>
+<td>미팅 브리핑 하나로 시작해 에이전트를 하나씩 늘린다</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="전체-구조">6. 전체 구조</h2>
+<pre><code>               [영업 담당자: 세일즈포스 화면 / 메신저 / 웹]
+                                  │
+                                  ▼
+ ┌──────────────────────── AIR Studio ─────────────────────────┐
+ │                                                             │
+ │   지휘자 에이전트 (LangGraph, 코드형으로 등록)                  │
+ │      ├─ 미팅 브리핑   ├─ 견적·제안 초안                         │
+ │      ├─ 딜 코치       └─ CRM 자동 입력                          │
+ │                                                             │
+ │   Data: 제안서·계약서·제품 문서 지식베이스 (RAG)                 │
+ │   Ops: 배포·버전·롤백·모니터링                                  │
+ │   Governance: 권한·토큰 한도·Virtual Key·감사 로그              │
+ │                    ▲                                        │
+ │                    │ 외부 에이전트로 등록·통제                   │
+ └────────────────────┼────────────────────────────────────────┘
+          커넥터·MCP │              │
+                     │              ▼
+        [세일즈포스 Agentforce]   [세일즈포스 데이터: 거래처·기회·활동]
+                                  ▲
+                    Apex: 버튼 클릭 → 에이전트 호출, 결과를 기회에 기록</code></pre>
+<hr />
+<h2 id="세일즈포스-agentforce와의-관계-경쟁이-아니라-역할-분담">7.
+세일즈포스 Agentforce와의 관계: 경쟁이 아니라 역할 분담</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Agentforce</th>
+<th>AIR Deal Desk</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>강한 곳</td>
+<td>세일즈포스 안의 데이터와 화면</td>
+<td>세일즈포스 <strong>밖</strong>의 사내 문서, 여러 시스템을 가로지르는
+업무</td>
+</tr>
+<tr class="even">
+<td>데이터</td>
+<td>세일즈포스 클라우드</td>
+<td>사내 문서는 회사가 정한 환경에 그대로</td>
+</tr>
+<tr class="odd">
+<td>관리</td>
+<td>세일즈포스 안에서</td>
+<td>AIR Studio에서 Agentforce까지 포함해 <strong>한
+기준으로</strong></td>
+</tr>
+</tbody>
+</table>
+<p>고객에게 하는 말: <strong>“Agentforce를 버리라는 게 아닙니다.
+Agentforce는 CRM 안에서 일하고, AIR Deal Desk는 CRM 밖의 지식을
+가져옵니다. 둘 다 AIR Studio 한곳에서 관리합니다.”</strong></p>
+<hr />
+<h2 id="데모-시나리오-5분">8. 데모 시나리오 (5분)</h2>
+<ol type="1">
+<li><strong>(0:00) 문제 제기</strong>: “내일 오전 A사 미팅입니다.
+지금까지는 준비에 1시간 걸렸습니다.”</li>
+<li><strong>(0:30) 미팅 브리핑</strong>: 세일즈포스 기회 화면에서 버튼
+클릭 → 30초 안에 고객 요약, 지난 제안 핵심, 예상 질문 3개가 나온다. 근거
+문서 링크가 함께 붙는다.</li>
+<li><strong>(1:30) 견적 초안</strong>: “서버 50대, 3년 계약, 할인 15%로
+견적 줘” → 초안 생성. 할인율이 기준(예: 10%)을 넘어서 <strong>관리자
+승인 요청이 자동으로 걸린다.</strong></li>
+<li><strong>(2:30) CRM 자동 입력</strong>: 미팅 메모를 붙여 넣으면 활동,
+다음 단계, 금액 변경이 세일즈포스에 기록 대기. 담당자가 확인하고
+저장.</li>
+<li><strong>(3:30) 관리자 화면으로 전환</strong>: AIR Studio Governance.
+팀별 토큰 사용량, 에이전트별 권한, 방금 실행된 모든 기록이 보인다.</li>
+<li><strong>(4:30) 마무리</strong>: “영업 담당자는 1시간을 아꼈고,
+IT팀은 모든 걸 보고 있습니다.”</li>
+</ol>
+<blockquote>
+<p>데모의 핵심은 3번(사람 승인)과 5번(관리자 화면)이다. 다른 AI 영업
+도구와의 차이가 여기서 보인다.</p>
+</blockquote>
+<hr />
+<h2 id="poc-패키지-4주">9. PoC 패키지 (4주)</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>주차</th>
+<th>할 일</th>
+<th>산출물</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1주</td>
+<td>영업팀 인터뷰, 업무 흐름 파악, 성공 기준 합의, 데이터 위치 확인</td>
+<td>문제 정의서, 성공 기준표</td>
+</tr>
+<tr class="even">
+<td>2주</td>
+<td>세일즈포스 연결, 문서 지식베이스 구축, 미팅 브리핑 에이전트</td>
+<td>동작하는 브리핑 에이전트</td>
+</tr>
+<tr class="odd">
+<td>3주</td>
+<td>견적 초안 또는 CRM 자동 입력 중 하나 추가, 권한·한도 설정</td>
+<td>에이전트 2종 + 거버넌스 설정</td>
+</tr>
+<tr class="even">
+<td>4주</td>
+<td>영업 담당자 5~10명 실사용, 측정, 결과 보고</td>
+<td>결과 보고서, 본 구축 제안서</td>
+</tr>
+</tbody>
+</table>
+<h3 id="성공-기준-poc에서-측정할-지표">성공 기준 (PoC에서 측정할
+지표)</h3>
+<table>
+<thead>
+<tr class="header">
+<th>지표</th>
+<th>측정 방법</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>미팅 준비 시간</td>
+<td>도입 전후 담당자 자가 기록 비교</td>
+</tr>
+<tr class="even">
+<td>CRM 입력 지연</td>
+<td>미팅 후 활동이 기록되기까지 걸린 시간</td>
+</tr>
+<tr class="odd">
+<td>견적 회신 시간</td>
+<td>요청부터 고객 발송까지</td>
+</tr>
+<tr class="even">
+<td>브리핑 정확도</td>
+<td>담당자가 매긴 점수 (근거 문서가 맞는지)</td>
+</tr>
+<tr class="odd">
+<td>사용률</td>
+<td>4주 동안 매주 쓰는 담당자 비율</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>숫자 목표는 고객과 1주 차에 함께 정한다. 미리 “○○% 절감”을 약속하지
+않는다.</p>
+</blockquote>
+<hr />
+<h2 id="듣는-사람별-어필-메시지">10. 듣는 사람별 어필 메시지</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>대상</th>
+<th>한 문장</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>영업 담당자</td>
+<td>“미팅 준비 1시간을 고객 앞 1시간으로 바꿉니다.”</td>
+</tr>
+<tr class="even">
+<td>영업 관리자</td>
+<td>“CRM이 미팅 당일에 채워지니, 파이프라인 회의가 추측이 아니라 사실로
+진행됩니다.”</td>
+</tr>
+<tr class="odd">
+<td>IT·보안</td>
+<td>“영업팀 AI 사용을 권한, 비용, 기록까지 한 화면에서 통제합니다.
+Agentforce까지 포함해서요.”</td>
+</tr>
+<tr class="even">
+<td>경영진</td>
+<td>“작게 시작해 4주 안에 숫자로 보여드리고, 효과가 확인된 만큼만
+넓힙니다.”</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="예상-반론과-답변">11. 예상 반론과 답변</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>반론</th>
+<th>답변</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>“Agentforce 사면 되잖아요”</td>
+<td>CRM 밖 문서(제안서, 계약서)와 여러 시스템을 함께 다뤄야 할 때 AIR
+Studio가 필요합니다. Agentforce도 AIR Studio에서 함께 관리할 수
+있습니다</td>
+</tr>
+<tr class="even">
+<td>“AI가 틀린 견적을 내면요?”</td>
+<td>견적은 초안까지만 만들고, 기준을 넘는 조건은 반드시 사람이
+승인합니다. 모든 근거 문서를 함께 보여줍니다</td>
+</tr>
+<tr class="odd">
+<td>“고객 데이터가 밖으로 나가지 않나요?”</td>
+<td>사내 문서는 회사가 정한 환경에 두고, 에이전트별로 접근 범위를
+제한합니다. 모든 접근은 기록됩니다</td>
+</tr>
+<tr class="even">
+<td>“비용이 얼마나 늘어나죠?”</td>
+<td>팀·사용자별 토큰 한도를 걸어 예산을 넘지 않게 합니다. PoC 기간 실제
+사용량으로 연간 비용을 추정해 드립니다</td>
+</tr>
+<tr class="odd">
+<td>“영업 담당자들이 안 쓸 것 같은데요”</td>
+<td>새 화면을 배우지 않도록 세일즈포스 화면의 버튼으로 붙입니다. 4주
+사용률을 성공 기준에 넣습니다</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="확인해야-할-가정-아직-모르는-것">12. 확인해야 할 가정 (아직
+모르는 것)</h2>
+<ul class="task-list">
+<li><label><input type="checkbox" />AIR Studio의 70여 종 커넥터에
+<strong>세일즈포스 커넥터</strong>가 있는지, 읽기·쓰기 범위는
+어디까지인지</label></li>
+<li><label><input type="checkbox" />세일즈포스 쪽 <strong>MCP
+서버</strong>를 AIR Studio에 등록해 쓸 수 있는지</label></li>
+<li><label><input type="checkbox" />Agentforce를 AIR Studio에
+<strong>외부 에이전트로 등록</strong>할 때 감사 로그를 어느 수준까지
+받을 수 있는지</label></li>
+<li><label><input type="checkbox" />AIR Studio 배포 방식 (SaaS, 고객
+클라우드 설치, 폐쇄망 설치)</label></li>
+<li><label><input type="checkbox" />AIR Studio 가격 구조 (홈페이지에
+공개되지 않음)</label></li>
+<li><label><input type="checkbox" />메가존 안에 이미 비슷한 영업용
+오퍼링이 있는지</label></li>
+</ul>
+<blockquote>
+<p>과정의 AIR Studio 실습과 현업 멘토 질문으로 하나씩 지운다.</p>
+</blockquote>
+<hr />
+<h2 id="부트캠프에서-만드는-범위-포트폴리오-mvp">13. 부트캠프에서 만드는
+범위 (포트폴리오 MVP)</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>시기</th>
+<th>만들 것</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2026.11~12</td>
+<td>세일즈포스 Developer Edition + 가짜 영업 데이터, 파이썬·Apex 양쪽
+연동, 제안서 RAG</td>
+</tr>
+<tr class="even">
+<td>2027.01</td>
+<td>미팅 브리핑 + 견적 초안 에이전트, LangGraph 지휘자, 권한·토큰
+추적·로그</td>
+</tr>
+<tr class="odd">
+<td>2027.02</td>
+<td>(가능하면) AIR Studio에 등록, 5분 데모 영상, 품평회 발표</td>
+</tr>
+<tr class="even">
+<td>2027.03</td>
+<td>이 기획서 + 데모 + 결과 보고서 형식 포트폴리오로 정리</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>실제 회사 데이터는 쓰지 않는다. 가짜 거래처·기회·제안서로 만든다.</p>
+</blockquote>
+<hr />
+<p><em>참고: 메가존클라우드 AIR Studio 제품 페이지
+(megazone.com/solutions/product/air-studio), 2026-10-16 확인. AIR
+Studio의 세부 기능, 커넥터 목록, 가격은 공개 범위가 제한적이어서 12장의
+가정은 실제 확인이 필요하다.</em></p>
+</body>
+</html>
