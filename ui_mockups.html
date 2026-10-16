@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIR Deal Desk 화면 구성</title>
+<style>
+:root{
+  --bg:#f6f5f1;--card:#ffffff;--fg:#1f2328;--muted:#6b6f76;--rule:#e3e1da;
+  --air:#0f9d8f;--air-soft:#e3f5f2;--sf:#1b6ac9;--sf-soft:#eaf2fc;--chat:#6b4fbb;--chat-soft:#f1edfb;
+  --warn:#c2410c;--warn-soft:#fdeee6;--ok:#15803d;--shadow:0 1px 3px rgba(0,0,0,.08);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#17181b;--card:#222428;--fg:#e8e6e1;--muted:#a1a3a8;--rule:#373a40;
+  --air:#3cc7b8;--air-soft:#163733;--sf:#6aa7f0;--sf-soft:#1a2b42;--chat:#a993f0;--chat-soft:#2a2340;
+  --warn:#f59e6b;--warn-soft:#3a2418;--ok:#4ade80;--shadow:none;}}
+:root[data-theme="dark"]{
+  --bg:#17181b;--card:#222428;--fg:#e8e6e1;--muted:#a1a3a8;--rule:#373a40;
+  --air:#3cc7b8;--air-soft:#163733;--sf:#6aa7f0;--sf-soft:#1a2b42;--chat:#a993f0;--chat-soft:#2a2340;
+  --warn:#f59e6b;--warn-soft:#3a2418;--ok:#4ade80;--shadow:none;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;line-height:1.6;word-break:keep-all}
+.wrap{max-width:980px;margin:0 auto;padding:32px 16px 80px}
+h1{font-size:26px;margin:0 0 6px}
+.lead{color:var(--muted);margin:0 0 28px}
+h2{font-size:20px;margin:56px 0 6px;display:flex;align-items:center;gap:10px}
+.num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--fg);color:var(--bg);font-size:14px;flex:none}
+.desc{color:var(--muted);margin:0 0 14px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+.tag{font-size:12px;padding:3px 9px;border-radius:999px;border:1px solid var(--rule);background:var(--card)}
+.tag.big{border-color:var(--warn);color:var(--warn)}
+.tag.small{border-color:var(--ok);color:var(--ok)}
+/* overview */
+.overview{background:var(--card);border:1px solid var(--rule);border-radius:12px;padding:20px;box-shadow:var(--shadow)}
+.ov-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ov-box{border:1px solid var(--rule);border-radius:8px;padding:10px;text-align:center;font-size:13px;background:var(--bg)}
+.ov-box b{display:block;font-size:14px}
+.ov-arrow{text-align:center;color:var(--muted);font-size:13px;margin:10px 0}
+.ov-core{border:2px solid var(--air);background:var(--air-soft);border-radius:10px;padding:14px;text-align:center}
+.ov-core b{color:var(--air)}
+.ov-agents{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:8px}
+.ov-agents span{font-size:12px;background:var(--card);border:1px solid var(--rule);border-radius:6px;padding:3px 8px}
+/* flow strip */
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px;font-size:13px}
+.flow .step{background:var(--card);border:1px solid var(--rule);border-radius:6px;padding:5px 10px}
+.flow .arr{color:var(--muted)}
+/* generic window */
+.win{background:var(--card);border:1px solid var(--rule);border-radius:10px;overflow:hidden;box-shadow:var(--shadow)}
+.bar{display:flex;align-items:center;gap:6px;padding:8px 12px;border-bottom:1px solid var(--rule);font-size:12px;color:var(--muted)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--rule)}
+.bar .t{margin-left:8px}
+/* 1 assistant */
+.asst{display:grid;grid-template-columns:200px 1fr;min-height:360px}
+.side{border-right:1px solid var(--rule);padding:12px;font-size:13px;background:var(--bg)}
+.side .h{font-size:11px;color:var(--muted);margin:6px 0}
+.side .it{padding:6px 8px;border-radius:6px;margin-bottom:3px}
+.side .it.on{background:var(--air-soft);color:var(--air);font-weight:600}
+.chat{padding:16px;display:flex;flex-direction:column;gap:12px;font-size:14px}
+.msg{max-width:85%;padding:10px 12px;border-radius:10px}
+.msg.me{align-self:flex-end;background:var(--air);color:#fff}
+.msg.bot{align-self:flex-start;background:var(--bg);border:1px solid var(--rule)}
+.msg.bot ul{margin:6px 0 0;padding-left:18px}
+.src{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+.src span{font-size:11px;border:1px solid var(--rule);border-radius:4px;padding:1px 6px;color:var(--muted)}
+.input{margin-top:auto;border:1px solid var(--rule);border-radius:8px;padding:9px 12px;color:var(--muted);font-size:13px}
+/* 2 salesforce */
+.sfhead{padding:14px 16px;border-bottom:1px solid var(--rule)}
+.sfhead .ty{font-size:11px;color:var(--muted)}
+.sfhead .nm{font-size:18px;font-weight:700}
+.path{display:flex;gap:3px;margin-top:10px}
+.path span{flex:1;text-align:center;font-size:11px;padding:5px 2px;background:var(--bg);border:1px solid var(--rule)}
+.path span.done{background:var(--sf-soft);color:var(--sf)}
+.path span.cur{background:var(--sf);color:#fff;border-color:var(--sf)}
+.sfbody{display:grid;grid-template-columns:1fr 330px;gap:0}
+.fields{padding:14px 16px;font-size:13px}
+.fld{display:grid;grid-template-columns:110px 1fr;padding:6px 0;border-bottom:1px dashed var(--rule)}
+.fld .k{color:var(--muted)}
+.panel{border-left:1px solid var(--rule);padding:14px;background:var(--sf-soft)}
+.panel .pt{font-weight:700;font-size:14px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.badge{font-size:10px;padding:1px 6px;border-radius:4px;background:var(--air);color:#fff}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.btn{font-size:12px;padding:6px 10px;border-radius:6px;border:1px solid var(--sf);color:var(--sf);background:var(--card)}
+.btn.pri{background:var(--sf);color:#fff}
+.result{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:10px;font-size:13px}
+.result h4{margin:0 0 6px;font-size:13px}
+.result ul{margin:0;padding-left:18px}
+.approve{margin-top:8px;background:var(--warn-soft);color:var(--warn);border-radius:6px;padding:7px 9px;font-size:12px}
+/* 3 messenger */
+.msgr{display:grid;grid-template-columns:170px 1fr;min-height:300px}
+.chs{background:var(--chat);color:#fff;padding:12px;font-size:13px}
+.chs .it{padding:4px 6px;border-radius:4px;opacity:.85}
+.chs .it.on{background:rgba(255,255,255,.2);opacity:1;font-weight:600}
+.thread{padding:14px;font-size:14px;display:flex;flex-direction:column;gap:12px}
+.post{display:grid;grid-template-columns:34px 1fr;gap:10px}
+.av{width:34px;height:34px;border-radius:6px;background:var(--rule);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.av.bot{background:var(--air);color:#fff}
+.who{font-weight:700;font-size:13px}
+.who small{font-weight:400;color:var(--muted);margin-left:6px}
+.card2{margin-top:6px;border-left:3px solid var(--air);background:var(--bg);padding:8px 10px;border-radius:4px;font-size:13px}
+.mini{display:flex;gap:6px;margin-top:8px}
+.mini span{font-size:12px;border:1px solid var(--rule);border-radius:4px;padding:3px 8px;background:var(--card)}
+/* 4 admin */
+.admin{padding:16px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.kpi{border:1px solid var(--rule);border-radius:8px;padding:10px}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-size:20px;font-weight:700}
+.kpi .s{font-size:11px;color:var(--muted)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.box{border:1px solid var(--rule);border-radius:8px;padding:12px}
+.box h4{margin:0 0 10px;font-size:13px}
+.barrow{display:grid;grid-template-columns:80px 1fr 70px;align-items:center;gap:8px;font-size:12px;margin-bottom:8px}
+.track{height:10px;background:var(--bg);border-radius:5px;overflow:hidden;border:1px solid var(--rule)}
+.fill{height:100%;background:var(--air)}
+.fill.hot{background:var(--warn)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{text-align:left;padding:6px 4px;border-bottom:1px solid var(--rule)}
+th{color:var(--muted);font-weight:500}
+.st{font-size:11px;padding:1px 6px;border-radius:4px}
+.st.on{background:var(--air-soft);color:var(--air)}
+.st.ext{background:var(--sf-soft);color:var(--sf)}
+.stop{font-size:11px;border:1px solid var(--warn);color:var(--warn);border-radius:4px;padding:1px 6px}
+.log{margin-top:14px}
+/* 5 custom */
+.cust{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:16px}
+.cc{border:1px dashed var(--rule);border-radius:8px;padding:12px;font-size:13px;min-height:90px;color:var(--muted)}
+.cc b{color:var(--fg);display:block;margin-bottom:4px}
+.note{margin-top:12px;font-size:13px;color:var(--muted);border-left:3px solid var(--rule);padding-left:10px}
+/* summary table */
+.sum{width:100%;border-collapse:collapse;font-size:14px;background:var(--card);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.sum th,.sum td{padding:9px 10px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+.disc{margin-top:40px;font-size:12px;color:var(--muted)}
+@media (max-width:720px){
+  .ov-row{grid-template-columns:repeat(2,1fr)}
+  .asst,.msgr{grid-template-columns:1fr}
+  .side,.chs{display:none}
+  .sfbody{grid-template-columns:1fr}
+  .panel{border-left:0;border-top:1px solid var(--rule)}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .cols,.cust{grid-template-columns:1fr}
+  .sum{font-size:13px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>AIR Deal Desk 화면 구성</h1>
+<p class="lead">같은 에이전트를 여러 화면에서 부를 수 있습니다. 화면이 달라도 뒤에서 일하는 에이전트와 관리 체계는 하나입니다.</p>
+
+<!-- overview -->
+<div class="overview">
+  <div class="ov-row">
+    <div class="ov-box"><b>① AIR Studio 대화창</b>영업 담당자</div>
+    <div class="ov-box"><b>② 세일즈포스 버튼</b>영업 담당자</div>
+    <div class="ov-box"><b>③ 메신저 봇</b>영업 담당자</div>
+    <div class="ov-box"><b>⑤ 별도 웹</b>특별한 경우만</div>
+  </div>
+  <div class="ov-arrow">▼ 모두 같은 에이전트를 호출 ▼</div>
+  <div class="ov-core">
+    <b>AIR Studio</b>
+    <div class="ov-agents">
+      <span>지휘자</span><span>미팅 브리핑</span><span>견적·제안 초안</span><span>딜 코치</span><span>CRM 자동 입력</span>
+    </div>
+  </div>
+  <div class="ov-arrow">▲ 한곳에서 통제 ▲</div>
+  <div class="ov-row" style="grid-template-columns:1fr">
+    <div class="ov-box"><b>④ AIR Studio 관리 콘솔</b>IT·보안, 영업 관리자</div>
+  </div>
+</div>
+
+<!-- 1 -->
+<h2><span class="num">1</span>AIR Studio 대화창 (AI Assistant)</h2>
+<p class="desc">AIR Studio에 들어 있는 대화 화면을 그대로 씁니다. 영업 담당자는 왼쪽에서 에이전트를 고르고 말로 시킵니다.</p>
+<div class="tags"><span class="tag small">개발량: 거의 없음</span><span class="tag">PoC 1~2주 차</span><span class="tag">단점: 세일즈포스와 다른 화면을 하나 더 열어야 함</span></div>
+<div class="win">
+  <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="t">AIR Studio · AI Assistant</span></div>
+  <div class="asst">
+    <div class="side">
+      <div class="h">에이전트</div>
+      <div class="it on">미팅 브리핑</div>
+      <div class="it">견적·제안 초안</div>
+      <div class="it">딜 코치</div>
+      <div class="it">CRM 자동 입력</div>
+      <div class="h" style="margin-top:14px">최근 대화</div>
+      <div class="it">A사 미팅 준비</div>
+      <div class="it">B사 견적 문의</div>
+    </div>
+    <div class="chat">
+      <div class="msg me">내일 오전 A사 미팅 준비해 줘</div>
+      <div class="msg bot">
+        <b>A사 미팅 브리핑</b>
+        <ul>
+          <li>진행 중인 기회: 서버 50대, 3년 계약 (제안 단계)</li>
+          <li>지난 제안의 쟁점: 유지보수 비용, 이전 일정</li>
+          <li>예상 질문: 경쟁사 대비 가격, 장애 대응 시간, 단계별 이전 계획</li>
+        </ul>
+        <div class="src"><span>📄 A사_제안서_v2.pdf</span><span>📄 2025_유지보수계약.docx</span><span>🗂 세일즈포스 활동 기록 12건</span></div>
+      </div>
+      <div class="input">메시지를 입력하세요…</div>
+    </div>
+  </div>
+</div>
+
+<!-- 2 -->
+<h2><span class="num">2</span>세일즈포스 기회 화면에 붙인 버튼·패널</h2>
+<p class="desc">영업 담당자가 매일 보는 세일즈포스 화면 오른쪽에 패널(LWC)을 하나 붙입니다. 버튼을 누르면 Apex가 AIR Studio 에이전트를 부르고, 결과가 바로 이 화면에 나옵니다. <b>데모의 핵심 장면</b>입니다.</p>
+<div class="flow"><span class="step">버튼 클릭 (LWC)</span><span class="arr">→</span><span class="step">Apex Callout</span><span class="arr">→</span><span class="step">AIR Studio 에이전트</span><span class="arr">→</span><span class="step">결과 표시 · 기회에 기록</span></div>
+<div class="tags"><span class="tag small">개발량: 작음 (Apex + LWC)</span><span class="tag">PoC 3~4주 차, 데모</span><span class="tag">장점: 새 화면을 배울 필요 없음</span></div>
+<div class="win">
+  <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="t">세일즈포스 · 영업 기회</span></div>
+  <div class="sfhead">
+    <div class="ty">영업 기회</div>
+    <div class="nm">A사 – 서버 50대 3년 계약</div>
+    <div class="path"><span class="done">발굴</span><span class="done">요구 파악</span><span class="cur">제안</span><span>협상</span><span>수주</span></div>
+  </div>
+  <div class="sfbody">
+    <div class="fields">
+      <div class="fld"><span class="k">거래처</span><span>A사</span></div>
+      <div class="fld"><span class="k">금액</span><span>₩ 1,200,000,000</span></div>
+      <div class="fld"><span class="k">예상 마감일</span><span>2026-12-20</span></div>
+      <div class="fld"><span class="k">담당자</span><span>김영업</span></div>
+      <div class="fld"><span class="k">다음 단계</span><span>11/02 제안 발표</span></div>
+      <div class="fld"><span class="k">최근 활동</span><span>10/14 요구사항 미팅</span></div>
+    </div>
+    <div class="panel">
+      <div class="pt">AI 영업 도우미 <span class="badge">AIR</span></div>
+      <div class="btns">
+        <span class="btn pri">미팅 브리핑</span><span class="btn">견적 초안</span><span class="btn">딜 위험 점검</span>
+      </div>
+      <div class="result">
+        <h4>견적 초안 (할인 15%)</h4>
+        <ul>
+          <li>서버 50대 × 36개월</li>
+          <li>유사 견적 3건 참고 (평균 할인 9%)</li>
+        </ul>
+        <div class="approve">⚠ 할인율이 기준 10%를 넘어 <b>영업 관리자 승인 요청</b>이 생성되었습니다</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3 -->
+<h2><span class="num">3</span>메신저 봇 (Slack·Teams)</h2>
+<p class="desc">회사 메신저에서 봇에게 말을 겁니다. 이동 중이거나 세일즈포스를 열기 어려울 때 편합니다.</p>
+<div class="tags"><span class="tag">개발량: 중간</span><span class="tag">확장 단계</span></div>
+<div class="win">
+  <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="t">회사 메신저</span></div>
+  <div class="msgr">
+    <div class="chs">
+      <div class="it"># 영업1팀</div>
+      <div class="it"># 공지</div>
+      <div class="it on">● Deal Desk 봇</div>
+    </div>
+    <div class="thread">
+      <div class="post"><div class="av">김</div><div><div class="who">김영업 <small>오전 8:40</small></div>A사 미팅 30분 전인데 핵심만 3줄로</div></div>
+      <div class="post"><div class="av bot">AI</div><div><div class="who">Deal Desk <small>오전 8:40</small></div>
+        <div class="card2">1. 쟁점은 유지보수 비용. 지난 제안보다 5% 낮춘 안 준비됨<br>2. 상대 의사결정자 이부장 첫 참석 → 이전 일정 설명 필요<br>3. 경쟁사 B사 견적이 더 낮다는 언급 있었음 (10/14 메모)</div>
+        <div class="mini"><span>전체 브리핑 보기</span><span>세일즈포스 열기</span></div>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 4 -->
+<h2><span class="num">4</span>AIR Studio 관리 콘솔 (Governance · Ops)</h2>
+<p class="desc">IT·보안 담당과 영업 관리자가 보는 화면입니다. AIR Studio에 이미 있는 화면이라 따로 만들지 않습니다. 데모에서 "IT팀은 모든 걸 보고 있다"를 보여주는 장면입니다.</p>
+<div class="tags"><span class="tag small">개발량: 없음 (설정만)</span><span class="tag">IT·보안 설득용</span></div>
+<div class="win">
+  <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="t">AIR Studio · 관리 콘솔</span></div>
+  <div class="admin">
+    <div class="kpis">
+      <div class="kpi"><div class="l">이번 달 토큰 사용</div><div class="v">4.2M</div><div class="s">한도 6M의 70%</div></div>
+      <div class="kpi"><div class="l">에이전트 호출</div><div class="v">1,284</div><div class="s">지난주 대비 +18%</div></div>
+      <div class="kpi"><div class="l">오류율</div><div class="v">0.8%</div><div class="s">정상</div></div>
+      <div class="kpi"><div class="l">평균 응답</div><div class="v">6.1초</div><div class="s">목표 10초 이내</div></div>
+    </div>
+    <div class="cols">
+      <div class="box">
+        <h4>팀별 토큰 사용 (한도 대비)</h4>
+        <div class="barrow"><span>영업1팀</span><div class="track"><div class="fill hot" style="width:92%"></div></div><span>92% ⚠</span></div>
+        <div class="barrow"><span>영업2팀</span><div class="track"><div class="fill" style="width:58%"></div></div><span>58%</span></div>
+        <div class="barrow"><span>영업관리</span><div class="track"><div class="fill" style="width:31%"></div></div><span>31%</span></div>
+      </div>
+      <div class="box">
+        <h4>에이전트별 권한</h4>
+        <table>
+          <tr><th>에이전트</th><th>세일즈포스 권한</th><th>상태</th><th></th></tr>
+          <tr><td>미팅 브리핑</td><td>읽기</td><td><span class="st on">운영 중</span></td><td><span class="stop">중지</span></td></tr>
+          <tr><td>견적 초안</td><td>읽기</td><td><span class="st on">운영 중</span></td><td><span class="stop">중지</span></td></tr>
+          <tr><td>CRM 자동 입력</td><td>활동 쓰기만</td><td><span class="st on">운영 중</span></td><td><span class="stop">중지</span></td></tr>
+          <tr><td>Agentforce</td><td>외부 등록</td><td><span class="st ext">외부</span></td><td></td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="box log">
+      <h4>감사 로그</h4>
+      <table>
+        <tr><th>시각</th><th>사용자</th><th>에이전트</th><th>한 일</th></tr>
+        <tr><td>10:42</td><td>김영업</td><td>견적 초안</td><td>A사 견적 생성 → 승인 요청 (할인 15%)</td></tr>
+        <tr><td>10:31</td><td>김영업</td><td>미팅 브리핑</td><td>A사 문서 3건, 활동 12건 조회</td></tr>
+        <tr><td>10:15</td><td>박영업</td><td>Agentforce</td><td>고객 문의 응대 → Deal Desk로 넘김</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 5 -->
+<h2><span class="num">5</span>별도 웹 화면 (직접 개발)</h2>
+<p class="desc">React 같은 도구로 화면을 처음부터 만듭니다. 원하는 대로 꾸밀 수 있지만 시간이 가장 많이 듭니다. 고객이 "세일즈포스도 메신저도 아닌 전용 화면"을 원할 때만 고릅니다.</p>
+<div class="tags"><span class="tag big">개발량: 큼</span><span class="tag">특별한 요구가 있을 때만</span><span class="tag">과정 Step 9에서 연습</span></div>
+<div class="win">
+  <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="t">dealdesk.회사.com (직접 개발)</span></div>
+  <div class="cust">
+    <div class="cc"><b>파이프라인 대시보드</b>화면 설계부터 직접</div>
+    <div class="cc"><b>브리핑 목록</b>로그인, 권한도 직접</div>
+    <div class="cc"><b>견적 편집기</b>세일즈포스 연동도 직접</div>
+  </div>
+</div>
+<p class="note">①~④를 조합하면 대부분의 요구를 채울 수 있어서, PoC에서는 거의 쓰지 않습니다.</p>
+
+<!-- summary -->
+<h2>한눈에 비교</h2>
+<table class="sum">
+  <tr><th>화면</th><th>누가</th><th>개발량</th><th>언제</th></tr>
+  <tr><td>① AIR Studio 대화창</td><td>영업 담당자</td><td>거의 없음</td><td>PoC 초기, 에이전트 품질 다듬기</td></tr>
+  <tr><td>② 세일즈포스 버튼·패널</td><td>영업 담당자</td><td>작음 (Apex·LWC)</td><td>데모, 실사용 테스트</td></tr>
+  <tr><td>③ 메신저 봇</td><td>영업 담당자</td><td>중간</td><td>본 구축 후 확장</td></tr>
+  <tr><td>④ 관리 콘솔</td><td>IT·보안, 영업 관리자</td><td>없음</td><td>처음부터 끝까지</td></tr>
+  <tr><td>⑤ 별도 웹</td><td>특별한 경우</td><td>큼</td><td>거의 안 씀</td></tr>
+</table>
+
+<p class="disc">※ 모든 화면은 이해를 돕기 위한 가상 화면입니다. AIR Studio와 세일즈포스의 실제 화면 모양과 다르며, 회사명·금액·인물은 모두 가짜 데이터입니다.</p>
+
+</div>
+</body>
+</html>
