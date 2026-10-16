@@ -88,7 +88,7 @@ AI Agent Engineer Program – Megazone Cloud AI-Native Bootcamp (984 hours, 6 mo
 | 2027.01 | MVP Development, Product Requirements Documents (PRD) |
 | 2027.02~03 | AI Governance, Technical Presentations, Solution Architecture |
 
-기존 영업·CRM 기술(B2B Sales, Pipeline Management, Salesforce, CRM, Go-to-Market Strategy)은 **지우지 말고 유지**하세요. PoC 엔지니어에게는 강점입니다.
+기존 영업·CRM·개발 기술(B2B Sales, Pipeline Management, Salesforce, CRM, Go-to-Market Strategy, Java, Apex)은 **지우지 말고 유지**하세요. PoC 엔지니어에게는 강점입니다.
 
 ---
 

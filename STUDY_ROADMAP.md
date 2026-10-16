@@ -26,6 +26,7 @@
 |---|---|
 | B2B 영업, 파이프라인 관리 | 고객의 말에서 진짜 문제를 찾고, 계약까지 가는 흐름을 안다 |
 | 세일즈포스 관리자 자격 | CRM 데이터 구조와 영업·고객서비스 업무 흐름을 안다 |
+| Java·Apex 개발 경험 | 프로그래밍 논리는 이미 갖췄다. 세일즈포스 쪽 연동(Apex)까지 직접 만들 수 있다 |
 | 풀퍼널 GTM 경험 | 시제품이 "사고 싶은 제품"이 되려면 무엇이 필요한지 안다 |
 | AI 에이전트 과정 (지금) | 실제로 만들 수 있는 손을 갖춘다 |
 
@@ -69,6 +70,7 @@ PoC 엔지니어 → 솔루션 아키텍트 / 프리세일즈 리드 → AI 사�
 - [ ] Step 1 생성형 AI·LLM 기초. **AIR Studio 실습은 메모를 남기며 깊이 익히기**
 - [ ] Step 2 프롬프트 엔지니어링 (Zero-shot, Few-shot, CoT)
 - [ ] Step 3 AI 바이브 코딩 (요구사항 분석 → 화면 설계 → MVP)
+- [ ] **Java·Apex → 파이썬 전환 정리** (기초 문법은 건너뛰고 차이점만: 동적 타입, 들여쓰기, 리스트·딕셔너리 컴프리헨션, 타입 힌트, 가상환경·pip, async/await)
 - [x] **포트폴리오 주제 정하기** → 영업·CRM 에이전트 (2026-10-16 확정)
 - [ ] 세일즈포스 Developer Edition 계정 만들고 가짜 영업 데이터 넣어 두기
 - [ ] AWS 자격증 바우처 받는 방법과 시기 확인하기
@@ -80,7 +82,8 @@ PoC 엔지니어 → 솔루션 아키텍트 / 프리세일즈 리드 → AI 사�
 - [ ] Step 6 Vector DB와 RAG (청킹, 임베딩, Hybrid Search, Reranking)
 - [ ] Step 7 LangGraph 에이전트 (ReAct, 상태관리, 멀티 에이전트)
 - [ ] Step 8 클라우드 네이티브 배포 (Docker, Kubernetes, AWS, GitOps)
-- [ ] **개인 공부: 세일즈포스 API 연동** (REST API로 리드·기회 데이터 읽고 쓰기)
+- [ ] **개인 공부: 세일즈포스 API 연동, 양쪽 모두** (파이썬에서 REST API로 리드·기회 읽고 쓰기 + Apex 쪽에서 Named Credential·Callout으로 내 에이전트 API 호출하기)
+- [ ] **개인 공부: Agentforce 커스텀 액션을 Apex(@InvocableMethod)로 만들어 내 에이전트와 연결해 보기**
 - [ ] **개인 공부: Amazon Bedrock과 AgentCore**
 - [ ] **개인 공부: 세일즈포스 Agentforce 구조 이해** (Trailhead 무료 강의). 경쟁하고 연동할 대상을 알아야 한다
 - [ ] **AWS 자격증 하나 취득** (예: AI Practitioner → Solutions Architect Associate. PoC 엔지니어는 설계를 설명할 일이 많아 SA가 유리)
@@ -126,7 +129,8 @@ PoC 엔지니어 → 솔루션 아키텍트 / 프리세일즈 리드 → AI 사�
 
 | 주제 | 이유 | 공부 방법 |
 |---|---|---|
-| 세일즈포스 API·Agentforce | 포트폴리오 연동 대상이자, 고객사에 섞여 있을 에이전트 | Trailhead, Salesforce Developer Edition |
+| 세일즈포스 API·Agentforce | 포트폴리오 연동 대상이자, 고객사에 섞여 있을 에이전트 | Trailhead, Salesforce Developer Edition (Apex 경험 활용) |
+| LLM 고유의 개념 | Java·Apex에 없는 부분: 결과가 매번 달라지는 출력, 프롬프트, 임베딩, 그래프 상태 관리, 결과 평가(eval) | 과정 Step 2·6·7 + 직접 실험 |
 | Amazon Bedrock, AgentCore | 메가존 PAF 에이전트의 기반 기술 | AWS 공식 문서, AWS Skill Builder |
 | 에이전트 거버넌스 (권한·비용·감사 로그) | 메가존 전략의 핵심 (AAG) | 포트폴리오에 직접 구현 |
 | AI 보안 (프롬프트 인젝션, 데이터 유출 방지) | 고객 데이터를 다루는 PoC라면 반드시 질문받음 | OWASP LLM Top 10 |
@@ -151,4 +155,5 @@ PoC 엔지니어 → 솔루션 아키텍트 / 프리세일즈 리드 → AI 사�
 | 날짜 | 한 일 | 메모 |
 |---|---|---|
 | 2026-10-16 | 이정표 작성 | |
+| 2026-10-16 | Java·Apex 경험 확인 → 파이썬 기초 대신 전환 정리로, 세일즈포스 연동은 Apex 쪽까지 | |
 | 2026-10-16 | 목표 직무를 AI PoC 엔지니어로 확정, 포트폴리오 주제를 영업·CRM 에이전트로 확정 | B2B 영업 + 세일즈포스 자격 + AI 에이전트 조합을 강점으로 |
