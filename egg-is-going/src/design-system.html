@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>egg is going 디자인 시스템</title>
+<style>/*@TOKENS@*/</style>
+<style>
+.top{position:sticky;top:0;z-index:10;background:rgba(250,248,243,.88);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1160px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;gap:16px}
+.top-in .ver{font:600 12px/1 "Outfit";color:var(--muted);padding:5px 8px;border:1px solid var(--line);border-radius:999px}
+.top nav{margin-left:auto;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.top nav a{font-size:13px;font-weight:600;color:var(--ink-2);text-decoration:none;padding:7px 10px;border-radius:8px;white-space:nowrap}
+.top nav a:hover{background:var(--beige-100)}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+.hero{padding:72px 0 56px;display:grid;grid-template-columns:1.4fr 1fr;gap:40px;align-items:center}
+.hero p.lead{font-size:18px;line-height:1.7;color:var(--ink-2);margin:20px 0 0;max-width:560px}
+.hero .note{margin-top:20px;font-size:12px;color:var(--muted)}
+.hero-art{position:relative;height:300px}
+.hero-art .sun{position:absolute;right:10px;top:10px;width:250px;height:250px;border-radius:50%;background:var(--yellow-100)}
+.hero-art svg.egg{position:absolute;right:70px;top:40px;width:150px;height:178px;filter:drop-shadow(0 18px 24px rgba(90,70,20,.18))}
+.hero-art .note-card{position:absolute;left:0;bottom:14px;width:230px;padding:14px 16px;transform:rotate(-3deg)}
+.hero-art .note-card .eg-kv{grid-template-columns:56px 1fr}
+section.block{padding:56px 0;border-top:1px solid var(--line);display:grid;grid-template-columns:220px minmax(0,1fr);gap:40px}
+section.block>*,.grid>*{min-width:0}
+.sec-h .t-overline{display:block;margin-bottom:10px}
+.sec-h h2{margin:0}
+.sec-h p{margin:10px 0 0;color:var(--muted);font-size:14px;line-height:1.6}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.principle{padding:22px;border-radius:var(--r-lg);background:var(--paper);border:1px solid var(--line)}
+.principle .n{font:800 13px/1 "Outfit";color:var(--blue-500);letter-spacing:.04em}
+.principle h3{margin:10px 0 6px}
+.principle p{margin:0;color:var(--ink-2);font-size:14px;line-height:1.65}
+/* swatches */
+.sw{border-radius:var(--r-md);overflow:hidden;background:var(--paper);border:1px solid var(--line)}
+.sw .chip{height:96px;display:flex;align-items:flex-end;padding:12px;font:600 12px/1 "Outfit"}
+.sw .meta{padding:12px 14px}
+.sw .meta b{display:block;font-size:14px;letter-spacing:-.01em}
+.sw .meta code{font:500 12px/1.6 var(--font-mono);color:var(--muted)}
+.sw .meta span{display:block;font-size:12.5px;color:var(--ink-2);margin-top:6px;line-height:1.5}
+.ramp{display:grid;grid-template-columns:repeat(5,1fr);border-radius:var(--r-md);overflow:hidden;border:1px solid var(--line)}
+.ramp div{height:64px;padding:8px;font:500 11px/1.3 var(--font-mono);display:flex;align-items:flex-end}
+.ratio{display:flex;height:40px;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.ratio div{display:flex;align-items:center;justify-content:center;font:600 11.5px/1 "Outfit"}
+table.spec{width:100%;border-collapse:collapse;font-size:14px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+table.spec th,table.spec td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.spec th{font-size:12px;font-weight:600;color:var(--muted);background:var(--beige-100)}
+table.spec tr:last-child td{border-bottom:0}
+table.spec code{font:500 12px var(--font-mono);color:var(--ink-2)}
+/* type */
+.font-card{padding:24px;border-radius:var(--r-lg);background:var(--paper);border:1px solid var(--line)}
+.font-card .big{font-size:56px;line-height:1;letter-spacing:-.04em;margin:14px 0 12px}
+.font-card p{margin:0;font-size:13.5px;color:var(--ink-2);line-height:1.6}
+.scale-row{display:grid;grid-template-columns:150px 1fr;gap:24px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--line)}
+.scale-row:last-child{border-bottom:0}
+.scale-row .tk code{display:block;font:500 12px/1.6 var(--font-mono);color:var(--ink-2)}
+.scale-row .tk span{font-size:12px;color:var(--muted)}
+.rules{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.rules li{display:grid;grid-template-columns:22px 1fr;gap:10px;font-size:14px;line-height:1.6}
+.rules li .ic{width:18px;height:18px;margin-top:2px;color:var(--sage-700)}
+.dd{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.do,.dont{border-radius:var(--r-md);padding:18px;border:1px solid var(--line);background:var(--paper)}
+.do .lbl,.dont .lbl{display:inline-flex;align-items:center;gap:6px;font:700 12px/1 var(--font-sans);margin-bottom:12px}
+.do .lbl{color:var(--sage-700)} .dont .lbl{color:var(--tomato-700)}
+.do .lbl .ic,.dont .lbl .ic{width:15px;height:15px}
+/* space */
+.space-row{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+.space-row .bx{background:var(--yellow-300);border-radius:4px}
+.space-row figure{margin:0;text-align:center;font:500 11px/1.4 var(--font-mono);color:var(--muted)}
+.radius-row{display:flex;gap:14px;flex-wrap:wrap}
+.radius-row div{width:84px;height:64px;background:var(--paper);border:1.5px solid var(--ink);display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;font:500 11px var(--font-mono);color:var(--muted)}
+.shadow-row{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.shadow-row div{height:96px;border-radius:var(--r-lg);background:var(--paper);display:flex;align-items:center;justify-content:center;font:500 12px var(--font-mono);color:var(--muted)}
+/* icons */
+.icons{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.icons figure{margin:0;padding:16px 8px;border-radius:var(--r-md);background:var(--paper);border:1px solid var(--line);text-align:center}
+.icons .ic{width:22px;height:22px}
+.icons figcaption{font-size:12px;margin-top:8px;color:var(--ink-2);line-height:1.4}
+.icons figcaption small{display:block;color:var(--muted);font:500 10.5px var(--font-mono)}
+.mascot{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;padding:22px;border-radius:var(--r-lg);background:var(--paper);border:1px solid var(--line)}
+.mascot .pair{display:flex;gap:12px;align-items:flex-end}
+.mascot svg{display:block}
+/* components */
+.comp{padding:24px;border-radius:var(--r-lg);background:var(--paper);border:1px solid var(--line)}
+.comp > h3{margin:0 0 4px}
+.comp > p.d{margin:0 0 18px;color:var(--muted);font-size:13.5px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.demo-cell{background:var(--cream);border-radius:var(--r-md);padding:18px;border:1px dashed var(--line-strong)}
+.step-demo{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.eg-step{display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:var(--r-md);background:var(--paper);border:1px solid var(--line);min-width:0}
+.eg-step__icon{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--beige-100);color:var(--ink-2)}
+.eg-step__name{font-weight:700;font-size:14px;letter-spacing:-.015em}
+.eg-step__meta{font-size:12px;color:var(--muted)}
+.eg-step.is-run{border-color:var(--blue-100);box-shadow:0 0 0 3px var(--blue-50)}
+.eg-step.is-run .eg-step__icon{background:var(--blue-50);color:var(--blue-500)}
+.eg-step.is-pass .eg-step__icon{background:var(--sage-50);color:var(--sage-700)}
+.eg-step.is-fix{border-color:var(--tomato-300)}
+.eg-step.is-fix .eg-step__icon{background:var(--tomato-50);color:var(--tomato-700)}
+.eg-step.is-human{border-color:var(--yellow-500);background:var(--yellow-50)}
+.eg-step.is-human .eg-step__icon{background:var(--yellow-300);color:var(--ink)}
+.eg-line{display:grid;grid-template-columns:28px 52px 1fr;gap:10px;align-items:start;padding:10px 12px;border-radius:12px}
+.eg-line .pl{width:28px;height:28px;border-radius:50%;background:var(--beige-100);display:grid;place-items:center;color:var(--ink)}
+.eg-line .pl .ic{width:12px;height:12px}
+.eg-line .eg-ts{padding-top:5px;color:var(--muted)}
+.eg-line .who{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;margin-bottom:2px}
+.eg-line .tx{font-size:14px;line-height:1.6;color:var(--ink)}
+.eg-line.is-evidence{background:var(--yellow-50);box-shadow:inset 3px 0 0 var(--egg-yellow)}
+.eg-line.is-uncertain .tx{text-decoration:underline wavy var(--tomato-300) 1px;text-underline-offset:4px}
+.eg-kv{display:grid;grid-template-columns:88px 1fr;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);margin:0;align-items:center}
+.eg-kv:last-child{border-bottom:0}
+.eg-kv dt{color:var(--muted);font-size:13px;font-weight:500}
+.eg-kv dd{margin:0;font-weight:600;font-size:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.hist{list-style:none;margin:0;padding:0}
+.hist li{position:relative;padding:0 0 14px 22px;font-size:13.5px}
+.hist li::before{content:"";position:absolute;left:4px;top:7px;width:8px;height:8px;border-radius:50%;background:var(--line-strong)}
+.hist li::after{content:"";position:absolute;left:7.5px;top:17px;bottom:-1px;width:1px;background:var(--line)}
+.hist li:last-child{padding-bottom:0}
+.hist li:last-child::after{display:none}
+.hist li.final::before{background:var(--egg-yellow);box-shadow:0 0 0 3px var(--yellow-100)}
+.hist s{color:var(--subtle)}
+.hist .why{display:block;font-size:12px;color:var(--muted)}
+.vlist{list-style:none;margin:0;padding:0}
+.vlist li{display:grid;grid-template-columns:24px 1fr auto;gap:10px;align-items:start;padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.vlist li:last-child{border-bottom:0}
+.vdot{width:22px;height:22px;border-radius:50%;display:grid;place-items:center}
+.vdot .ic{width:13px;height:13px;stroke-width:2.4}
+.vdot.ok{background:var(--sage-50);color:var(--sage-700)}
+.vdot.fix{background:var(--tomato-50);color:var(--tomato-700)}
+.vdot.q{background:var(--yellow-100);color:var(--yellow-700)}
+.vlist b{font-weight:700}
+.vlist small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.reviewbar{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(--paper);border:1px solid var(--line);box-shadow:var(--sh-2)}
+.reviewbar .msg{font-size:13px;color:var(--ink-2);display:flex;align-items:center;gap:8px}
+.reviewbar .msg .ic{color:var(--yellow-700);width:16px;height:16px}
+.reviewbar .sp{flex:1}
+.toast{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;background:var(--ink);color:var(--paper);font-size:13.5px;box-shadow:var(--sh-3)}
+.toast .ic{color:var(--egg-yellow)}
+.toast a{color:var(--egg-yellow);font-weight:600;text-decoration:none;margin-left:6px}
+.empty{text-align:center;padding:28px 16px}
+.empty svg{width:64px;height:76px}
+.empty h4{margin:12px 0 4px;font-size:16px;letter-spacing:-.015em}
+.empty p{margin:0 0 14px;color:var(--muted);font-size:13.5px}
+.modal{max-width:440px;background:var(--paper);border-radius:var(--r-lg);box-shadow:var(--sh-3);border:1px solid var(--line);overflow:hidden}
+.modal .mh{display:flex;gap:12px;align-items:flex-start;padding:20px 20px 12px}
+.modal .mh .qi{width:36px;height:36px;border-radius:10px;background:var(--yellow-300);display:grid;place-items:center;flex:none}
+.modal .mh h4{margin:0;font-size:16px;letter-spacing:-.02em;line-height:1.4}
+.modal .mh p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+.modal .mb{padding:0 20px 16px}
+.modal .quote{background:var(--cream);border-radius:12px;padding:6px}
+.modal .opts{display:grid;gap:8px;margin-top:14px}
+.opt{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--line-strong);border-radius:12px;font-size:14px;font-weight:600}
+.opt .rd{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--line-strong);flex:none}
+.opt.on{border-color:var(--ink);background:var(--yellow-50)}
+.opt.on .rd{border:5px solid var(--ink)}
+.modal .mf{display:flex;justify-content:flex-end;gap:8px;padding:14px 20px;background:var(--beige-100);border-top:1px solid var(--line)}
+.voice td:first-child{font-weight:600;white-space:nowrap}
+pre.code{margin:0;padding:18px 20px;border-radius:var(--r-md);background:#1B1A16;color:#EDE9DF;font:500 12.5px/1.7 var(--font-mono);overflow-x:auto}
+pre.code .c{color:#9A9384} pre.code .k{color:#F8E950} pre.code .s{color:#A9C9A4}
+footer{padding:40px 0 64px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media (max-width:960px){
+  .hero{grid-template-columns:1fr;padding:48px 0 32px}
+  .hero-art{height:260px}
+  section.block{grid-template-columns:minmax(0,1fr);gap:20px;padding:40px 0}
+  .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g3{grid-template-columns:1fr}
+  .step-demo{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .icons{grid-template-columns:repeat(3,1fr)}
+  .shadow-row{grid-template-columns:1fr}
+}
+@media (max-width:600px){
+  .wrap,.top-in{padding:0 16px}
+  .top nav{display:none}
+  .g2,.dd{grid-template-columns:1fr}
+  .scale-row{grid-template-columns:1fr;gap:6px}
+  .mascot{grid-template-columns:1fr}
+  .ramp div{font-size:9.5px}
+  table.spec{font-size:13px;display:block;overflow-x:auto}
+  .reviewbar{flex-wrap:wrap}
+  .step-demo{grid-template-columns:minmax(0,1fr)}
+}
+</style>
+</head>
+<body>
+<!--@SPRITE@-->
+
+<header class="top"><div class="top-in">
+  <span class="eg-wordmark">egg is going<i></i></span>
+  <span class="ver">Design System v0.1</span>
+  <nav>
+    <a href="#principles">원칙</a><a href="#color">색</a><a href="#type">타이포그래피</a><a href="#space">간격·모양</a>
+    <a href="#icon">아이콘·캐릭터</a><a href="#components">컴포넌트</a><a href="#voice">문구</a><a href="#dev">개발</a>
+  </nav>
+</div></header>
+
+<main class="wrap">
+
+<div class="hero">
+  <div>
+    <span class="t-overline">제작회의 워크스페이스 · Design System</span>
+    <h1 class="t-display" style="margin:14px 0 0">근거는 <span class="hl">선명하게</span>,<br>화면은 크림처럼.</h1>
+    <p class="lead">제안서의 노랑·크림·블루베리와 Outfit × Noto Sans KR 조합을 제품 화면으로 옮긴 규칙입니다. 슬라이드의 따뜻함은 지키고, 매일 쓰는 업무 도구답게 정보는 또렷하게.</p>
+    <p class="note">가상 제작사 대상 교육 프로젝트입니다. 실제 기업의 제안·승인과 무관합니다.</p>
+  </div>
+  <div class="hero-art" aria-hidden="true">
+    <div class="sun"></div>
+    <svg class="egg"><use href="#egg"/></svg>
+    <div class="eg-card note-card">
+      <dl class="eg-kv"><dt>오프닝</dt><dd>스튜디오</dd></dl>
+      <dl class="eg-kv"><dt>근거</dt><dd><span class="eg-tsbtn">00:48–00:51</span></dd></dl>
+      <dl class="eg-kv"><dt>담당</dt><dd><span class="eg-missing">미정</span></dd></dl>
+    </div>
+  </div>
+</div>
+
+<!-- 원칙 -->
+<section class="block" id="principles">
+  <div class="sec-h"><span class="t-overline">01 · Principles</span><h2 class="t-h2">디자인 원칙</h2><p>화면을 만들다 헷갈리면 이 여섯 줄로 돌아옵니다.</p></div>
+  <div class="grid g2">
+    <div class="principle"><span class="n">01</span><h3 class="t-h3">근거가 먼저 보인다</h3><p>에이전트가 정리한 모든 값 옆에는 원문 시각이 붙습니다. 근거 없는 값은 화면에 올리지 않고 <span class="eg-missing">미정</span>으로 둡니다.</p></div>
+    <div class="principle"><span class="n">02</span><h3 class="t-h3">마지막 결정은 사람이</h3><p>승인·반려·상신 버튼은 늘 사람 손에. 에이전트는 “제안”과 “확인 요청”까지만 합니다.</p></div>
+    <div class="principle"><span class="n">03</span><h3 class="t-h3">노랑은 행동과 강조에만</h3><p>egg yellow는 주요 버튼, 형광펜 강조, 사람 확인 상태에만 씁니다. 넓은 면을 노랗게 칠하지 않습니다.</p></div>
+    <div class="principle"><span class="n">04</span><h3 class="t-h3">크림 위의 넓은 여백</h3><p>배경은 크림, 카드는 흰색. 촘촘한 정보일수록 여백과 줄간격으로 숨 쉴 틈을 만듭니다.</p></div>
+    <div class="principle"><span class="n">05</span><h3 class="t-h3">상태는 색과 글자로 함께</h3><p>“통과”, “수정 필요”, “사람 확인”을 색만으로 구분하지 않습니다. 언제나 이름을 같이 씁니다.</p></div>
+    <div class="principle"><span class="n">06</span><h3 class="t-h3">AI 완료 ≠ 업무 승인</h3><p>AI 실행 상태는 <b>둥근 점 칩</b>, 문서(업무) 상태는 <b>각진 배지</b>로 모양부터 다르게 씁니다. 실행이 “완료”여도 문서는 여전히 “초안”입니다.</p></div>
+    <div class="principle" style="background:var(--yellow-50);border-color:var(--yellow-100)"><span class="n">TIP</span><h3 class="t-h3">슬라이드 ≠ 제품</h3><p>3D 달걀 캐릭터와 큰 헤드라인은 발표 자료용입니다. 제품 화면에서는 빈 화면·로딩·완료 순간에만 작은 평면 달걀을 씁니다.</p></div>
+  </div>
+</section>
+
+<!-- 색 -->
+<section class="block" id="color">
+  <div class="sec-h"><span class="t-overline">02 · Color</span><h2 class="t-h2">색</h2><p>브랜드 3색(제안서 12장) 위에 따뜻한 무채색과 상태 색을 더했습니다.</p></div>
+  <div class="grid" style="gap:28px">
+    <div class="grid g3">
+      <div class="sw"><div class="chip" style="background:var(--egg-yellow)">Brand</div><div class="meta"><b>egg yellow</b><code>--egg-yellow · #F8E950</code><span>주요 버튼, 형광펜 강조, 사람 확인</span></div></div>
+      <div class="sw"><div class="chip" style="background:var(--egg-beige)">Brand</div><div class="meta"><b>egg light beige</b><code>--egg-beige · #EAE6DF</code><span>보조 면, 구분선 계열, 비활성</span></div></div>
+      <div class="sw"><div class="chip" style="background:var(--blueberry);color:#fff">Brand</div><div class="meta"><b>blueberry blue</b><code>--blueberry · #1E1E7F</code><span>링크, 선택, 포커스, 타임스탬프, 숫자 강조</span></div></div>
+    </div>
+
+    <div>
+      <p class="t-label" style="margin:0 0 10px">따뜻한 무채색</p>
+      <div class="ramp">
+        <div style="background:var(--cream)">cream<br>#FAF8F3</div>
+        <div style="background:var(--beige-100)">beige-100<br>#F3F0EA</div>
+        <div style="background:var(--line)">line<br>#E3DED4</div>
+        <div style="background:var(--muted);color:#fff">muted<br>#75706A</div>
+        <div style="background:var(--ink);color:#fff">ink<br>#16150F</div>
+      </div>
+    </div>
+
+    <div>
+      <p class="t-label" style="margin:0 0 10px">상태 표시 — 네 가지 상태 체계를 섞지 않습니다 (02_Swimlane_ToBe · 03_PRD · 04_ERD 기준)</p>
+      <table class="spec">
+        <thead><tr><th>체계</th><th>표시 (화면 이름 · 시스템 값)</th><th>모양</th></tr></thead>
+        <tbody>
+          <tr><td><b>AI 실행</b><br><span class="t-caption">Run · StepRun</span></td><td><div class="row" style="gap:6px">
+            <span class="eg-chip eg-chip--wait">대기 <span class="t-mono" style="font-size:10.5px;opacity:.7">queued</span></span>
+            <span class="eg-chip eg-chip--run">실행 중 <span class="t-mono" style="font-size:10.5px;opacity:.7">running</span></span>
+            <span class="eg-chip eg-chip--human">사람 확인 대기 <span class="t-mono" style="font-size:10.5px;opacity:.7">waiting_for_human</span></span>
+            <span class="eg-chip eg-chip--pass">완료 <span class="t-mono" style="font-size:10.5px;opacity:.7">succeeded</span></span>
+            <span class="eg-chip eg-chip--fail">실패 <span class="t-mono" style="font-size:10.5px;opacity:.85">failed</span></span>
+            <span class="eg-chip eg-chip--cancel">취소됨 <span class="t-mono" style="font-size:10.5px;opacity:.7">cancelled</span></span></div></td><td>둥근 칩 + 점</td></tr>
+          <tr><td><b>검증 결과</b><br><span class="t-caption">ValidationFinding</span></td><td><div class="row" style="gap:6px">
+            <span class="eg-chip eg-chip--pass">통과</span><span class="eg-chip eg-chip--fix">수정 필요 · 누락·모순</span><span class="eg-chip eg-chip--human">사람 확인 · 불명확</span></div></td><td>둥근 칩 + 점</td></tr>
+          <tr><td><b>문서(업무)</b><br><span class="t-caption">DocumentVersion</span></td><td><div class="row" style="gap:6px">
+            <span class="eg-badge eg-badge--draft">초안 <span class="t-mono" style="font-size:10.5px;opacity:.7;font-weight:500">draft</span></span>
+            <span class="eg-badge eg-badge--review">검토 중 <span class="t-mono" style="font-size:10.5px;opacity:.7;font-weight:500">in_review</span></span>
+            <span class="eg-badge eg-badge--changes">변경 요청 <span class="t-mono" style="font-size:10.5px;opacity:.7;font-weight:500">changes_requested</span></span>
+            <span class="eg-badge eg-badge--approved"><svg class="ic"><use href="#i-lock"/></svg>승인됨 <span class="t-mono" style="font-size:10.5px;opacity:.7;font-weight:500">approved</span></span>
+            <span class="eg-badge eg-badge--superseded">이전 요청 <span class="t-mono" style="font-size:10.5px;font-weight:500">superseded</span></span></div></td><td>각진 배지, 점 없음</td></tr>
+          <tr><td><b>회의 항목</b><br><span class="t-caption">ItemRevision.status</span></td><td><div class="row" style="gap:6px">
+            <span class="eg-item eg-item--proposed">제안</span><span class="eg-item eg-item--confirmed">확정</span><span class="eg-item eg-item--hold">보류</span><span class="eg-item eg-item--dropped">폐기</span></div></td><td>작은 태그</td></tr>
+          <tr><td><b>빈 값</b></td><td><div class="row" style="gap:6px"><span class="eg-missing">미정</span><span class="t-caption">담당·기한이 원문에 없음 (null)</span></div>
+            <div class="row" style="gap:6px;margin-top:6px"><span class="eg-unverified">미확인</span><span class="t-caption">근거 Segment가 연결되지 않음 (FR-02)</span></div></td><td>값 자리 표시</td></tr>
+        </tbody>
+      </table>
+      <p class="t-caption" style="margin:10px 0 0">승인된 문서 버전은 바뀌지 않습니다. 승인 뒤 고치면 새 DocumentVersion이 <span class="eg-badge eg-badge--draft" style="height:20px;font-size:11px">초안</span>으로 생깁니다.</p>
+    </div>
+
+    <div class="grid g2">
+      <div>
+        <p class="t-label" style="margin:0 0 10px">팀 구분 (제안서 03장)</p>
+        <div class="row"><span class="eg-team eg-team--writer">작가팀</span><span class="eg-team eg-team--pd">PD팀</span></div>
+        <p class="t-caption" style="margin:10px 0 0">작가팀은 노랑, PD팀은 세이지. 원문 화자 옆에 항상 붙입니다.</p>
+      </div>
+      <div>
+        <p class="t-label" style="margin:0 0 10px">화면 색 비율</p>
+        <div class="ratio">
+          <div style="flex:62;background:var(--cream)">cream 62</div>
+          <div style="flex:22;background:var(--paper)">paper 22</div>
+          <div style="flex:10;background:var(--ink);color:#fff">ink 10</div>
+          <div style="flex:4;background:var(--egg-yellow)">4</div>
+          <div style="flex:2;background:var(--blueberry)"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 타이포그래피 -->
+<section class="block" id="type">
+  <div class="sec-h"><span class="t-overline">03 · Typography</span><h2 class="t-h2">타이포그래피</h2><p>영문·숫자는 Outfit, 한글은 Noto Sans KR. 한 줄의 font-family로 두 글꼴이 자연스럽게 섞입니다.</p></div>
+  <div class="grid" style="gap:28px">
+    <div class="grid g3">
+      <div class="font-card"><span class="t-overline">Latin · Numbers</span><div class="big" style="font-family:'Outfit';font-weight:700">Aa 0:48</div><p><b>Outfit</b> 400–800<br>워드마크, 숫자, 영문 라벨. 둥근 기하 형태가 달걀 로고의 리듬과 맞습니다.</p></div>
+      <div class="font-card"><span class="t-overline">Hangul</span><div class="big" style="font-family:'Noto Sans KR';font-weight:800">가나 회의</div><p><b>Noto Sans KR</b> 400–900<br>모든 한글. 제목은 800·900, 본문은 400, 라벨은 500·700.</p></div>
+      <div class="font-card"><span class="t-overline">Timestamp · ID</span><div class="big" style="font-family:'JetBrains Mono';font-weight:500;font-size:44px;letter-spacing:-.02em">00:48</div><p><b>JetBrains Mono</b> 400–600<br>원문 시각, 세그먼트 ID, 코드. 자릿수가 흔들리지 않습니다.</p></div>
+    </div>
+
+    <div class="eg-card" style="padding:4px 24px">
+      <div class="scale-row"><div class="tk"><code>.t-display</code><span>64 / 1.12 · 900 · -4.5%</span></div><div class="t-display" style="font-size:52px">회의가 끝나면</div></div>
+      <div class="scale-row"><div class="tk"><code>.t-h1</code><span>32 / 1.25 · 800 · -3.2%</span></div><div class="t-h1">3회차 오프닝 구성 회의</div></div>
+      <div class="scale-row"><div class="tk"><code>.t-h2</code><span>24 / 1.3 · 800 · -2.6%</span></div><div class="t-h2">정리된 결정</div></div>
+      <div class="scale-row"><div class="tk"><code>.t-h3</code><span>18 / 1.4 · 700 · -1.6%</span></div><div class="t-h3">오프닝 장소가 스튜디오로 바뀐 이유</div></div>
+      <div class="scale-row"><div class="tk"><code>.t-body-l</code><span>16 / 1.7 · 400</span></div><div class="t-body-l">촬영일 오후 비 예보가 있어 야외 오프닝을 실내로 돌렸고, 대관이 가능한 스튜디오로 최종 정리했습니다.</div></div>
+      <div class="scale-row"><div class="tk"><code>.t-body</code><span>15 / 1.6 · 400 (기본)</span></div><div class="t-body">스튜디오 대관 가능 여부는 서브 PD가 확인하기로 했습니다. 기한은 원문에 없습니다.</div></div>
+      <div class="scale-row"><div class="tk"><code>.t-label</code><span>13 / 1.4 · 600</span></div><div class="t-label">담당 · 기한</div></div>
+      <div class="scale-row"><div class="tk"><code>.t-caption</code><span>12 / 1.5 · 500 · muted</span></div><div class="t-caption">10월 21일 오전 10:42 · 에이전트가 생성</div></div>
+      <div class="scale-row"><div class="tk"><code>.t-mono</code><span>12.5 · JetBrains Mono</span></div><div class="t-mono">00:48 – 00:51 · seg_07</div></div>
+    </div>
+
+    <div class="grid g2">
+      <div>
+        <p class="t-label" style="margin:0 0 12px">한글 조판 규칙</p>
+        <ul class="rules">
+          <li><svg class="ic"><use href="#i-check"/></svg><span><b>word-break: keep-all</b> — 단어 중간에서 줄이 끊기지 않게.</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span>글자가 클수록 자간을 좁힙니다. 18px 이상 -1.5%, 32px 이상 -3%, 제목 화면 -4.5%.</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span>본문은 14px 아래로 내리지 않습니다. 표 안 보조 정보만 12–13px.</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span>줄간격은 본문 1.6–1.7, 제목 1.12–1.3. 한글은 영문보다 넉넉하게.</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span>숫자 비교가 필요한 곳(시간, 건수)은 <code class="t-mono">.t-num</code>으로 자릿수를 맞춥니다.</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span>굵기는 400 / 600·700 / 800·900 세 단계만. 중간 굵기를 섞지 않습니다.</span></li>
+        </ul>
+      </div>
+      <div>
+        <p class="t-label" style="margin:0 0 12px">강조는 형광펜 한 가지</p>
+        <div class="eg-card" style="padding:20px">
+          <p class="t-h3" style="margin:0">해석은 에이전트가, <span class="hl">확인은 사람이.</span></p>
+          <p class="t-body" style="margin:10px 0 0;color:var(--ink-2)">문장 안 핵심 구절 하나에만 <code class="t-mono">.hl</code>을 씁니다. 한 화면에 두 번 이상 쓰지 않습니다.</p>
+        </div>
+        <div class="dd" style="margin-top:12px">
+          <div class="do"><span class="lbl"><svg class="ic"><use href="#i-check"/></svg>이렇게</span><div style="font-weight:800;font-size:17px;letter-spacing:-.02em">결정이 바뀐 <span class="hl">이유</span>까지</div></div>
+          <div class="dont"><span class="lbl"><svg class="ic"><use href="#i-x"/></svg>이렇게 말고</span><div style="font-weight:800;font-size:17px;letter-spacing:.02em;color:#C9A400;font-style:italic;text-decoration:underline">결정이 바뀐 이유까지!!</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 간격 -->
+<section class="block" id="space">
+  <div class="sec-h"><span class="t-overline">04 · Space & Shape</span><h2 class="t-h2">간격 · 모서리 · 그림자</h2><p>4px 단위. 카드는 둥글게, 그림자는 따뜻하고 낮게.</p></div>
+  <div class="grid" style="gap:32px">
+    <div>
+      <p class="t-label" style="margin:0 0 14px">간격 <span class="t-caption">— --s-1 … --s-20</span></p>
+      <div class="space-row">
+        <figure><div class="bx" style="width:4px;height:4px"></div>4</figure>
+        <figure><div class="bx" style="width:8px;height:8px"></div>8</figure>
+        <figure><div class="bx" style="width:12px;height:12px"></div>12</figure>
+        <figure><div class="bx" style="width:16px;height:16px"></div>16</figure>
+        <figure><div class="bx" style="width:20px;height:20px"></div>20</figure>
+        <figure><div class="bx" style="width:24px;height:24px"></div>24</figure>
+        <figure><div class="bx" style="width:32px;height:32px"></div>32</figure>
+        <figure><div class="bx" style="width:40px;height:40px"></div>40</figure>
+        <figure><div class="bx" style="width:56px;height:56px"></div>56</figure>
+        <figure><div class="bx" style="width:80px;height:80px"></div>80</figure>
+      </div>
+      <p class="t-caption" style="margin:12px 0 0">카드 안쪽 20–24 · 카드 사이 16 · 섹션 사이 40–56 · 화면 바깥 여백 28.</p>
+    </div>
+    <div>
+      <p class="t-label" style="margin:0 0 14px">모서리</p>
+      <div class="radius-row">
+        <div style="border-radius:6px">xs 6</div><div style="border-radius:10px">sm 10</div><div style="border-radius:14px">md 14</div>
+        <div style="border-radius:20px">lg 20</div><div style="border-radius:28px">xl 28</div><div style="border-radius:999px">pill</div>
+      </div>
+      <p class="t-caption" style="margin:12px 0 0">칩 6 · 버튼·입력 10 · 리스트 행 12–14 · 카드 20 · 큰 패널 28 · 상태 칩 pill.</p>
+    </div>
+    <div>
+      <p class="t-label" style="margin:0 0 14px">그림자</p>
+      <div class="shadow-row">
+        <div style="box-shadow:var(--sh-1);border:1px solid var(--line)">--sh-1 · 카드</div>
+        <div style="box-shadow:var(--sh-2)">--sh-2 · 떠 있는 바</div>
+        <div style="box-shadow:var(--sh-3)">--sh-3 · 모달·토스트</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 아이콘 -->
+<section class="block" id="icon">
+  <div class="sec-h"><span class="t-overline">05 · Icon & Mascot</span><h2 class="t-h2">아이콘 · 캐릭터</h2><p>선 굵기 1.8의 둥근 선 아이콘. 다섯 에이전트는 아이콘이 고정입니다.</p></div>
+  <div class="grid" style="gap:24px">
+    <div class="icons">
+      <figure><svg class="ic"><use href="#i-wave"/></svg><figcaption>전사·화자<small>i-wave</small></figcaption></figure>
+      <figure><svg class="ic"><use href="#i-bulb"/></svg><figcaption>제작 맥락<small>i-bulb</small></figcaption></figure>
+      <figure><svg class="ic"><use href="#i-checks"/></svg><figcaption>결정·업무<small>i-checks</small></figcaption></figure>
+      <figure><svg class="ic"><use href="#i-doc"/></svg><figcaption>문서 구성<small>i-doc</small></figcaption></figure>
+      <figure><svg class="ic"><use href="#i-search"/></svg><figcaption>검증<small>i-search</small></figcaption></figure>
+      <figure><svg class="ic"><use href="#i-layers"/></svg><figcaption>문서 출력 도구<small>i-layers</small></figcaption></figure>
+      <figure><svg class="ic"><use href="#i-help"/></svg><figcaption>사람 확인<small>i-help</small></figcaption></figure>
+      <figure><svg class="ic"><use href="#i-refresh"/></svg><figcaption>다시 실행<small>i-refresh</small></figcaption></figure>
+      <figure><svg class="ic"><use href="#i-send"/></svg><figcaption>상신<small>i-send</small></figcaption></figure>
+      <figure><svg class="ic"><use href="#i-diff"/></svg><figcaption>수정 비교<small>i-diff</small></figcaption></figure>
+      <figure><svg class="ic"><use href="#i-template"/></svg><figcaption>템플릿<small>i-template</small></figcaption></figure>
+      <figure><svg class="ic"><use href="#i-lock"/></svg><figcaption>값 고정<small>i-lock</small></figcaption></figure>
+    </div>
+    <div class="mascot">
+      <div class="pair">
+        <svg width="72" height="86"><use href="#egg"/></svg>
+        <svg width="52" height="52"><use href="#yolk"/></svg>
+      </div>
+      <div>
+        <h3 class="t-h3" style="margin:0 0 6px">평면 달걀 · 노른자</h3>
+        <p style="margin:0;font-size:14px;color:var(--ink-2);line-height:1.65">달걀은 빈 화면과 로딩, 노른자는 “다 됐어요” 같은 완료 순간에만 등장합니다. 데이터가 빽빽한 표·원문 영역에는 넣지 않고, 한 화면에 하나만 씁니다. 제안서의 3D 캐릭터 이미지는 발표 자료에서만 씁니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 컴포넌트 -->
+<section class="block" id="components">
+  <div class="sec-h"><span class="t-overline">06 · Components</span><h2 class="t-h2">컴포넌트</h2><p>화면 기획서의 모든 화면은 아래 조각으로 만듭니다.</p></div>
+  <div class="grid" style="gap:16px">
+
+    <div class="comp">
+      <h3 class="t-h3">버튼</h3><p class="d">한 화면에 primary(노랑)는 하나만. 되돌릴 수 없는 행동(반려)은 danger.</p>
+      <div class="row">
+        <button class="eg-btn eg-btn--primary"><svg class="ic"><use href="#i-send"/></svg>상신하기</button>
+        <button class="eg-btn eg-btn--secondary"><svg class="ic"><use href="#i-search"/></svg>근거 확인</button>
+        <button class="eg-btn eg-btn--ghost"><svg class="ic"><use href="#i-refresh"/></svg>이 단계부터 다시</button>
+        <button class="eg-btn eg-btn--ink">정리 시작</button>
+        <button class="eg-btn eg-btn--danger">반려</button>
+        <button class="eg-btn eg-btn--primary" disabled>상신하기</button>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <button class="eg-btn eg-btn--primary eg-btn--lg">새 회의 올리기</button>
+        <button class="eg-btn eg-btn--secondary eg-btn--sm">지정하기</button>
+        <a class="eg-tsbtn" href="#"><svg class="ic" style="width:11px;height:11px"><use href="#i-play"/></svg>00:48</a>
+      </div>
+    </div>
+
+    <div class="grid g2">
+      <div class="comp">
+        <h3 class="t-h3">상태 칩 · 배지 · 태그</h3><p class="d">AI 실행은 둥근 칩, 문서는 각진 배지. 이름은 고정 어휘만.</p>
+        <div class="row"><span class="eg-chip eg-chip--run">실행 중</span><span class="eg-chip eg-chip--human">사람 확인 대기</span><span class="eg-chip eg-chip--pass">완료</span><span class="eg-chip eg-chip--fail">실패</span></div>
+        <div class="row" style="margin-top:10px"><span class="eg-badge eg-badge--draft">초안</span><span class="eg-badge eg-badge--review">검토 중</span><span class="eg-badge eg-badge--approved"><svg class="ic"><use href="#i-lock"/></svg>승인됨</span><span class="eg-item eg-item--confirmed">확정</span><span class="eg-item eg-item--hold">보류</span></div>
+        <div class="row" style="margin-top:10px"><span class="eg-team eg-team--writer">작가팀</span><span class="eg-team eg-team--pd">PD팀</span><span class="eg-missing">미정</span><span class="eg-unverified">미확인</span></div>
+      </div>
+      <div class="comp">
+        <h3 class="t-h3">입력</h3><p class="d">라벨은 위, 도움말은 아래. 포커스는 블루베리.</p>
+        <label class="eg-label" for="f1">회의 이름</label>
+        <input class="eg-input" id="f1" value="3회차 오프닝 구성 회의">
+        <p class="eg-help">프로그램과 회차가 보이게 써 주세요.</p>
+      </div>
+    </div>
+
+    <div class="comp">
+      <h3 class="t-h3">에이전트 단계 노드</h3><p class="d">실행 상태 보드와 회의 목록의 진행 표시에 씁니다.</p>
+      <div class="step-demo">
+        <div class="eg-step is-pass"><div class="eg-step__icon"><svg class="ic"><use href="#i-wave"/></svg></div><div><div class="eg-step__name">전사·화자</div><div class="eg-step__meta">42분 · 화자 6명</div></div><span class="eg-chip eg-chip--pass">완료</span></div>
+        <div class="eg-step is-pass"><div class="eg-step__icon"><svg class="ic"><use href="#i-bulb"/></svg></div><div><div class="eg-step__name">제작 맥락</div><div class="eg-step__meta">안건 4 · 변화 3</div></div><span class="eg-chip eg-chip--pass">완료</span></div>
+        <div class="eg-step is-run"><div class="eg-step__icon"><svg class="ic"><use href="#i-checks"/></svg></div><div><div class="eg-step__name">결정·업무</div><div class="eg-step__meta">누락 1건 재처리 · 시도 2/2</div></div><span class="eg-chip eg-chip--run">실행 중</span></div>
+        <div class="eg-step"><div class="eg-step__icon"><svg class="ic"><use href="#i-doc"/></svg></div><div><div class="eg-step__name">문서 구성</div><div class="eg-step__meta">템플릿 v3 고정</div></div><span class="eg-chip eg-chip--wait">대기</span></div>
+        <div class="eg-step is-human"><div class="eg-step__icon"><svg class="ic"><use href="#i-search"/></svg></div><div><div class="eg-step__name">검증</div><div class="eg-step__meta">확인 질문 2건</div></div><span class="eg-chip eg-chip--human">사람 확인 대기</span></div>
+      </div>
+    </div>
+
+    <div class="grid g2">
+      <div class="comp">
+        <h3 class="t-h3">원문 행</h3><p class="d">근거 구간은 노란 바, 불확실 구간은 물결 밑줄.</p>
+        <div class="demo-cell" style="padding:8px">
+          <div class="eg-line"><span class="pl"><svg class="ic"><use href="#i-play"/></svg></span><span class="eg-ts">00:12</span><div><div class="who">박준호 <span class="eg-team eg-team--pd">메인 PD</span></div><div class="tx">오프닝은 야외에서 가죠. 한강 공원 어때요?</div></div></div>
+          <div class="eg-line is-evidence"><span class="pl"><svg class="ic"><use href="#i-play"/></svg></span><span class="eg-ts">00:48</span><div><div class="who">한지수 <span class="eg-team eg-team--writer">메인 작가</span></div><div class="tx">우천이면 리스크 크니까 실내로 돌리죠.</div></div></div>
+          <div class="eg-line is-uncertain"><span class="pl"><svg class="ic"><use href="#i-play"/></svg></span><span class="eg-ts">02:05</span><div><div class="who">화자 불확실 <span class="eg-chip eg-chip--human" style="height:20px;font-size:11px">불확실 구간</span></div><div class="tx">그 부분은… (겹침) …다시 얘기하는 걸로</div></div></div>
+        </div>
+      </div>
+      <div class="comp">
+        <h3 class="t-h3">결정 카드</h3><p class="d">값 · 변경 이력 · 근거 · 담당/기한. 이유가 원문에 없으면 쓰지 않습니다.</p>
+        <dl class="eg-kv"><dt>오프닝</dt><dd>스튜디오 <span class="eg-chip eg-chip--pass eg-chip--plain">확정</span></dd></dl>
+        <dl class="eg-kv"><dt>변경 이력</dt><dd style="display:block">
+          <ul class="hist">
+            <li><s>야외 · 한강 공원</s> <a class="eg-tsbtn" href="#">00:12</a></li>
+            <li><s>실내</s> <a class="eg-tsbtn" href="#">00:48</a><span class="why">우천 예보 때문 (원문 근거)</span></li>
+            <li class="final"><b>스튜디오</b> <a class="eg-tsbtn" href="#">00:51</a><span class="why">이유 언급 없음</span></li>
+          </ul></dd></dl>
+        <dl class="eg-kv"><dt>담당 · 기한</dt><dd><span class="eg-missing">미정</span><button class="eg-btn eg-btn--secondary eg-btn--sm">지정하기</button></dd></dl>
+      </div>
+    </div>
+
+    <div class="grid g2">
+      <div class="comp">
+        <h3 class="t-h3">검증 항목</h3><p class="d">검증 에이전트 결과. 클릭하면 원문 근거로 이동.</p>
+        <ul class="vlist">
+          <li><span class="vdot ok"><svg class="ic"><use href="#i-check"/></svg></span><div><b>결정 4건이 문서에 모두 있음</b><small>원문 대조 완료</small></div><span class="eg-chip eg-chip--pass">통과</span></li>
+          <li><span class="vdot fix"><svg class="ic"><use href="#i-alert"/></svg></span><div><b>‘게스트 섭외 보류’ 누락</b><small>03:20 – 03:41 · 결정·업무 에이전트로 재처리</small></div><span class="eg-chip eg-chip--fix">수정 필요</span></li>
+          <li><span class="vdot q"><svg class="ic"><use href="#i-help"/></svg></span><div><b>‘스튜디오 대관 확인’ 기한 없음</b><small>01:20 · 담당자가 지정해 주세요</small></div><span class="eg-chip eg-chip--human">사람 확인</span></li>
+        </ul>
+      </div>
+      <div class="comp">
+        <h3 class="t-h3">사람 확인 모달</h3><p class="d">질문 하나, 원문 하나, 선택지 두세 개.</p>
+        <div class="modal">
+          <div class="mh"><span class="qi"><svg class="ic"><use href="#i-help"/></svg></span><div><h4>‘게스트 섭외’는 확정인가요, 보류인가요?</h4><p>검증 에이전트가 판단하지 못했어요 · 재시도 2/2</p></div></div>
+          <div class="mb">
+            <div class="quote"><div class="eg-line is-evidence" style="padding:8px 10px"><span class="pl"><svg class="ic"><use href="#i-play"/></svg></span><span class="eg-ts">03:20</span><div><div class="who">한지수 <span class="eg-team eg-team--writer">메인 작가</span></div><div class="tx">게스트는… 일단 출연료 보고 다음 주에 다시 얘기해요.</div></div></div></div>
+            <div class="opts"><div class="opt"><span class="rd"></span>확정</div><div class="opt on"><span class="rd"></span>보류 · 다음 주 재논의</div></div>
+          </div>
+          <div class="mf"><button class="eg-btn eg-btn--ghost eg-btn--sm">나중에</button><button class="eg-btn eg-btn--primary eg-btn--sm">이 값으로 고정</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comp">
+      <h3 class="t-h3">검토 바 · 토스트 · 빈 화면</h3><p class="d">검토 바는 문서 검토 화면 하단에 고정. 확인 요청이 남아 있으면 상신 버튼을 잠급니다.</p>
+      <div class="reviewbar"><span class="msg"><svg class="ic"><use href="#i-alert"/></svg>확인 요청 1건을 먼저 처리해 주세요</span><span class="sp"></span><button class="eg-btn eg-btn--danger eg-btn--sm">반려</button><button class="eg-btn eg-btn--primary eg-btn--sm" disabled>상신하기</button></div>
+      <div class="grid g2" style="margin-top:16px;align-items:center">
+        <div class="demo-cell" style="text-align:center"><span class="toast"><svg class="ic"><use href="#i-check"/></svg>문서 구성·출력·서식 검사만 다시 실행했어요<a href="#">보기</a></span></div>
+        <div class="demo-cell empty"><svg><use href="#egg"/></svg><h4>아직 올린 회의가 없어요</h4><p>녹취록이나 음성 파일을 올리면 정리를 시작해요.</p><button class="eg-btn eg-btn--primary eg-btn--sm"><svg class="ic"><use href="#i-upload"/></svg>새 회의 올리기</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 문구 -->
+<section class="block" id="voice">
+  <div class="sec-h"><span class="t-overline">07 · Voice</span><h2 class="t-h2">문구 원칙</h2><p>막내 작가에게 말을 거는 동료처럼. 짧게, 따뜻하게, 사실은 정확하게.</p></div>
+  <div class="grid" style="gap:16px">
+    <table class="spec voice">
+      <thead><tr><th>원칙</th><th>이렇게</th><th>이렇게 말고</th></tr></thead>
+      <tbody>
+        <tr><td>버튼은 동사로</td><td>근거 확인 · 상신하기 · 지정하기</td><td>확인 · OK · 처리</td></tr>
+        <tr><td>모르면 모른다고</td><td>원문에서 담당자를 찾지 못했어요</td><td>담당자: 박준호 (추정)</td></tr>
+        <tr><td>에이전트는 주어로</td><td>검증 에이전트가 누락 1건을 찾았어요</td><td>오류가 발생했습니다</td></tr>
+        <tr><td>다음 행동을 같이</td><td>확인 요청 2건을 처리하면 상신할 수 있어요</td><td>상신 불가</td></tr>
+        <tr><td>숫자는 단위와 함께</td><td>42분 · 화자 6명 · 결정 4건</td><td>42 / 6 / 4</td></tr>
+        <tr><td>탓하지 않기</td><td>이 구간은 말이 겹쳐 화자가 불확실해요</td><td>음성 품질 불량</td></tr>
+      </tbody>
+    </table>
+    <p class="t-caption" style="margin:0">고정 어휘 — AI 실행: 대기 · 실행 중 · 사람 확인 대기 · 완료 · 실패 · 취소됨 / 검증: 통과 · 수정 필요 · 사람 확인 / 문서: 초안 · 검토 중 · 변경 요청 · 승인됨 / 항목: 제안 · 확정 · 보류 · 폐기 / 빈 값: 미정(담당·기한 없음) · 미확인(근거 없음)</p>
+    <p class="t-caption" style="margin:0">“완료”는 AI 실행에만, “승인됨”은 문서에만 씁니다. 취소는 “취소 요청을 받았어요”와 “취소됐어요”를 나눠 알립니다.</p>
+  </div>
+</section>
+
+<!-- 개발 -->
+<section class="block" id="dev">
+  <div class="sec-h"><span class="t-overline">08 · For Developers</span><h2 class="t-h2">개발에 쓰기</h2><p>같은 폴더의 <code class="t-mono">tokens.css</code> 하나로 시작합니다.</p></div>
+  <div class="grid" style="gap:16px">
+<pre class="code"><span class="c">/* app/globals.css — Next.js */</span>
+<span class="k">@import</span> <span class="s">"./tokens.css"</span>;   <span class="c">/* 폰트 + 토큰 + 기본 컴포넌트 */</span>
+
+<span class="c">/* 컴포넌트에서 */</span>
+&lt;button className=<span class="s">"eg-btn eg-btn--primary"</span>&gt;상신하기&lt;/button&gt;
+&lt;span className=<span class="s">"eg-chip eg-chip--human"</span>&gt;사람 확인&lt;/span&gt;</pre>
+<pre class="code"><span class="c">// tailwind.config.ts — Tailwind를 쓴다면 토큰을 연결</span>
+theme: { extend: {
+  colors: { egg: { yellow: <span class="s">"var(--egg-yellow)"</span>, beige: <span class="s">"var(--egg-beige)"</span> },
+            blueberry: <span class="s">"var(--blueberry)"</span>, cream: <span class="s">"var(--cream)"</span>, ink: <span class="s">"var(--ink)"</span> },
+  fontFamily: { sans: [<span class="s">"Outfit"</span>, <span class="s">"Noto Sans KR"</span>, <span class="s">"sans-serif"</span>], mono: [<span class="s">"JetBrains Mono"</span>, <span class="s">"monospace"</span>] },
+  borderRadius: { card: <span class="s">"20px"</span> },
+}}</pre>
+    <p class="t-caption" style="margin:0">아이콘은 Lucide 계열 선 아이콘(stroke 1.8)과 같은 결로 맞춥니다. React에서는 <code class="t-mono">lucide-react</code> 패키지의 같은 이름 아이콘을 쓰면 됩니다.</p>
+  </div>
+</section>
+
+<footer><span><span class="eg-wordmark" style="font-size:15px">egg is going<i></i></span> &nbsp;Design System v0.1 · 2026-10-20</span><span>가상 제작사 대상 교육 프로젝트 · 실제 기업과 무관</span></footer>
+</main>
+</body>
+</html>

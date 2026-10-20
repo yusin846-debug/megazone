@@ -1,0 +1,181 @@
+/* ==========================================================================
+   egg is going — Design Tokens & Core Components  v0.1
+   가상 제작사 대상 교육 프로젝트. 실제 기업과 무관.
+   Next.js: app/globals.css 맨 위에서 @import "./tokens.css"; 로 불러 쓰세요.
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root{
+  /* ---- Brand (제안서 12장) ---- */
+  --egg-yellow:#F8E950;
+  --egg-beige:#EAE6DF;
+  --blueberry:#1E1E7F;
+
+  /* ---- Yellow scale ---- */
+  --yellow-50:#FFFCE8;
+  --yellow-100:#FDF7C4;
+  --yellow-300:#F8E950;
+  --yellow-500:#EAD024;
+  --yellow-700:#6E5F00;
+
+  /* ---- Warm neutrals ---- */
+  --cream:#FAF8F3;      /* 앱 배경 */
+  --paper:#FFFFFF;      /* 카드·패널 */
+  --beige-100:#F3F0EA;  /* 약한 면 */
+  --beige-200:#EAE6DF;  /* egg light beige */
+  --line:#E3DED4;
+  --line-strong:#CFC8BB;
+  --ink:#16150F;        /* 본문 */
+  --ink-2:#3B3934;
+  --muted:#75706A;
+  --subtle:#A39E95;
+
+  /* ---- Blueberry scale (링크·선택·포커스·숫자 강조) ---- */
+  --blue-50:#EFEFFA;
+  --blue-100:#DCDCF3;
+  --blue-500:#1E1E7F;
+  --blue-600:#15156A;
+
+  /* ---- Semantic ---- */
+  --sage-50:#EEF5EC;  --sage-300:#A9C9A4; --sage-500:#5E9A5A; --sage-700:#2E672B;
+  --tomato-50:#FEF0EA; --tomato-300:#F5A482; --tomato-500:#EF5F2D; --tomato-700:#B0411A;
+
+  /* ---- Status (색 + 글자 함께 쓰기) ---- */
+  --st-wait-bg:var(--beige-100);  --st-wait-fg:var(--muted);
+  --st-run-bg:var(--blue-50);     --st-run-fg:var(--blue-500);
+  --st-pass-bg:var(--sage-50);    --st-pass-fg:var(--sage-700);
+  --st-fix-bg:var(--tomato-50);   --st-fix-fg:var(--tomato-700);
+  --st-human-bg:var(--yellow-100);--st-human-fg:var(--yellow-700);
+
+  /* ---- Team ---- */
+  --team-writer-bg:var(--yellow-100); --team-writer-fg:var(--yellow-700);
+  --team-pd-bg:var(--sage-50);        --team-pd-fg:var(--sage-700);
+
+  /* ---- Type ---- */
+  --font-sans:"Outfit","Noto Sans KR",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+
+  /* ---- Space (4px base) ---- */
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:20px; --s-6:24px;
+  --s-8:32px; --s-10:40px; --s-14:56px; --s-20:80px;
+
+  /* ---- Radius ---- */
+  --r-xs:6px; --r-sm:10px; --r-md:14px; --r-lg:20px; --r-xl:28px; --r-pill:999px;
+
+  /* ---- Elevation (따뜻한 그림자) ---- */
+  --sh-1:0 1px 2px rgba(58,48,20,.06);
+  --sh-2:0 1px 2px rgba(58,48,20,.05),0 6px 18px rgba(58,48,20,.07);
+  --sh-3:0 2px 4px rgba(58,48,20,.05),0 20px 44px rgba(58,48,20,.12);
+  --focus:0 0 0 3px rgba(30,30,127,.26);
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+
+/* ---- Base ---- */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;font-family:var(--font-sans);font-size:15px;line-height:1.6;color:var(--ink);
+  background:var(--cream);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  word-break:keep-all;overflow-wrap:break-word;text-rendering:optimizeLegibility;
+}
+::selection{background:var(--yellow-300);color:var(--ink)}
+
+/* ---- Type scale ---- */
+.t-display{font-size:clamp(40px,6vw,64px);line-height:1.12;font-weight:900;letter-spacing:-.045em}
+.t-h1{font-size:32px;line-height:1.25;font-weight:800;letter-spacing:-.032em}
+.t-h2{font-size:24px;line-height:1.3;font-weight:800;letter-spacing:-.026em}
+.t-h3{font-size:18px;line-height:1.4;font-weight:700;letter-spacing:-.016em}
+.t-body-l{font-size:16px;line-height:1.7}
+.t-body{font-size:15px;line-height:1.6}
+.t-label{font-size:13px;line-height:1.4;font-weight:600;letter-spacing:-.005em}
+.t-caption{font-size:12px;line-height:1.5;font-weight:500;color:var(--muted)}
+.t-overline{font-size:11.5px;line-height:1.2;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.t-num{font-family:"Outfit",var(--font-sans);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.t-mono,.eg-ts{font-family:var(--font-mono);font-size:12.5px;letter-spacing:0;font-variant-numeric:tabular-nums}
+.hl{background:linear-gradient(transparent 56%,var(--yellow-300) 56%,var(--yellow-300) 92%,transparent 92%);padding:0 .06em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+
+/* ---- Wordmark ---- */
+.eg-wordmark{display:inline-flex;align-items:baseline;font-family:"Outfit",var(--font-sans);font-weight:700;font-size:20px;letter-spacing:-.04em;color:var(--ink);line-height:1;white-space:nowrap}
+.eg-wordmark i{display:inline-block;width:.36em;height:.36em;border-radius:50%;background:var(--egg-yellow);box-shadow:inset 0 -1px 0 rgba(0,0,0,.1);margin-left:.1em}
+
+/* ---- Icon ---- */
+.ic{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---- Button ---- */
+.eg-btn{--h:40px;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--h);padding:0 16px;border-radius:var(--r-sm);border:1px solid transparent;
+  font:600 14px/1 var(--font-sans);letter-spacing:-.01em;color:var(--ink);cursor:pointer;white-space:nowrap;text-decoration:none;
+  transition:background .15s var(--ease),border-color .15s var(--ease),box-shadow .15s var(--ease),transform .06s}
+.eg-btn .ic{width:16px;height:16px}
+.eg-btn:focus-visible{outline:none;box-shadow:var(--focus)}
+.eg-btn:active{transform:translateY(1px)}
+.eg-btn--primary{background:var(--egg-yellow);box-shadow:inset 0 -2px 0 rgba(0,0,0,.08)}
+.eg-btn--primary:hover{background:#F2DF36}
+.eg-btn--secondary{background:var(--paper);border-color:var(--line-strong)}
+.eg-btn--secondary:hover{background:var(--beige-100)}
+.eg-btn--ghost{background:transparent;color:var(--ink-2)}
+.eg-btn--ghost:hover{background:var(--beige-100)}
+.eg-btn--ink{background:var(--ink);color:var(--paper)}
+.eg-btn--ink:hover{background:#2B2A24}
+.eg-btn--danger{background:var(--paper);color:var(--tomato-700);border-color:var(--tomato-300)}
+.eg-btn--danger:hover{background:var(--tomato-50)}
+.eg-btn--sm{--h:32px;padding:0 12px;font-size:13px;border-radius:8px}
+.eg-btn--lg{--h:48px;padding:0 22px;font-size:15px;border-radius:12px}
+.eg-btn[disabled],.eg-btn.is-disabled{background:var(--beige-100);color:var(--subtle);border-color:transparent;box-shadow:none;cursor:not-allowed}
+
+/* ---- Status chip ---- */
+.eg-chip{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:var(--r-pill);font:600 12px/1 var(--font-sans);letter-spacing:-.005em;background:var(--beige-100);color:var(--ink-2);white-space:nowrap}
+.eg-chip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.eg-chip--plain::before{display:none}
+.eg-chip--wait{background:var(--st-wait-bg);color:var(--st-wait-fg)}
+.eg-chip--run{background:var(--st-run-bg);color:var(--st-run-fg)}
+.eg-chip--run::before{animation:eg-pulse 1.4s ease-in-out infinite}
+.eg-chip--pass{background:var(--st-pass-bg);color:var(--st-pass-fg)}
+.eg-chip--fix{background:var(--st-fix-bg);color:var(--st-fix-fg)}
+.eg-chip--human{background:var(--st-human-bg);color:var(--st-human-fg)}
+.eg-chip--done{background:var(--ink);color:var(--paper)}
+.eg-chip--fail{background:var(--tomato-500);color:#fff}
+.eg-chip--cancel{background:transparent;color:var(--muted);box-shadow:inset 0 0 0 1px var(--line-strong)}
+@keyframes eg-pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* ---- Document status badge (업무 상태: 각진 배지, 점 없음 — AI 실행 칩과 모양으로 구분) ---- */
+.eg-badge{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:6px;font:700 12px/1 var(--font-sans);letter-spacing:-.005em;white-space:nowrap}
+.eg-badge .ic{width:12px;height:12px;stroke-width:2.2}
+.eg-badge--draft{background:var(--paper);color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line-strong)}
+.eg-badge--review{background:var(--blue-50);color:var(--blue-500);box-shadow:inset 0 0 0 1px var(--blue-100)}
+.eg-badge--changes{background:var(--tomato-50);color:var(--tomato-700);box-shadow:inset 0 0 0 1px var(--tomato-300)}
+.eg-badge--approved{background:var(--ink);color:var(--paper)}
+.eg-badge--superseded{background:var(--beige-100);color:var(--subtle);text-decoration:line-through}
+
+/* ---- Item status (ItemRevision: 제안·확정·보류·폐기) ---- */
+.eg-item{display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:5px;font:700 11.5px/1 var(--font-sans);white-space:nowrap}
+.eg-item--proposed{background:var(--blue-50);color:var(--blue-500)}
+.eg-item--confirmed{background:var(--sage-50);color:var(--sage-700)}
+.eg-item--hold{background:var(--yellow-100);color:var(--yellow-700)}
+.eg-item--dropped{background:var(--beige-100);color:var(--subtle);text-decoration:line-through}
+
+/* ---- "미확인" (근거 없음, FR-02) ---- */
+.eg-unverified{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:6px;background:var(--tomato-50);color:var(--tomato-700);font:600 12.5px/1 var(--font-sans);box-shadow:inset 0 0 0 1px var(--tomato-300)}
+
+/* ---- Team tag ---- */
+.eg-team{display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:6px;font:600 11.5px/1 var(--font-sans);white-space:nowrap}
+.eg-team--writer{background:var(--team-writer-bg);color:var(--team-writer-fg)}
+.eg-team--pd{background:var(--team-pd-bg);color:var(--team-pd-fg)}
+
+/* ---- Missing value ("미정") ---- */
+.eg-missing{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:6px;background:var(--yellow-100);color:var(--yellow-700);font:600 12.5px/1 var(--font-sans)}
+
+/* ---- Card ---- */
+.eg-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-1)}
+
+/* ---- Form ---- */
+.eg-label{display:block;font:600 13px/1.4 var(--font-sans);color:var(--ink-2);margin-bottom:6px}
+.eg-input,.eg-select,.eg-textarea{width:100%;height:40px;padding:0 12px;border:1px solid var(--line-strong);border-radius:var(--r-sm);background:var(--paper);
+  font:400 14px/1.4 var(--font-sans);color:var(--ink);transition:border-color .15s,box-shadow .15s}
+.eg-textarea{height:auto;min-height:88px;padding:10px 12px;line-height:1.6;resize:vertical}
+.eg-input::placeholder,.eg-textarea::placeholder{color:var(--subtle)}
+.eg-input:focus,.eg-select:focus,.eg-textarea:focus{outline:none;border-color:var(--blue-500);box-shadow:var(--focus)}
+.eg-help{font-size:12px;color:var(--muted);margin-top:6px}
+
+/* ---- Timestamp button ---- */
+.eg-tsbtn{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 7px;border-radius:6px;background:var(--blue-50);color:var(--blue-500);font:500 12px/1 var(--font-mono);text-decoration:none;white-space:nowrap}
+.eg-tsbtn:hover{background:var(--blue-100)}

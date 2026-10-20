@@ -1,0 +1,1013 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>egg is going 화면 기획</title>
+<style>/* ==========================================================================
+   egg is going — Design Tokens & Core Components  v0.1
+   가상 제작사 대상 교육 프로젝트. 실제 기업과 무관.
+   Next.js: app/globals.css 맨 위에서 @import "./tokens.css"; 로 불러 쓰세요.
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root{
+  /* ---- Brand (제안서 12장) ---- */
+  --egg-yellow:#F8E950;
+  --egg-beige:#EAE6DF;
+  --blueberry:#1E1E7F;
+
+  /* ---- Yellow scale ---- */
+  --yellow-50:#FFFCE8;
+  --yellow-100:#FDF7C4;
+  --yellow-300:#F8E950;
+  --yellow-500:#EAD024;
+  --yellow-700:#6E5F00;
+
+  /* ---- Warm neutrals ---- */
+  --cream:#FAF8F3;      /* 앱 배경 */
+  --paper:#FFFFFF;      /* 카드·패널 */
+  --beige-100:#F3F0EA;  /* 약한 면 */
+  --beige-200:#EAE6DF;  /* egg light beige */
+  --line:#E3DED4;
+  --line-strong:#CFC8BB;
+  --ink:#16150F;        /* 본문 */
+  --ink-2:#3B3934;
+  --muted:#75706A;
+  --subtle:#A39E95;
+
+  /* ---- Blueberry scale (링크·선택·포커스·숫자 강조) ---- */
+  --blue-50:#EFEFFA;
+  --blue-100:#DCDCF3;
+  --blue-500:#1E1E7F;
+  --blue-600:#15156A;
+
+  /* ---- Semantic ---- */
+  --sage-50:#EEF5EC;  --sage-300:#A9C9A4; --sage-500:#5E9A5A; --sage-700:#2E672B;
+  --tomato-50:#FEF0EA; --tomato-300:#F5A482; --tomato-500:#EF5F2D; --tomato-700:#B0411A;
+
+  /* ---- Status (색 + 글자 함께 쓰기) ---- */
+  --st-wait-bg:var(--beige-100);  --st-wait-fg:var(--muted);
+  --st-run-bg:var(--blue-50);     --st-run-fg:var(--blue-500);
+  --st-pass-bg:var(--sage-50);    --st-pass-fg:var(--sage-700);
+  --st-fix-bg:var(--tomato-50);   --st-fix-fg:var(--tomato-700);
+  --st-human-bg:var(--yellow-100);--st-human-fg:var(--yellow-700);
+
+  /* ---- Team ---- */
+  --team-writer-bg:var(--yellow-100); --team-writer-fg:var(--yellow-700);
+  --team-pd-bg:var(--sage-50);        --team-pd-fg:var(--sage-700);
+
+  /* ---- Type ---- */
+  --font-sans:"Outfit","Noto Sans KR",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+
+  /* ---- Space (4px base) ---- */
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:20px; --s-6:24px;
+  --s-8:32px; --s-10:40px; --s-14:56px; --s-20:80px;
+
+  /* ---- Radius ---- */
+  --r-xs:6px; --r-sm:10px; --r-md:14px; --r-lg:20px; --r-xl:28px; --r-pill:999px;
+
+  /* ---- Elevation (따뜻한 그림자) ---- */
+  --sh-1:0 1px 2px rgba(58,48,20,.06);
+  --sh-2:0 1px 2px rgba(58,48,20,.05),0 6px 18px rgba(58,48,20,.07);
+  --sh-3:0 2px 4px rgba(58,48,20,.05),0 20px 44px rgba(58,48,20,.12);
+  --focus:0 0 0 3px rgba(30,30,127,.26);
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+
+/* ---- Base ---- */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;font-family:var(--font-sans);font-size:15px;line-height:1.6;color:var(--ink);
+  background:var(--cream);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  word-break:keep-all;overflow-wrap:break-word;text-rendering:optimizeLegibility;
+}
+::selection{background:var(--yellow-300);color:var(--ink)}
+
+/* ---- Type scale ---- */
+.t-display{font-size:clamp(40px,6vw,64px);line-height:1.12;font-weight:900;letter-spacing:-.045em}
+.t-h1{font-size:32px;line-height:1.25;font-weight:800;letter-spacing:-.032em}
+.t-h2{font-size:24px;line-height:1.3;font-weight:800;letter-spacing:-.026em}
+.t-h3{font-size:18px;line-height:1.4;font-weight:700;letter-spacing:-.016em}
+.t-body-l{font-size:16px;line-height:1.7}
+.t-body{font-size:15px;line-height:1.6}
+.t-label{font-size:13px;line-height:1.4;font-weight:600;letter-spacing:-.005em}
+.t-caption{font-size:12px;line-height:1.5;font-weight:500;color:var(--muted)}
+.t-overline{font-size:11.5px;line-height:1.2;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.t-num{font-family:"Outfit",var(--font-sans);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.t-mono,.eg-ts{font-family:var(--font-mono);font-size:12.5px;letter-spacing:0;font-variant-numeric:tabular-nums}
+.hl{background:linear-gradient(transparent 56%,var(--yellow-300) 56%,var(--yellow-300) 92%,transparent 92%);padding:0 .06em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+
+/* ---- Wordmark ---- */
+.eg-wordmark{display:inline-flex;align-items:baseline;font-family:"Outfit",var(--font-sans);font-weight:700;font-size:20px;letter-spacing:-.04em;color:var(--ink);line-height:1;white-space:nowrap}
+.eg-wordmark i{display:inline-block;width:.36em;height:.36em;border-radius:50%;background:var(--egg-yellow);box-shadow:inset 0 -1px 0 rgba(0,0,0,.1);margin-left:.1em}
+
+/* ---- Icon ---- */
+.ic{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---- Button ---- */
+.eg-btn{--h:40px;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--h);padding:0 16px;border-radius:var(--r-sm);border:1px solid transparent;
+  font:600 14px/1 var(--font-sans);letter-spacing:-.01em;color:var(--ink);cursor:pointer;white-space:nowrap;text-decoration:none;
+  transition:background .15s var(--ease),border-color .15s var(--ease),box-shadow .15s var(--ease),transform .06s}
+.eg-btn .ic{width:16px;height:16px}
+.eg-btn:focus-visible{outline:none;box-shadow:var(--focus)}
+.eg-btn:active{transform:translateY(1px)}
+.eg-btn--primary{background:var(--egg-yellow);box-shadow:inset 0 -2px 0 rgba(0,0,0,.08)}
+.eg-btn--primary:hover{background:#F2DF36}
+.eg-btn--secondary{background:var(--paper);border-color:var(--line-strong)}
+.eg-btn--secondary:hover{background:var(--beige-100)}
+.eg-btn--ghost{background:transparent;color:var(--ink-2)}
+.eg-btn--ghost:hover{background:var(--beige-100)}
+.eg-btn--ink{background:var(--ink);color:var(--paper)}
+.eg-btn--ink:hover{background:#2B2A24}
+.eg-btn--danger{background:var(--paper);color:var(--tomato-700);border-color:var(--tomato-300)}
+.eg-btn--danger:hover{background:var(--tomato-50)}
+.eg-btn--sm{--h:32px;padding:0 12px;font-size:13px;border-radius:8px}
+.eg-btn--lg{--h:48px;padding:0 22px;font-size:15px;border-radius:12px}
+.eg-btn[disabled],.eg-btn.is-disabled{background:var(--beige-100);color:var(--subtle);border-color:transparent;box-shadow:none;cursor:not-allowed}
+
+/* ---- Status chip ---- */
+.eg-chip{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:var(--r-pill);font:600 12px/1 var(--font-sans);letter-spacing:-.005em;background:var(--beige-100);color:var(--ink-2);white-space:nowrap}
+.eg-chip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.eg-chip--plain::before{display:none}
+.eg-chip--wait{background:var(--st-wait-bg);color:var(--st-wait-fg)}
+.eg-chip--run{background:var(--st-run-bg);color:var(--st-run-fg)}
+.eg-chip--run::before{animation:eg-pulse 1.4s ease-in-out infinite}
+.eg-chip--pass{background:var(--st-pass-bg);color:var(--st-pass-fg)}
+.eg-chip--fix{background:var(--st-fix-bg);color:var(--st-fix-fg)}
+.eg-chip--human{background:var(--st-human-bg);color:var(--st-human-fg)}
+.eg-chip--done{background:var(--ink);color:var(--paper)}
+.eg-chip--fail{background:var(--tomato-500);color:#fff}
+.eg-chip--cancel{background:transparent;color:var(--muted);box-shadow:inset 0 0 0 1px var(--line-strong)}
+@keyframes eg-pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* ---- Document status badge (업무 상태: 각진 배지, 점 없음 — AI 실행 칩과 모양으로 구분) ---- */
+.eg-badge{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:6px;font:700 12px/1 var(--font-sans);letter-spacing:-.005em;white-space:nowrap}
+.eg-badge .ic{width:12px;height:12px;stroke-width:2.2}
+.eg-badge--draft{background:var(--paper);color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line-strong)}
+.eg-badge--review{background:var(--blue-50);color:var(--blue-500);box-shadow:inset 0 0 0 1px var(--blue-100)}
+.eg-badge--changes{background:var(--tomato-50);color:var(--tomato-700);box-shadow:inset 0 0 0 1px var(--tomato-300)}
+.eg-badge--approved{background:var(--ink);color:var(--paper)}
+.eg-badge--superseded{background:var(--beige-100);color:var(--subtle);text-decoration:line-through}
+
+/* ---- Item status (ItemRevision: 제안·확정·보류·폐기) ---- */
+.eg-item{display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:5px;font:700 11.5px/1 var(--font-sans);white-space:nowrap}
+.eg-item--proposed{background:var(--blue-50);color:var(--blue-500)}
+.eg-item--confirmed{background:var(--sage-50);color:var(--sage-700)}
+.eg-item--hold{background:var(--yellow-100);color:var(--yellow-700)}
+.eg-item--dropped{background:var(--beige-100);color:var(--subtle);text-decoration:line-through}
+
+/* ---- "미확인" (근거 없음, FR-02) ---- */
+.eg-unverified{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:6px;background:var(--tomato-50);color:var(--tomato-700);font:600 12.5px/1 var(--font-sans);box-shadow:inset 0 0 0 1px var(--tomato-300)}
+
+/* ---- Team tag ---- */
+.eg-team{display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:6px;font:600 11.5px/1 var(--font-sans);white-space:nowrap}
+.eg-team--writer{background:var(--team-writer-bg);color:var(--team-writer-fg)}
+.eg-team--pd{background:var(--team-pd-bg);color:var(--team-pd-fg)}
+
+/* ---- Missing value ("미정") ---- */
+.eg-missing{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:6px;background:var(--yellow-100);color:var(--yellow-700);font:600 12.5px/1 var(--font-sans)}
+
+/* ---- Card ---- */
+.eg-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-1)}
+
+/* ---- Form ---- */
+.eg-label{display:block;font:600 13px/1.4 var(--font-sans);color:var(--ink-2);margin-bottom:6px}
+.eg-input,.eg-select,.eg-textarea{width:100%;height:40px;padding:0 12px;border:1px solid var(--line-strong);border-radius:var(--r-sm);background:var(--paper);
+  font:400 14px/1.4 var(--font-sans);color:var(--ink);transition:border-color .15s,box-shadow .15s}
+.eg-textarea{height:auto;min-height:88px;padding:10px 12px;line-height:1.6;resize:vertical}
+.eg-input::placeholder,.eg-textarea::placeholder{color:var(--subtle)}
+.eg-input:focus,.eg-select:focus,.eg-textarea:focus{outline:none;border-color:var(--blue-500);box-shadow:var(--focus)}
+.eg-help{font-size:12px;color:var(--muted);margin-top:6px}
+
+/* ---- Timestamp button ---- */
+.eg-tsbtn{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 7px;border-radius:6px;background:var(--blue-50);color:var(--blue-500);font:500 12px/1 var(--font-mono);text-decoration:none;white-space:nowrap}
+.eg-tsbtn:hover{background:var(--blue-100)}
+</style>
+<style>
+.top{position:sticky;top:0;z-index:20;background:rgba(250,248,243,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1240px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;gap:14px}
+.top-in .ver{font:600 12px/1 "Outfit";color:var(--muted);padding:5px 8px;border:1px solid var(--line);border-radius:999px;white-space:nowrap}
+.top nav{margin-left:auto;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.top nav a{font:600 12.5px/1 var(--font-sans);color:var(--ink-2);text-decoration:none;padding:8px 9px;border-radius:8px;white-space:nowrap}
+.top nav a:hover{background:var(--beige-100)}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+.hero{padding:64px 0 40px}
+.hero .lead{font-size:17px;line-height:1.7;color:var(--ink-2);max-width:720px;margin:18px 0 0}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:28px}
+.fact{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-md);padding:16px}
+.fact b{display:block;font-size:20px;font-weight:800;letter-spacing:-.03em}
+.fact span{font-size:12.5px;color:var(--muted)}
+h2.sec{margin:0 0 6px}
+p.sec-d{margin:0 0 22px;color:var(--muted);font-size:14px}
+.block{padding:48px 0;border-top:1px solid var(--line)}
+/* flow map */
+.lanes{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+.lane{display:grid;grid-template-columns:150px minmax(0,1fr);border-bottom:1px solid var(--line)}
+.lane:last-child{border-bottom:0}
+.lane .who{padding:16px;background:var(--beige-100);font-weight:700;font-size:13px;display:flex;flex-direction:column;justify-content:center;gap:2px}
+.lane .who small{font-weight:500;color:var(--muted);font-size:11.5px}
+.lane .cells{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;padding:12px}
+.node{border-radius:12px;padding:10px 12px;font-size:12.5px;line-height:1.45;border:1px solid var(--line);background:var(--cream)}
+.node b{display:block;font:700 11px/1 var(--font-mono);color:var(--blue-500);margin-bottom:4px}
+.node a{color:inherit;text-decoration:none}
+.node.scr{background:var(--yellow-50);border-color:var(--yellow-500)}
+.node.scr i{font-style:normal;display:inline-block;margin-top:4px;font:600 11px/1 var(--font-sans);background:var(--egg-yellow);border-radius:4px;padding:3px 5px}
+.node.sys{background:var(--blue-50);border-color:var(--blue-100)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;border-radius:4px;display:inline-block}
+table.map{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;margin-top:20px}
+table.map th,table.map td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.map th{background:var(--beige-100);font-size:12px;color:var(--muted);font-weight:600}
+table.map tr:last-child td{border-bottom:0}
+table.map code{font:500 12px var(--font-mono)}
+.pri{display:inline-flex;height:20px;align-items:center;padding:0 7px;border-radius:5px;font:700 11px/1 "Outfit"}
+.p0{background:var(--ink);color:var(--egg-yellow)} .p1{background:var(--beige-200);color:var(--ink-2)}
+/* screen header */
+.sh{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.sh .no{font:800 13px/1 "Outfit";color:var(--blue-500);letter-spacing:.04em}
+.sh h2{margin:6px 0 0}
+.sh .tags{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.tagx{display:inline-flex;align-items:center;height:24px;padding:0 9px;border-radius:6px;background:var(--paper);border:1px solid var(--line);font:600 12px/1 var(--font-sans);color:var(--ink-2)}
+.tagx.m{font-family:var(--font-mono);font-weight:500}
+/* frame & app shell */
+.frame{overflow-x:auto;padding:6px 6px 18px;margin:0 -6px;-webkit-overflow-scrolling:touch}
+.app{min-width:1180px;display:grid;grid-template-columns:224px minmax(0,1fr);background:var(--cream);border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:var(--sh-3);position:relative}
+.side{background:var(--paper);border-right:1px solid var(--line);padding:18px 12px;display:flex;flex-direction:column;gap:2px;min-height:100%}
+.side .brand{padding:4px 10px 18px}
+.side .prog{margin:0 4px 14px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;display:flex;align-items:center;gap:8px;font-size:13px}
+.side .prog small{display:block;color:var(--muted);font-size:11px}
+.side .prog .ic{margin-left:auto;width:14px;height:14px;color:var(--muted)}
+.side .navx{display:flex;align-items:center;gap:10px;height:38px;padding:0 10px;border-radius:10px;color:var(--ink-2);font-size:13.5px;font-weight:500}
+.side .navx .ic{width:17px;height:17px}
+.side .navx.on{background:var(--yellow-100);color:var(--ink);font-weight:700}
+.side .navx .cnt{margin-left:auto;font:700 11px/1 "Outfit";background:var(--tomato-500);color:#fff;border-radius:999px;padding:3px 7px}
+.side .grp{font:600 11px/1 var(--font-sans);color:var(--subtle);padding:16px 10px 6px;letter-spacing:.02em}
+.side .me{margin-top:auto;display:flex;align-items:center;gap:10px;padding:12px 10px 4px;border-top:1px solid var(--line)}
+.side .me svg{width:30px;height:36px}
+.side .me b{display:block;font-size:13px}
+.side .me small{color:var(--muted);font-size:11.5px}
+.main{min-width:0;display:flex;flex-direction:column}
+.bar{height:60px;display:flex;align-items:center;gap:12px;padding:0 28px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.55)}
+.crumb{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.crumb b{color:var(--ink);font-weight:700}
+.bar .sp{flex:1}
+.body{padding:24px 28px 28px}
+.page-h{display:flex;align-items:flex-end;gap:16px;margin-bottom:20px}
+.page-h h3{margin:0;font-size:24px;font-weight:800;letter-spacing:-.03em;line-height:1.25}
+.page-h p{margin:4px 0 0;font-size:13.5px;color:var(--muted)}
+.page-h .act{margin-left:auto;display:flex;gap:8px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--sh-1)}
+.card-h{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.card-h h4{margin:0;font-size:15px;font-weight:700;letter-spacing:-.02em}
+.card-h .r{margin-left:auto;display:flex;gap:6px;align-items:center}
+.card-b{padding:16px 18px}
+.muted{color:var(--muted)}
+.mono{font-family:var(--font-mono);font-size:12px}
+/* spec */
+.spec{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:6px}
+.spec > div{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:13px;line-height:1.6}
+.spec h5{margin:0 0 8px;font:700 11.5px/1 var(--font-sans);color:var(--muted);letter-spacing:.04em}
+.spec ul{margin:0;padding-left:16px}
+.spec li{margin:2px 0}
+.spec code{font:500 11.5px var(--font-mono);background:var(--beige-100);padding:1px 4px;border-radius:4px}
+.callout{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:12px;font-size:13px;line-height:1.55}
+.callout .ic{width:16px;height:16px;margin-top:2px}
+.callout.y{background:var(--yellow-50);border:1px solid var(--yellow-100)}
+.callout.y .ic{color:var(--yellow-700)}
+.callout.b{background:var(--blue-50);border:1px solid var(--blue-100);color:var(--blue-600)}
+.callout.r{background:var(--tomato-50);border:1px solid var(--tomato-300);color:var(--tomato-700)}
+/* S1 */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.stat .l{font-size:12.5px;color:var(--muted);font-weight:500}
+.stat .v{font:800 28px/1.1 "Outfit";letter-spacing:-.03em;margin-top:6px}
+.stat .v small{font:600 13px var(--font-sans);color:var(--muted);margin-left:4px}
+.stat.hot{background:var(--yellow-50);border-color:var(--yellow-500)}
+table.tb{width:100%;border-collapse:collapse;font-size:13.5px}
+table.tb th{font-size:12px;color:var(--muted);font-weight:600;text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--beige-100)}
+table.tb td{padding:13px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.tb tr:last-child td{border-bottom:0}
+table.tb .tt b{display:block;font-weight:700;letter-spacing:-.015em}
+table.tb .tt small{color:var(--muted);font-size:12px}
+.dots{display:flex;gap:4px}
+.dots i{width:18px;height:6px;border-radius:3px;background:var(--beige-200)}
+.dots i.ok{background:var(--sage-500)} .dots i.run{background:var(--blue-500)} .dots i.h{background:var(--yellow-500)} .dots i.f{background:var(--tomato-500)}
+/* S2 */
+.two{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:16px}
+.drop{border:1.5px dashed var(--line-strong);border-radius:16px;background:var(--cream);padding:22px;display:flex;align-items:center;gap:16px}
+.drop .fi{width:46px;height:46px;border-radius:12px;background:var(--yellow-300);display:grid;place-items:center}
+.drop b{display:block;font-size:14.5px}
+.drop small{color:var(--muted);font-size:12.5px}
+.fg{margin-bottom:16px}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sel{display:flex;align-items:center;justify-content:space-between;height:40px;padding:0 12px;border:1px solid var(--line-strong);border-radius:10px;background:var(--paper);font-size:14px}
+.sel .ic{width:15px;height:15px;color:var(--muted)}
+.people{display:grid;gap:6px}
+.person{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;font-size:13.5px}
+.person .av{width:26px;height:26px;border-radius:50%;background:var(--beige-100);display:grid;place-items:center;font:700 11px var(--font-sans)}
+.person .ext{margin-left:auto;font-size:11.5px;color:var(--muted)}
+.checklist{list-style:none;margin:0;padding:0;display:grid;gap:10px;font-size:13.5px}
+.checklist li{display:flex;gap:10px;align-items:flex-start}
+.checklist .vd{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;flex:none;margin-top:1px}
+.checklist .vd .ic{width:12px;height:12px;stroke-width:2.6}
+.vd.ok{background:var(--sage-50);color:var(--sage-700)} .vd.no{background:var(--tomato-50);color:var(--tomato-700)} .vd.qq{background:var(--yellow-100);color:var(--yellow-700)}
+/* S3 */
+.board{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.eg-step{display:flex;flex-direction:column;gap:9px;padding:14px;border-radius:14px;background:var(--paper);border:1px solid var(--line);min-width:0}
+.eg-step__icon{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:var(--beige-100);color:var(--ink-2)}
+.eg-step__icon .ic{width:17px;height:17px}
+.eg-step__name{font-weight:700;font-size:13.5px;letter-spacing:-.015em}
+.eg-step__meta{font-size:11.5px;color:var(--muted);line-height:1.45}
+.eg-step.is-run{border-color:var(--blue-100);box-shadow:0 0 0 3px var(--blue-50)}
+.eg-step.is-run .eg-step__icon{background:var(--blue-50);color:var(--blue-500)}
+.eg-step.is-pass .eg-step__icon{background:var(--sage-50);color:var(--sage-700)}
+.eg-step.is-human{border-color:var(--yellow-500);background:var(--yellow-50)}
+.eg-step.is-human .eg-step__icon{background:var(--yellow-300);color:var(--ink)}
+.eg-step.is-tool{border-style:dashed}
+.branch{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.br{border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--paper);font-size:13px;opacity:.55}
+.br.on{opacity:1;border-color:var(--yellow-500);background:var(--yellow-50);box-shadow:0 0 0 3px var(--yellow-100)}
+.br b{display:flex;align-items:center;gap:6px;font-size:13.5px;margin-bottom:4px}
+.br .k{font:600 11px/1 var(--font-sans);padding:4px 7px;border-radius:5px}
+.log{list-style:none;margin:0;padding:0;font-size:12.5px}
+.log li{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.log li:last-child{border-bottom:0}
+.log .t{font:500 11.5px var(--font-mono);color:var(--muted)}
+.meta-grid{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:12.5px}
+.meta-grid dt{color:var(--muted)} .meta-grid dd{margin:0;font:500 12px var(--font-mono)}
+/* S4 */
+.ws{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:16px}
+.tr-h{display:flex;align-items:center;gap:8px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.tr-h h4{margin:0;font-size:15px}
+.ver{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 9px;border:1px solid var(--line);border-radius:8px;font:500 12px var(--font-mono);color:var(--ink-2)}
+.wave{display:flex;align-items:center;gap:2px;height:30px;padding:0 18px;border-bottom:1px solid var(--line);background:var(--beige-100)}
+.wave i{width:3px;border-radius:2px;background:var(--line-strong)}
+.wave i.e{background:var(--yellow-500)}
+.eg-line{display:grid;grid-template-columns:26px 50px 1fr;gap:10px;align-items:start;padding:10px 14px;border-radius:12px}
+.eg-line .pl{width:26px;height:26px;border-radius:50%;background:var(--beige-100);display:grid;place-items:center}
+.eg-line .pl .ic{width:11px;height:11px}
+.eg-line .eg-ts{padding-top:4px;color:var(--muted)}
+.eg-line .who{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;margin-bottom:2px}
+.eg-line .tx{font-size:14px;line-height:1.6}
+.eg-line.is-evidence{background:var(--yellow-50);box-shadow:inset 3px 0 0 var(--egg-yellow)}
+.eg-line.is-uncertain .tx{text-decoration:underline wavy var(--tomato-300) 1px;text-underline-offset:4px}
+.tabs{display:flex;gap:4px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.tabs span{font-size:13px;font-weight:600;padding:7px 11px;border-radius:9px;color:var(--muted)}
+.tabs span.on{background:var(--ink);color:var(--paper)}
+.tabs span b{font:700 11px "Outfit";margin-left:4px;opacity:.7}
+.item{padding:14px 16px;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+.item.on{background:var(--cream)}
+.item-h{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.item-h b{font-size:14.5px;letter-spacing:-.015em}
+.item-h .r{margin-left:auto;display:flex;gap:6px}
+.eg-kv{display:grid;grid-template-columns:84px 1fr;gap:12px;padding:8px 0;margin:0;align-items:center;border-top:1px dashed var(--line)}
+.eg-kv dt{color:var(--muted);font-size:12.5px;font-weight:500}
+.eg-kv dd{margin:0;font-weight:600;font-size:13.5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.hist{list-style:none;margin:0;padding:0}
+.hist li{position:relative;padding:0 0 10px 20px;font-size:13px;font-weight:500}
+.hist li::before{content:"";position:absolute;left:3px;top:7px;width:8px;height:8px;border-radius:50%;background:var(--line-strong)}
+.hist li::after{content:"";position:absolute;left:6.5px;top:17px;bottom:-1px;width:1px;background:var(--line)}
+.hist li:last-child{padding-bottom:0}
+.hist li:last-child::after{display:none}
+.hist li.final::before{background:var(--egg-yellow);box-shadow:0 0 0 3px var(--yellow-100)}
+.hist s{color:var(--subtle)}
+.hist .why{display:block;font-size:11.5px;color:var(--muted);font-weight:400}
+/* S5 */
+.inbox{display:grid;grid-template-columns:320px minmax(0,1fr);gap:16px}
+.tq{padding:14px 16px;border-bottom:1px solid var(--line);font-size:13px}
+.tq.on{background:var(--yellow-50);box-shadow:inset 3px 0 0 var(--egg-yellow)}
+.tq b{display:block;font-size:13.5px;margin:6px 0 2px;letter-spacing:-.01em}
+.tq small{color:var(--muted)}
+.opt{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--line-strong);border-radius:12px;font-size:14px;font-weight:600;background:var(--paper)}
+.opt .rd{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--line-strong);flex:none}
+.opt.on{border-color:var(--ink);background:var(--yellow-50)}
+.opt.on .rd{border:5px solid var(--ink)}
+.opt small{margin-left:auto;font-weight:500;color:var(--muted);font-size:12px}
+/* S6, S7 doc */
+.docv{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:16px}
+.paper{background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:var(--sh-2);padding:34px 38px;font-family:"Noto Sans KR",sans-serif;color:#1d1c18}
+.paper .dt{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #1d1c18;padding-bottom:10px}
+.paper .dt h5{margin:0;font-size:19px;font-weight:800;letter-spacing:-.03em}
+.paper .dt span{font-size:11px;color:#77736b}
+.paper table.hd{width:100%;border-collapse:collapse;font-size:12px;margin:12px 0 18px}
+.paper table.hd td{border:1px solid #d9d4ca;padding:6px 8px}
+.paper table.hd td.k{background:#f5f2ec;font-weight:700;width:76px}
+.paper h6{margin:16px 0 6px;font-size:13px;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:6px}
+.paper h6 em{font-style:normal;font:700 10.5px var(--font-mono);color:#1E1E7F;background:#EFEFFA;padding:2px 5px;border-radius:4px}
+.paper p,.paper li{font-size:12.5px;line-height:1.7;margin:0}
+.paper ul{margin:0;padding-left:16px}
+.paper .chg{background:linear-gradient(transparent 58%,#F8E950 58%,#F8E950 92%,transparent 92%)}
+.paper table.ai{width:100%;border-collapse:collapse;font-size:12px}
+.paper table.ai th{background:#f5f2ec;border:1px solid #d9d4ca;padding:5px 7px;text-align:left}
+.paper table.ai td{border:1px solid #d9d4ca;padding:5px 7px}
+.paper .flag{outline:2px solid var(--yellow-500);outline-offset:2px;border-radius:2px}
+.vlist{list-style:none;margin:0;padding:0}
+.vlist li{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:start;padding:11px 0;border-bottom:1px solid var(--line);font-size:13px}
+.vlist li:last-child{border-bottom:0}
+.vdot{width:22px;height:22px;border-radius:50%;display:grid;place-items:center}
+.vdot .ic{width:12px;height:12px;stroke-width:2.6}
+.vdot.ok{background:var(--sage-50);color:var(--sage-700)} .vdot.fix{background:var(--tomato-50);color:var(--tomato-700)} .vdot.q{background:var(--yellow-100);color:var(--yellow-700)}
+.vlist b{font-weight:700} .vlist small{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
+.reviewbar{position:sticky;bottom:0;display:flex;align-items:center;gap:10px;padding:12px 28px;background:rgba(255,255,255,.92);border-top:1px solid var(--line);backdrop-filter:blur(6px)}
+.reviewbar .msg{font-size:13px;color:var(--ink-2);display:flex;align-items:center;gap:8px}
+.reviewbar .msg .ic{width:16px;height:16px;color:var(--yellow-700)}
+.reviewbar .sp{flex:1}
+.policy{display:flex;align-items:center;gap:8px;font-size:12.5px}
+.policy .pp{display:flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:var(--paper)}
+.policy .pp.done{background:var(--sage-50);border-color:var(--sage-300);color:var(--sage-700)}
+.policy .pp.cur{background:var(--yellow-50);border-color:var(--yellow-500);font-weight:700}
+.policy .ar{color:var(--subtle)}
+.diff p{font-size:12.5px;line-height:1.7;margin:4px 0}
+.diff del{background:var(--tomato-50);color:var(--tomato-700);text-decoration:line-through}
+.diff ins{background:var(--sage-50);color:var(--sage-700);text-decoration:none}
+.thread{list-style:none;margin:0;padding:0}
+.thread li{display:grid;grid-template-columns:28px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}
+.thread li:last-child{border-bottom:0}
+.thread .av{width:28px;height:28px;border-radius:50%;background:var(--beige-100);display:grid;place-items:center;font:700 11px var(--font-sans)}
+.thread small{color:var(--muted);font-size:11.5px}
+/* S8 */
+.fields{list-style:none;margin:0;padding:0}
+.fields li{display:grid;grid-template-columns:20px 1.2fr 1fr 70px 1.6fr;gap:12px;align-items:center;padding:11px 16px;border-bottom:1px solid var(--line);font-size:13px}
+.fields li.h{font-size:11.5px;color:var(--muted);font-weight:600;background:var(--beige-100)}
+.fields li.chg{background:var(--yellow-50)}
+.fields .ic{width:15px;height:15px;color:var(--subtle)}
+.req{font:700 11px var(--font-sans);color:var(--sage-700)}
+.impact{position:absolute;right:28px;top:150px;width:360px;background:var(--paper);border-radius:18px;box-shadow:var(--sh-3);border:1px solid var(--line);overflow:hidden}
+.impact .ih{padding:18px 18px 10px}
+.impact .ih h4{margin:8px 0 4px;font-size:16px;letter-spacing:-.02em}
+.impact .ih p{margin:0;font-size:12.5px;color:var(--muted)}
+.chain{display:flex;flex-wrap:wrap;gap:6px;padding:4px 18px 14px;align-items:center;font-size:12px}
+.chain span{padding:5px 8px;border-radius:7px;background:var(--beige-100);color:var(--subtle);text-decoration:line-through}
+.chain span.re{background:var(--yellow-100);color:var(--ink);text-decoration:none;font-weight:700}
+.impact .if{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px;background:var(--beige-100);border-top:1px solid var(--line)}
+/* S9 */
+.bars{display:grid;gap:12px}
+.bar-row{display:grid;grid-template-columns:150px 1fr 60px;gap:12px;align-items:center;font-size:12.5px}
+.stack{display:flex;height:22px;border-radius:6px;overflow:hidden;background:var(--beige-100)}
+.stack i{display:block;height:100%}
+.s-h{background:var(--ink)} .s-a{background:var(--blue-500)} .s-r{background:var(--yellow-500)}
+.keyrow{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-bottom:12px}
+.keyrow span{display:inline-flex;gap:6px;align-items:center}
+.keyrow i{width:10px;height:10px;border-radius:3px;display:inline-block}
+footer{padding:40px 0 64px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media (max-width:900px){
+  .facts{grid-template-columns:repeat(2,1fr)}
+  .spec{grid-template-columns:1fr 1fr}
+  .lane{grid-template-columns:1fr}
+  .lane .cells{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:600px){
+  .wrap,.top-in{padding:0 16px}
+  .top nav{display:none}
+  .spec{grid-template-columns:1fr}
+  .sh .tags{margin-left:0}
+  table.map{display:block;overflow-x:auto}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="eggShade" cx="36%" cy="28%" r="78%">
+      <stop offset="0" stop-color="#FFFEFA"/><stop offset=".62" stop-color="#F6EEDD"/><stop offset="1" stop-color="#E4D6BA"/>
+    </radialGradient>
+    <radialGradient id="yolkShade" cx="38%" cy="32%" r="70%">
+      <stop offset="0" stop-color="#FFE97A"/><stop offset=".7" stop-color="#F7C928"/><stop offset="1" stop-color="#E9AE12"/>
+    </radialGradient>
+  </defs>
+  <symbol id="egg" viewBox="0 0 64 76">
+    <path d="M32 2C17 2 4 26 4 46c0 16 12.5 28 28 28s28-12 28-28C60 26 47 2 32 2Z" fill="url(#eggShade)"/>
+    <ellipse cx="23" cy="45" rx="2.6" ry="3.6" fill="#1A1814"/><ellipse cx="41" cy="45" rx="2.6" ry="3.6" fill="#1A1814"/>
+    <path d="M26.5 54c3 2.8 8 2.8 11 0" stroke="#1A1814" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+  </symbol>
+  <symbol id="yolk" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="29" fill="url(#yolkShade)"/>
+    <ellipse cx="24" cy="31" rx="2.6" ry="3.6" fill="#1A1814"/><ellipse cx="40" cy="31" rx="2.6" ry="3.6" fill="#1A1814"/>
+    <path d="M27 40c2.8 2.4 7.2 2.4 10 0" stroke="#1A1814" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+  </symbol>
+  <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 10v3M6 6v11M10 3v18M14 8v7M18 5v13M22 10v3"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6M10 22h4"/></symbol>
+  <symbol id="i-checks" viewBox="0 0 24 24"><path d="m3 17 2 2 4-4M3 7l2 2 4-4M13 6h8M13 12h8M13 18h8"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M16 13H8M16 17H8M10 9H8"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7.5"/><path d="m21 21-4.6-4.6"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12.8 2.2a2 2 0 0 0-1.6 0L2.6 6.1a1 1 0 0 0 0 1.8l8.6 3.9a2 2 0 0 0 1.6 0l8.6-3.9a1 1 0 0 0 0-1.8Z"/><path d="m22 12.6-9.2 4.2a2 2 0 0 1-1.6 0L2 12.6M22 17.6l-9.2 4.2a2 2 0 0 1-1.6 0L2 17.6"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.5 0 4.9 1 6.7 2.7L21 8"/><path d="M21 3v5h-5"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5Z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.5 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.7 1.1Z"/></symbol>
+  <symbol id="i-template" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="7" rx="1.5"/><rect x="3" y="14" width="9" height="7" rx="1.5"/><rect x="16" y="14" width="5" height="7" rx="1.5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><path d="M12 9v4M12 17h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-diff" viewBox="0 0 24 24"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7M11 18H8a2 2 0 0 1-2-2V9"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z"/></symbol>
+  <symbol id="i-grip" viewBox="0 0 24 24"><circle cx="9" cy="6" r="1" fill="currentColor"/><circle cx="15" cy="6" r="1" fill="currentColor"/><circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="15" cy="12" r="1" fill="currentColor"/><circle cx="9" cy="18" r="1" fill="currentColor"/><circle cx="15" cy="18" r="1" fill="currentColor"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+</svg>
+
+
+<template id="shell-side">
+  <aside class="side">
+    <div class="brand"><span class="eg-wordmark" style="font-size:19px">egg is going<i></i></span></div>
+    <div class="prog"><div><small>프로그램</small><b>달걀 한 판 여행기</b></div><svg class="ic"><use href="#i-chev"/></svg></div>
+    <div class="navx" data-k="home"><svg class="ic"><use href="#i-home"/></svg>회의</div>
+    <div class="navx" data-k="tasks"><svg class="ic"><use href="#i-inbox"/></svg>확인 요청<span class="cnt">2</span></div>
+    <div class="navx" data-k="review"><svg class="ic"><use href="#i-send"/></svg>검토·결재</div>
+    <div class="grp">관리</div>
+    <div class="navx" data-k="tpl"><svg class="ic"><use href="#i-template"/></svg>템플릿·정책</div>
+    <div class="navx" data-k="metric"><svg class="ic"><use href="#i-clock"/></svg>PoC 측정</div>
+    <div class="me"><svg><use href="#egg"/></svg><div><b data-user>이혜연</b><small data-role>작성자 · 막내 작가</small></div></div>
+  </aside>
+</template>
+
+<header class="top"><div class="top-in">
+  <span class="eg-wordmark">egg is going<i></i></span><span class="ver">화면 기획 v0.1</span>
+  <nav>
+    <a href="#flow">흐름</a><a href="#s1">S1 회의</a><a href="#s2">S2 등록</a><a href="#s3">S3 실행</a><a href="#s4">S4 작업실</a>
+    <a href="#s5">S5 확인 요청</a><a href="#s6">S6 상신</a><a href="#s7">S7 결재</a><a href="#s8">S8 템플릿</a><a href="#s9">S9 측정</a>
+  </nav>
+</div></header>
+
+<main class="wrap">
+
+<section class="hero">
+  <span class="t-overline">제작회의 워크스페이스 · Screen Plan</span>
+  <h1 class="t-display" style="margin:14px 0 0;font-size:clamp(36px,5vw,56px)">회의가 끝나면,<br><span class="hl">제작이 시작되도록.</span></h1>
+  <p class="lead">To-Be 업무 흐름(T01–T07)과 PRD 요구사항(FR-01–10)을 9개 화면으로 옮겼습니다. 모든 화면은 <b>디자인 시스템 v0.1</b>의 토큰과 컴포넌트만으로 그렸고, 데이터 이름은 ERD를 따릅니다.</p>
+  <div class="facts">
+    <div class="fact"><b>9개 화면</b><span>P0 8개 · P1 1개</span></div>
+    <div class="fact"><b>5개 역할</b><span>작성자·검토자·결재자·관리자·운영자</span></div>
+    <div class="fact"><b>2개 상태 체계</b><span>AI 실행 ≠ 문서 승인</span></div>
+    <div class="fact"><b>1·1·1</b><span>프로그램·템플릿·출력 형식 (MVP)</span></div>
+  </div>
+  <p class="t-caption" style="margin-top:16px">가상 제작사 대상 교육 프로젝트 · 가상 데이터 · 실제 기업과 AIR Studio의 확정 API와 무관</p>
+</section>
+
+<!-- FLOW -->
+<section class="block" id="flow">
+  <h2 class="t-h2 sec">업무 흐름 위의 화면</h2>
+  <p class="sec-d">02_Swimlane_ToBe의 담당 구역 위에 화면(노랑)과 시스템 처리(파랑)를 얹었습니다.</p>
+  <div class="lanes">
+    <div class="lane"><div class="who">작성자<small>막내 작가</small></div><div class="cells">
+      <div class="node scr"><b>T01</b>회의·녹음 등록<br><i>S2</i></div><div></div><div></div>
+      <div class="node scr"><b>T05a</b>확인 응답 후 재개<br><i>S5</i></div>
+      <div class="node scr"><b>T05</b>원문 비교·정정<br><i>S4</i></div>
+      <div class="node scr"><b>T05</b>확인·상신<br><i>S6</i></div><div></div></div></div>
+    <div class="lane"><div class="who">검토·결재자<small>상위 작가 · 메인 작가·PD</small></div><div class="cells">
+      <div></div><div></div><div></div><div></div><div></div><div></div>
+      <div class="node scr"><b>T06</b>검토·결재<br><i>S7</i></div></div></div>
+    <div class="lane"><div class="who">업무 웹·백엔드<small>문서·결재 원장</small></div><div class="cells">
+      <div></div><div class="node sys"><b>T02</b>권한·파일·입력 버전 확정</div><div></div><div></div><div></div><div></div>
+      <div class="node sys"><b>T07</b>승인본 불변 보관</div></div></div>
+    <div class="lane"><div class="who">오케스트레이터<small>AI 실행 상태</small></div><div class="cells">
+      <div></div><div></div><div class="node scr"><b>T03</b>실행·분기·부분 재실행<br><i>S3</i></div><div></div><div></div><div></div><div></div></div></div>
+    <div class="lane"><div class="who">에이전트·도구<small>5 에이전트 + 출력 도구</small></div><div class="cells">
+      <div></div><div></div><div class="node sys"><b>T04</b>전사 → 맥락 → 결정·업무 → 구성·출력 → 검증</div><div></div><div></div><div></div><div></div></div></div>
+  </div>
+  <div class="legend"><span><i style="background:var(--yellow-50);border:1px solid var(--yellow-500)"></i>사용자 화면</span><span><i style="background:var(--blue-50);border:1px solid var(--blue-100)"></i>시스템 처리</span><span>상시 화면: <b style="color:var(--ink)">S1 회의 목록</b> · <b style="color:var(--ink)">S8 템플릿·정책</b> · <b style="color:var(--ink)">S9 PoC 측정</b></span></div>
+
+  <table class="map">
+    <thead><tr><th>화면</th><th>주 사용자</th><th>To-Be</th><th>요구사항</th><th>주요 데이터 (ERD)</th><th>우선</th></tr></thead>
+    <tbody>
+      <tr><td><b>S1</b> 회의 목록</td><td>작성자</td><td>—</td><td>FR-08</td><td><code>Meeting</code> <code>Run</code> <code>DocumentVersion</code></td><td><span class="pri p0">P0</span></td></tr>
+      <tr><td><b>S2</b> 회의·녹음 등록</td><td>작성자</td><td>T01–T02</td><td>FR-01</td><td><code>Meeting</code> <code>Participant</code> <code>Recording</code> <code>TemplateVersion</code></td><td><span class="pri p0">P0</span></td></tr>
+      <tr><td><b>S3</b> 실행 상태</td><td>작성자 · 운영자</td><td>T03–T04</td><td>FR-06</td><td><code>Run</code> <code>StepRun</code> <code>Artifact</code> <code>WorkflowVersion</code></td><td><span class="pri p0">P0</span></td></tr>
+      <tr><td><b>S4</b> 회의 작업실</td><td>작성자</td><td>T05</td><td>FR-02 · 03</td><td><code>Segment</code> <code>DiscussionItem</code> <code>ItemRevision</code> <code>EvidenceLink</code> <code>ActionItem</code></td><td><span class="pri p0">P0</span></td></tr>
+      <tr><td><b>S5</b> 확인 요청</td><td>작성자</td><td>T05a</td><td>FR-07</td><td><code>HumanTask</code></td><td><span class="pri p0">P0</span></td></tr>
+      <tr><td><b>S6</b> 문서 확인·상신</td><td>작성자</td><td>T05</td><td>FR-04 · 05 · 07</td><td><code>DocumentVersion</code> <code>ValidationFinding</code> <code>ReviewRequest</code></td><td><span class="pri p0">P0</span></td></tr>
+      <tr><td><b>S7</b> 검토·결재</td><td>검토자 · 결재자</td><td>T06–T07</td><td>FR-05</td><td><code>ReviewRequest</code> <code>ReviewAction</code> <code>DocumentVersion</code></td><td><span class="pri p0">P0</span></td></tr>
+      <tr><td><b>S8</b> 템플릿·검토 정책</td><td>프로그램 관리자</td><td>—</td><td>FR-04 · 06</td><td><code>Template</code> <code>TemplateVersion</code> <code>ArtifactDependency</code></td><td><span class="pri p1">P1</span></td></tr>
+      <tr><td><b>S9</b> PoC 측정</td><td>작성자 · 관리자</td><td>—</td><td>FR-10</td><td><code>MetricObservation</code> <code>ReviewAction</code></td><td><span class="pri p0">P0</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- S1 -->
+<section class="block" id="s1">
+  <div class="sh"><div><span class="no">S1</span><h2 class="t-h2">회의 목록</h2></div><div class="tags"><span class="pri p0">P0</span><span class="tagx">작성자 홈</span><span class="tagx m">FR-08</span></div></div>
+  <div class="frame"><div class="app" data-nav="home">
+    <div class="main">
+      <div class="bar"><div class="crumb">달걀 한 판 여행기 <span>/</span> <b>회의</b></div><span class="sp"></span><input class="eg-input" style="width:240px;height:36px" placeholder="회의·결정 검색"></div>
+      <div class="body">
+        <div class="page-h"><div><h3>혜연님, 확인할 일이 3개 있어요</h3><p>확인 요청 2건 · 상신 대기 1건</p></div><div class="act"><button class="eg-btn eg-btn--primary"><svg class="ic"><use href="#i-plus"/></svg>새 회의 등록</button></div></div>
+        <div class="stats">
+          <div class="stat hot"><div class="l">확인 요청</div><div class="v">2<small>건</small></div></div>
+          <div class="stat"><div class="l">상신 대기</div><div class="v">1<small>건</small></div></div>
+          <div class="stat"><div class="l">검토 중</div><div class="v">2<small>건</small></div></div>
+          <div class="stat"><div class="l">이번 주 회의</div><div class="v">6<small>회</small></div></div>
+        </div>
+        <div class="card">
+          <table class="tb">
+            <thead><tr><th>회의</th><th>일시</th><th>AI 실행</th><th>진행</th><th>문서</th><th>확인</th><th></th></tr></thead>
+            <tbody>
+              <tr><td class="tt"><b>3회차 오프닝 구성 회의</b><small>참석 6명 · 42분</small></td><td class="t-num">10.21 (화) 10:00</td><td><span class="eg-chip eg-chip--human">사람 확인 대기</span></td><td><div class="dots"><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="h"></i></div></td><td><span class="eg-badge eg-badge--draft">초안 v1</span></td><td><span class="eg-missing">2건</span></td><td><button class="eg-btn eg-btn--secondary eg-btn--sm">열기</button></td></tr>
+              <tr><td class="tt"><b>2회차 편집 방향 회의</b><small>참석 5명 · 1시간 18분</small></td><td class="t-num">10.20 (월) 15:30</td><td><span class="eg-chip eg-chip--pass">완료</span></td><td><div class="dots"><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i></div></td><td><span class="eg-badge eg-badge--draft">초안 v2</span></td><td class="muted">—</td><td><button class="eg-btn eg-btn--primary eg-btn--sm">상신하기</button></td></tr>
+              <tr><td class="tt"><b>게스트 섭외 회의</b><small>참석 4명 · 35분</small></td><td class="t-num">10.17 (금) 11:00</td><td><span class="eg-chip eg-chip--pass">완료</span></td><td><div class="dots"><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i></div></td><td><span class="eg-badge eg-badge--review">검토 중 v3</span></td><td class="muted">—</td><td><button class="eg-btn eg-btn--ghost eg-btn--sm">보기</button></td></tr>
+              <tr><td class="tt"><b>2회차 촬영 회의</b><small>참석 6명 · 3시간 52분</small></td><td class="t-num">10.16 (목) 14:00</td><td><span class="eg-chip eg-chip--fail">실패</span></td><td><div class="dots"><i class="ok"></i><i class="f"></i><i></i><i></i><i></i></div></td><td class="muted">—</td><td class="muted">—</td><td><button class="eg-btn eg-btn--secondary eg-btn--sm"><svg class="ic"><use href="#i-refresh"/></svg>재시작</button></td></tr>
+              <tr><td class="tt"><b>1회차 기획 회의</b><small>참석 6명 · 58분</small></td><td class="t-num">10.14 (화) 10:00</td><td><span class="eg-chip eg-chip--pass">완료</span></td><td><div class="dots"><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i></div></td><td><span class="eg-badge eg-badge--approved"><svg class="ic"><use href="#i-lock"/></svg>승인됨 v2</span></td><td class="muted">—</td><td><button class="eg-btn eg-btn--ghost eg-btn--sm">보기</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <div class="spec">
+    <div><h5>목적</h5>내 프로그램의 회의를 한눈에. 지금 내가 처리할 것(확인 요청·상신)을 맨 위로.</div>
+    <div><h5>핵심 규칙</h5><ul><li>AI 실행 칩과 문서 배지를 <b>다른 열</b>로 분리</li><li>진행 점 5개 = 에이전트 5단계</li><li>멤버십이 있는 프로그램만 보임</li></ul></div>
+    <div><h5>상태</h5><ul><li>빈 화면: 달걀 + “새 회의 등록”</li><li>실패: 실패 단계 점을 빨강, “재시작” 버튼</li></ul></div>
+    <div><h5>데이터</h5><code>Meeting</code> · 최신 <code>Run.status</code> · 최신 <code>DocumentVersion.status</code> · 미처리 <code>HumanTask</code> 수</div>
+  </div>
+</section>
+
+<!-- S2 -->
+<section class="block" id="s2">
+  <div class="sh"><div><span class="no">S2</span><h2 class="t-h2">회의·녹음 등록</h2></div><div class="tags"><span class="pri p0">P0</span><span class="tagx m">T01–T02</span><span class="tagx m">FR-01</span></div></div>
+  <div class="frame"><div class="app" data-nav="home">
+    <div class="main">
+      <div class="bar"><div class="crumb">회의 <span>/</span> <b>새 회의 등록</b></div></div>
+      <div class="body">
+        <div class="page-h"><div><h3>새 회의 등록</h3><p>녹음과 참석자를 알려주면 정리를 시작해요.</p></div></div>
+        <div class="two">
+          <div class="card"><div class="card-b">
+            <div class="fg"><label class="eg-label">녹음 파일</label>
+              <div class="drop"><span class="fi"><svg class="ic"><use href="#i-wave"/></svg></span><div><b>1021_오프닝구성회의.m4a</b><small>42분 10초 · 38.4MB · 업로드 완료</small></div><button class="eg-btn eg-btn--ghost eg-btn--sm" style="margin-left:auto">바꾸기</button></div>
+              <p class="eg-help">m4a · mp3 · wav. 긴 회의는 자동으로 나눠 전사한 뒤 시간 순서대로 합쳐요.</p></div>
+            <div class="fg-row fg">
+              <div><label class="eg-label">회의 이름</label><input class="eg-input" value="3회차 오프닝 구성 회의"></div>
+              <div><label class="eg-label">회의 일시</label><input class="eg-input" value="2026-10-21 10:00"></div>
+            </div>
+            <div class="fg-row fg">
+              <div><label class="eg-label">프로그램</label><div class="sel">달걀 한 판 여행기 <svg class="ic"><use href="#i-chev"/></svg></div></div>
+              <div><label class="eg-label">템플릿</label><div class="sel">제작회의록 <span class="mono muted">v3 · 승인됨</span><svg class="ic"><use href="#i-chev"/></svg></div></div>
+            </div>
+            <div class="fg"><label class="eg-label">참석자 <span class="muted" style="font-weight:500">6명 · 전사 화자 후보로 쓰여요</span></label>
+              <div class="people">
+                <div class="person"><span class="av">한</span>한지수 <span class="eg-team eg-team--writer">메인 작가</span></div>
+                <div class="person"><span class="av">오</span>오다은 <span class="eg-team eg-team--writer">서브 작가</span></div>
+                <div class="person"><span class="av">이</span>이혜연 <span class="eg-team eg-team--writer">막내 작가</span><span class="ext">작성자</span></div>
+                <div class="person"><span class="av">박</span>박준호 <span class="eg-team eg-team--pd">메인 PD</span></div>
+                <div class="person"><span class="av">최</span>최민재 <span class="eg-team eg-team--pd">서브 PD</span></div>
+                <div class="person"><span class="av" style="background:var(--yellow-100)">+</span>외부 참석자 추가<span class="ext">계정 없이 이름만</span></div>
+              </div></div>
+          </div></div>
+          <div style="display:grid;gap:16px;align-content:start">
+            <div class="card"><div class="card-h"><h4>접수 확인</h4><span class="r"><span class="t-caption">T02 · 백엔드 검증</span></span></div><div class="card-b">
+              <ul class="checklist">
+                <li><span class="vd ok"><svg class="ic"><use href="#i-check"/></svg></span><div><b>프로그램 권한</b><div class="t-caption">‘달걀 한 판 여행기’ 작성자</div></div></li>
+                <li><span class="vd ok"><svg class="ic"><use href="#i-check"/></svg></span><div><b>파일 형식·길이</b><div class="t-caption">m4a · 42분 · 해시 기록됨</div></div></li>
+                <li><span class="vd ok"><svg class="ic"><use href="#i-check"/></svg></span><div><b>템플릿 버전 고정</b><div class="t-caption">제작회의록 v3로 이 회의를 처리해요</div></div></li>
+                <li><span class="vd qq"><svg class="ic"><use href="#i-help"/></svg></span><div><b>외부 참석자 0명</b><div class="t-caption">게스트가 있었다면 추가해 주세요</div></div></li>
+              </ul></div></div>
+            <div class="callout b"><svg class="ic"><use href="#i-lock"/></svg><div>원본 녹음은 바뀌지 않아요. 전사를 고치면 새 전사 버전이 만들어지고, 원본은 그대로 남아요.</div></div>
+            <div class="callout r"><svg class="ic"><use href="#i-alert"/></svg><div><b>거부 예시</b> · 권한 없는 프로그램, 지원하지 않는 파일, 0초 녹음은 등록되지 않아요. 이유를 그대로 보여 줘요.</div></div>
+            <button class="eg-btn eg-btn--ink eg-btn--lg" style="width:100%">정리 시작</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <div class="spec">
+    <div><h5>목적</h5>T01 등록. 이후 모든 실행의 입력(녹음·참석자·템플릿 버전)을 여기서 고정.</div>
+    <div><h5>핵심 규칙</h5><ul><li>템플릿은 <b>버전까지</b> 표시하고 고정</li><li>외부 참석자는 <code>user_id</code> 없이 이름만</li><li>같은 입력으로 두 번 누르면 기존 실행으로 이동 (중복 실행 방지)</li></ul></div>
+    <div><h5>상태</h5><ul><li>업로드 중: 진행률</li><li>거부: 사유 문장 + 고칠 방법</li></ul></div>
+    <div><h5>데이터</h5><code>Meeting</code> <code>Participant</code> <code>Recording(hash, duration_ms)</code> <code>TemplateVersion</code> → <code>Run(idempotency_key)</code></div>
+  </div>
+</section>
+
+<!-- S3 -->
+<section class="block" id="s3">
+  <div class="sh"><div><span class="no">S3</span><h2 class="t-h2">실행 상태</h2></div><div class="tags"><span class="pri p0">P0</span><span class="tagx m">T03–T04</span><span class="tagx m">FR-06</span><span class="tagx">운영자 화면 겸용</span></div></div>
+  <div class="frame"><div class="app" data-nav="home">
+    <div class="main">
+      <div class="bar"><div class="crumb">회의 <span>/</span> 3회차 오프닝 구성 회의 <span>/</span> <b>실행 상태</b></div><span class="sp"></span><span class="eg-chip eg-chip--human">사람 확인 대기</span><button class="eg-btn eg-btn--ghost eg-btn--sm">실행 취소</button></div>
+      <div class="body">
+        <div class="page-h"><div><h3>확인 질문 2건에 답하면 이어서 진행해요</h3><p>검증 에이전트가 판단하기 어려운 부분을 찾았어요. 나머지 단계는 끝났어요.</p></div><div class="act"><button class="eg-btn eg-btn--primary"><svg class="ic"><use href="#i-help"/></svg>확인 요청 보기</button></div></div>
+        <div class="board">
+          <div class="eg-step is-pass"><div class="eg-step__icon"><svg class="ic"><use href="#i-wave"/></svg></div><div><div class="eg-step__name">전사·화자</div><div class="eg-step__meta">42분 · 화자 6명<br>불확실 구간 1</div></div><span class="eg-chip eg-chip--pass">완료</span></div>
+          <div class="eg-step is-pass"><div class="eg-step__icon"><svg class="ic"><use href="#i-bulb"/></svg></div><div><div class="eg-step__name">제작 맥락</div><div class="eg-step__meta">안건 4 · 변경 이력 3</div></div><span class="eg-chip eg-chip--pass">완료</span></div>
+          <div class="eg-step is-pass"><div class="eg-step__icon"><svg class="ic"><use href="#i-checks"/></svg></div><div><div class="eg-step__name">결정·업무</div><div class="eg-step__meta">확정 3 · 보류 1 · 업무 2<br>시도 2 (누락 재처리)</div></div><span class="eg-chip eg-chip--pass">완료</span></div>
+          <div class="eg-step is-pass"><div class="eg-step__icon"><svg class="ic"><use href="#i-doc"/></svg></div><div><div class="eg-step__name">문서 구성</div><div class="eg-step__meta">제작회의록 v3</div></div><span class="eg-chip eg-chip--pass">완료</span></div>
+          <div class="eg-step is-pass is-tool"><div class="eg-step__icon"><svg class="ic"><use href="#i-layers"/></svg></div><div><div class="eg-step__name">문서 출력 <span class="t-caption">규칙 도구</span></div><div class="eg-step__meta">docx · 서식 검사 통과</div></div><span class="eg-chip eg-chip--pass">완료</span></div>
+          <div class="eg-step is-human"><div class="eg-step__icon"><svg class="ic"><use href="#i-search"/></svg></div><div><div class="eg-step__name">검증</div><div class="eg-step__meta">통과 9 · 불명확 2</div></div><span class="eg-chip eg-chip--human">사람 확인 대기</span></div>
+        </div>
+        <div class="branch">
+          <div class="br"><b><span class="k" style="background:var(--sage-50);color:var(--sage-700)">통과</span>작성자 검토 후 상신</b><span class="muted">AI 처리 완료 · 문서는 아직 초안</span></div>
+          <div class="br"><b><span class="k" style="background:var(--tomato-50);color:var(--tomato-700)">누락·모순</span>관련 단계 재처리</b><span class="muted">단계당 자동 2회까지 · 하위 결과 무효화</span></div>
+          <div class="br on"><b><span class="k" style="background:var(--yellow-300);color:var(--ink)">불명확·한도 도달</span>사람 확인 대기</b><span class="muted">질문 2건 → 응답하면 새 입력 버전으로 재개</span></div>
+        </div>
+        <div class="two" style="margin-top:16px">
+          <div class="card"><div class="card-h"><h4>실행 기록</h4><span class="r"><span class="t-caption">최신순</span></span></div><div class="card-b" style="padding-top:4px;padding-bottom:4px">
+            <ul class="log">
+              <li><span class="t">10:46:12</span><span><b>검증</b> 불명확 2건 → 사람 확인 요청 생성 <span class="eg-tsbtn">HT-2</span> <span class="eg-tsbtn">HT-3</span></span></li>
+              <li><span class="t">10:45:40</span><span><b>문서 출력</b> docx 생성 · 서식 검사 통과</span></li>
+              <li><span class="t">10:45:02</span><span><b>결정·업무</b> 시도 2 완료 · ‘게스트 섭외’ 보류 항목 추가</span></li>
+              <li><span class="t">10:44:31</span><span><b>검증</b> 누락 1건 (03:20 게스트 섭외) → <b>결정·업무</b>부터 재처리</span></li>
+              <li><span class="t">10:42:05</span><span><b>전사·화자</b> 완료 · 02:05 구간 화자 불확실</span></li>
+            </ul></div></div>
+          <div class="card"><div class="card-h"><h4>이 실행의 고정 입력</h4><span class="r"><span class="t-caption">재현성</span></span></div><div class="card-b">
+            <dl class="meta-grid">
+              <dt>Run</dt><dd>run_7f3a · parent 없음</dd>
+              <dt>워크플로</dt><dd>meeting-doc v0.4</dd>
+              <dt>전사</dt><dd>TranscriptVersion v1</dd>
+              <dt>템플릿</dt><dd>제작회의록 v3</dd>
+              <dt>프롬프트</dt><dd>decision@3 · verify@2</dd>
+              <dt>입력 해시</dt><dd>sha256:9c1e…a04d</dd>
+            </dl>
+            <div class="callout y" style="margin-top:14px"><svg class="ic"><use href="#i-alert"/></svg><div>같은 입력으로 이미 실행 중이면 새로 시작하지 않고 이 화면으로 와요.</div></div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <div class="spec">
+    <div><h5>목적</h5>오케스트레이터의 현재 위치와 다음 행동을 보여 주기. “지금 내가 할 일”을 헤드라인으로.</div>
+    <div><h5>핵심 규칙</h5><ul><li>문서 출력은 <b>점선 테두리</b>(에이전트 아님, 규칙 도구)</li><li>분기 3칸 중 현재 경로만 강조</li><li>“이 단계부터 다시”는 하위 단계까지 포함해 재실행</li></ul></div>
+    <div><h5>상태</h5><ul><li>실패: 실패 단계·재시작 위치 표시</li><li>취소: “취소 요청 받음” → “취소됨” 두 단계</li><li>전송 불확실: 재요청 대신 상태 조회 중 표시</li></ul></div>
+    <div><h5>데이터</h5><code>Run</code> <code>StepRun(step_key, attempt, prompt_ref, input_hash)</code> <code>Artifact</code> <code>HumanTask</code><br><span class="t-caption">운영자에게는 원문 없이 기록·오류만 보임</span></div>
+  </div>
+</section>
+
+<!-- S4 -->
+<section class="block" id="s4">
+  <div class="sh"><div><span class="no">S4</span><h2 class="t-h2">회의 작업실</h2></div><div class="tags"><span class="pri p0">P0</span><span class="tagx m">T05</span><span class="tagx m">FR-02 · FR-03</span><span class="tagx">핵심 화면</span></div></div>
+  <div class="frame"><div class="app" data-nav="home">
+    <div class="main">
+      <div class="bar"><div class="crumb">회의 <span>/</span> 3회차 오프닝 구성 회의 <span>/</span> <b>작업실</b></div><span class="sp"></span><button class="eg-btn eg-btn--secondary eg-btn--sm"><svg class="ic"><use href="#i-doc"/></svg>문서 보기</button></div>
+      <div class="body">
+        <div class="ws">
+          <div class="card" style="overflow:hidden">
+            <div class="tr-h"><h4>회의 원문</h4><span class="ver">전사 v1 · 원본</span><span class="r" style="margin-left:auto;display:flex;gap:6px"><button class="eg-btn eg-btn--ghost eg-btn--sm"><svg class="ic"><use href="#i-search"/></svg></button><button class="eg-btn eg-btn--secondary eg-btn--sm"><svg class="ic"><use href="#i-pencil"/></svg>전사 정정</button></span></div>
+            <div class="wave">
+              <i style="height:30%"></i><i style="height:60%"></i><i style="height:40%"></i><i style="height:80%"></i><i style="height:50%"></i><i style="height:35%"></i><i style="height:70%"></i><i style="height:45%"></i><i style="height:30%"></i><i class="e" style="height:85%"></i><i class="e" style="height:65%"></i><i class="e" style="height:90%"></i><i class="e" style="height:55%"></i><i style="height:40%"></i><i style="height:60%"></i><i style="height:30%"></i><i style="height:50%"></i><i style="height:75%"></i><i style="height:35%"></i><i style="height:55%"></i><i style="height:25%"></i><i style="height:65%"></i><i style="height:40%"></i><i style="height:30%"></i><i style="height:70%"></i><i style="height:45%"></i><i style="height:60%"></i><i style="height:35%"></i><i style="height:50%"></i><i style="height:28%"></i><i style="height:62%"></i><i style="height:38%"></i><i style="height:52%"></i><i style="height:30%"></i><i style="height:66%"></i><i style="height:44%"></i><i style="height:58%"></i><i style="height:33%"></i>
+            </div>
+            <div style="padding:8px">
+              <div class="eg-line"><span class="pl"><svg class="ic"><use href="#i-play"/></svg></span><span class="eg-ts">00:12</span><div><div class="who">박준호 <span class="eg-team eg-team--pd">메인 PD</span></div><div class="tx">오프닝은 야외에서 가죠. 한강 공원 어때요?</div></div></div>
+              <div class="eg-line"><span class="pl"><svg class="ic"><use href="#i-play"/></svg></span><span class="eg-ts">00:31</span><div><div class="who">오다은 <span class="eg-team eg-team--writer">서브 작가</span></div><div class="tx">그날 오후에 비 소식 있던데요.</div></div></div>
+              <div class="eg-line is-evidence"><span class="pl"><svg class="ic"><use href="#i-play"/></svg></span><span class="eg-ts">00:48</span><div><div class="who">한지수 <span class="eg-team eg-team--writer">메인 작가</span></div><div class="tx">우천이면 리스크 크니까 실내로 돌리죠.</div></div></div>
+              <div class="eg-line is-evidence"><span class="pl"><svg class="ic"><use href="#i-play"/></svg></span><span class="eg-ts">00:51</span><div><div class="who">박준호 <span class="eg-team eg-team--pd">메인 PD</span></div><div class="tx">그럼 스튜디오에서 오프닝 찍는 걸로 정리합시다.</div></div></div>
+              <div class="eg-line"><span class="pl"><svg class="ic"><use href="#i-play"/></svg></span><span class="eg-ts">01:20</span><div><div class="who">최민재 <span class="eg-team eg-team--pd">서브 PD</span></div><div class="tx">스튜디오 대관은 제가 확인해 볼게요.</div></div></div>
+              <div class="eg-line is-uncertain"><span class="pl"><svg class="ic"><use href="#i-play"/></svg></span><span class="eg-ts">02:05</span><div><div class="who">화자 불확실 <span class="eg-chip eg-chip--human" style="height:20px;font-size:11px">불확실 구간</span></div><div class="tx">그 부분은… (겹침) …다시 얘기하는 걸로</div></div></div>
+              <div class="eg-line"><span class="pl"><svg class="ic"><use href="#i-play"/></svg></span><span class="eg-ts">03:20</span><div><div class="who">한지수 <span class="eg-team eg-team--writer">메인 작가</span></div><div class="tx">게스트는… 일단 출연료 보고 다음 주에 다시 얘기해요.</div></div></div>
+            </div>
+          </div>
+          <div class="card" style="overflow:hidden">
+            <div class="tabs"><span class="on">결정<b>4</b></span><span>아이디어 변화<b>3</b></span><span>후속 업무<b>2</b></span><span>보류<b>1</b></span></div>
+            <div class="item on">
+              <div class="item-h"><b>오프닝 장소</b><span class="eg-item eg-item--confirmed">확정</span><span class="r"><span class="mono muted">rev 3</span></span></div>
+              <dl class="eg-kv"><dt>최종</dt><dd>스튜디오</dd></dl>
+              <dl class="eg-kv"><dt>변경 이력</dt><dd style="display:block"><ul class="hist">
+                <li><s>야외 · 한강 공원</s> <span class="eg-item eg-item--proposed">제안</span> <a class="eg-tsbtn">00:12</a></li>
+                <li><s>실내</s> <a class="eg-tsbtn">00:48</a><span class="why">이유: 촬영일 오후 비 예보 (00:31 근거)</span></li>
+                <li class="final"><b>스튜디오</b> <a class="eg-tsbtn">00:51</a><span class="why">이유 언급 없음</span></li></ul></dd></dl>
+              <dl class="eg-kv"><dt>근거</dt><dd><a class="eg-tsbtn"><svg class="ic" style="width:10px;height:10px"><use href="#i-play"/></svg>00:48 – 00:51</a><span class="t-caption">발언 2개 연결</span></dd></dl>
+              <dl class="eg-kv"><dt>담당 · 기한</dt><dd><span class="eg-missing">미정</span><span class="t-caption">원문에 언급 없음</span></dd></dl>
+            </div>
+            <div class="item">
+              <div class="item-h"><b>오프닝 멘트 톤</b><span class="eg-item eg-item--confirmed">확정</span></div>
+              <dl class="eg-kv"><dt>최종</dt><dd>밝은 여행 브이로그 톤</dd></dl>
+              <dl class="eg-kv"><dt>근거</dt><dd><span class="eg-unverified">미확인</span><button class="eg-btn eg-btn--secondary eg-btn--sm">근거 연결</button></dd></dl>
+            </div>
+            <div class="item">
+              <div class="item-h"><b>드론 촬영</b><span class="eg-item eg-item--dropped">폐기</span></div>
+              <dl class="eg-kv"><dt>근거</dt><dd><a class="eg-tsbtn">01:05</a><span class="t-caption">“예산 때문에 이번엔 빼죠”</span></dd></dl>
+            </div>
+            <div style="padding:12px 16px;border-top:1px solid var(--line)"><div class="callout y" style="padding:10px 12px"><svg class="ic"><use href="#i-alert"/></svg><div>결정을 고치면 <b>문서 구성 이후</b> 결과를 다시 만들어요. 전사를 고치면 <b>제작 맥락 이후</b>부터 다시 만들어요.</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <div class="spec">
+    <div><h5>목적</h5>원문과 정리 결과를 나란히. 제안서 06장 “결정이 바뀐 이유까지”를 구현.</div>
+    <div><h5>핵심 규칙</h5><ul><li>항목 클릭 → 원문 근거 구간 노란 바 + 파형 강조</li><li>제안·확정·보류·<b>폐기</b> 구분</li><li>근거 없는 값은 <span class="eg-unverified" style="height:18px;font-size:11px">미확인</span>, 담당·기한 없음은 <span class="eg-missing" style="height:18px;font-size:11px">미정</span></li></ul></div>
+    <div><h5>정정</h5><ul><li>전사 정정 → 새 <code>TranscriptVersion</code> (원본 보존)</li><li>항목 정정 → 새 <code>ItemRevision</code></li><li>정정 전 영향 범위를 먼저 보여 줌</li></ul></div>
+    <div><h5>데이터</h5><code>Segment(start_ms, end_ms)</code> <code>DiscussionItem</code> <code>ItemRevision(status, supersedes)</code> <code>EvidenceLink</code> <code>ActionItem(assignee=null)</code></div>
+  </div>
+</section>
+
+<!-- S5 -->
+<section class="block" id="s5">
+  <div class="sh"><div><span class="no">S5</span><h2 class="t-h2">확인 요청</h2></div><div class="tags"><span class="pri p0">P0</span><span class="tagx m">T05a</span><span class="tagx m">FR-07</span></div></div>
+  <div class="frame"><div class="app" data-nav="tasks">
+    <div class="main">
+      <div class="bar"><div class="crumb"><b>확인 요청</b> <span class="muted">· 미처리 2건</span></div></div>
+      <div class="body">
+        <div class="inbox">
+          <div class="card" style="overflow:hidden">
+            <div class="tq on"><span class="eg-chip eg-chip--human" style="height:20px;font-size:11px">필수</span> <span class="t-caption">3회차 오프닝 구성 회의</span><b>‘게스트 섭외’는 확정인가요, 보류인가요?</b><small>검증 · 재시도 한도 도달 · 3분 전</small></div>
+            <div class="tq"><span class="eg-chip eg-chip--human" style="height:20px;font-size:11px">필수</span> <span class="t-caption">3회차 오프닝 구성 회의</span><b>02:05 구간 화자가 누구인가요?</b><small>전사·화자 · 발화 겹침 · 3분 전</small></div>
+            <div class="tq" style="opacity:.6"><span class="eg-chip eg-chip--pass" style="height:20px;font-size:11px">답변함</span> <span class="t-caption">2회차 편집 방향 회의</span><b>‘엔딩 BGM’ 담당자를 지정할까요?</b><small>어제 · 이혜연</small></div>
+          </div>
+          <div class="card">
+            <div class="card-b" style="padding:22px">
+              <div style="display:flex;gap:12px;align-items:flex-start">
+                <span style="width:40px;height:40px;border-radius:12px;background:var(--yellow-300);display:grid;place-items:center;flex:none"><svg class="ic"><use href="#i-help"/></svg></span>
+                <div><h3 class="t-h3" style="margin:0">‘게스트 섭외’는 확정인가요, 보류인가요?</h3><p class="t-caption" style="margin:4px 0 0">검증 에이전트가 두 번 시도했지만 판단하지 못했어요. 응답하면 이 값을 고정하고 <b>문서 구성</b>부터 이어서 진행해요.</p></div>
+              </div>
+              <p class="t-label" style="margin:20px 0 8px">근거 원문</p>
+              <div style="background:var(--cream);border-radius:14px;padding:6px">
+                <div class="eg-line"><span class="pl"><svg class="ic"><use href="#i-play"/></svg></span><span class="eg-ts">03:14</span><div><div class="who">박준호 <span class="eg-team eg-team--pd">메인 PD</span></div><div class="tx">게스트 후보 두 명 중에 누구로 갈까요?</div></div></div>
+                <div class="eg-line is-evidence"><span class="pl"><svg class="ic"><use href="#i-play"/></svg></span><span class="eg-ts">03:20</span><div><div class="who">한지수 <span class="eg-team eg-team--writer">메인 작가</span></div><div class="tx">게스트는… 일단 출연료 보고 다음 주에 다시 얘기해요.</div></div></div>
+              </div>
+              <p class="t-label" style="margin:20px 0 8px">응답</p>
+              <div style="display:grid;gap:8px">
+                <div class="opt"><span class="rd"></span>확정<small>값을 함께 입력</small></div>
+                <div class="opt on"><span class="rd"></span>보류 · 다음 주 재논의<small>사유: 출연료 확인 필요</small></div>
+                <div class="opt"><span class="rd"></span>회의에서 다루지 않음 (항목 삭제)</div>
+              </div>
+              <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:18px">
+                <button class="eg-btn eg-btn--ghost">나중에</button><button class="eg-btn eg-btn--primary"><svg class="ic"><use href="#i-lock"/></svg>이 값으로 고정하고 재개</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <div class="spec">
+    <div><h5>목적</h5>에이전트가 멈춘 지점을 사람이 풀어 주는 곳. 질문 하나 · 원문 하나 · 선택지 두세 개.</div>
+    <div><h5>핵심 규칙</h5><ul><li>필수 확인이 남아 있으면 S6 상신 잠금</li><li>답한 값은 <b>고정(lock)</b>, 에이전트가 다시 바꾸지 않음</li><li>같은 질문 중복 응답 방지</li></ul></div>
+    <div><h5>상태</h5><ul><li>응답 후: “새 입력 버전으로 재개했어요” 토스트 → S3</li><li>빈 화면: 노른자 “확인할 게 없어요”</li></ul></div>
+    <div><h5>데이터</h5><code>HumanTask(question, response, assignee, input_version)</code> → <code>submit_human_response</code> → 하위 <code>Run(parent_run_id)</code></div>
+  </div>
+</section>
+
+<!-- S6 -->
+<section class="block" id="s6">
+  <div class="sh"><div><span class="no">S6</span><h2 class="t-h2">문서 확인·상신</h2></div><div class="tags"><span class="pri p0">P0</span><span class="tagx m">T05</span><span class="tagx m">FR-04 · 05 · 07</span></div></div>
+  <div class="frame"><div class="app" data-nav="home">
+    <div class="main">
+      <div class="bar"><div class="crumb">회의 <span>/</span> 3회차 오프닝 구성 회의 <span>/</span> <b>문서</b></div><span class="sp"></span><span class="eg-badge eg-badge--draft">초안 v1</span><span class="eg-chip eg-chip--pass">AI 처리 완료</span></div>
+      <div class="body" style="padding-bottom:12px">
+        <div class="docv">
+          <div class="paper">
+            <div class="dt"><h5>달걀 한 판 여행기 · 제작회의록</h5><span>제작회의록 v3 · 초안 v1</span></div>
+            <table class="hd"><tr><td class="k">회차·안건</td><td>3회차 · 오프닝 구성</td><td class="k">일시</td><td>2026.10.21 10:00 (42분)</td></tr><tr><td class="k">참석</td><td colspan="3">한지수, 오다은, 이혜연(작가) · 박준호, 최민재(PD)</td></tr></table>
+            <h6>1. 오프닝 <em>00:48–00:51</em></h6>
+            <p>장소: <b>스튜디오</b> &nbsp;<span class="chg">야외(한강 공원) → 실내(우천 예보) → 스튜디오</span></p>
+            <h6>2. 결정 사항</h6>
+            <ul><li>오프닝 멘트는 밝은 여행 브이로그 톤으로 간다.</li><li>드론 촬영은 이번 회차에서 제외한다. (예산)</li></ul>
+            <h6>3. 후속 업무</h6>
+            <table class="ai"><tr><th>업무</th><th>담당</th><th>기한</th><th>근거</th></tr><tr><td>스튜디오 대관 확인</td><td>최민재 (서브 PD)</td><td><span class="flag">미정</span></td><td>01:20</td></tr></table>
+            <h6>4. 보류</h6>
+            <p>게스트 섭외 — 출연료 확인 후 다음 주 재논의 <span class="flag" style="font-size:11px">확인 중</span></p>
+          </div>
+          <div style="display:grid;gap:16px;align-content:start">
+            <div class="card"><div class="card-h"><h4>검증 결과</h4><span class="r"><span class="eg-chip eg-chip--pass">통과 9</span><span class="eg-chip eg-chip--human">확인 2</span></span></div><div class="card-b" style="padding-top:2px;padding-bottom:2px">
+              <ul class="vlist">
+                <li><span class="vdot q"><svg class="ic"><use href="#i-help"/></svg></span><div><b>‘게스트 섭외’ 상태 불명확</b><small>03:20 · 필수 확인 · S5에서 응답</small></div><span class="eg-chip eg-chip--human">사람 확인</span></li>
+                <li><span class="vdot q"><svg class="ic"><use href="#i-help"/></svg></span><div><b>‘스튜디오 대관 확인’ 기한 없음</b><small>01:20 · 미정으로 두거나 지정</small></div><span class="eg-chip eg-chip--human">사람 확인</span></li>
+                <li><span class="vdot ok"><svg class="ic"><use href="#i-check"/></svg></span><div><b>결정 4건이 문서에 모두 있음</b><small>원문 대조</small></div><span class="eg-chip eg-chip--pass">통과</span></li>
+                <li><span class="vdot ok"><svg class="ic"><use href="#i-check"/></svg></span><div><b>원문에 없는 내용 추가 없음</b><small>모든 문장에 근거 연결</small></div><span class="eg-chip eg-chip--pass">통과</span></li>
+                <li><span class="vdot ok"><svg class="ic"><use href="#i-check"/></svg></span><div><b>서식 규칙 통과</b><small>필수 칸 · 날짜 형식 · 참석자 명단</small></div><span class="eg-chip eg-chip--pass">통과</span></li>
+              </ul></div></div>
+            <div class="card"><div class="card-h"><h4>결재 경로</h4><span class="r"><span class="t-caption">상신 시 정책 고정</span></span></div><div class="card-b">
+              <div class="policy"><span class="pp cur">작성 · 이혜연</span><span class="ar">→</span><span class="pp">검토 · 오다은</span><span class="ar">→</span><span class="pp">결재 · 한지수·박준호</span></div>
+              <p class="t-caption" style="margin:10px 0 0">결재 순서(순차·공동)는 현업 확인 전 가정이에요.</p></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="reviewbar"><span class="msg"><svg class="ic"><use href="#i-alert"/></svg>필수 확인 1건을 처리하면 상신할 수 있어요</span><span class="sp"></span><button class="eg-btn eg-btn--ghost eg-btn--sm"><svg class="ic"><use href="#i-diff"/></svg>이전 버전과 비교</button><button class="eg-btn eg-btn--secondary eg-btn--sm">docx 내려받기</button><button class="eg-btn eg-btn--primary eg-btn--sm" disabled><svg class="ic"><use href="#i-send"/></svg>상신하기</button></div>
+    </div>
+  </div></div>
+  <div class="spec">
+    <div><h5>목적</h5>템플릿이 적용된 실제 문서를 보고, 검증 결과를 정리한 뒤 상신.</div>
+    <div><h5>핵심 규칙</h5><ul><li>헤더에 <b>문서 배지(초안)</b>와 <b>AI 칩(완료)</b>을 나란히 — 둘은 다름</li><li>필수 확인 미완료 시 상신 버튼 잠금</li><li>문서의 노란 테두리 = 확인 필요 위치</li></ul></div>
+    <div><h5>상신하면</h5><ul><li>이 <code>DocumentVersion</code>에 <code>ReviewRequest</code> 생성 (정책 스냅샷)</li><li>문서 상태 초안 → 검토 중</li></ul></div>
+    <div><h5>데이터</h5><code>DocumentVersion(template_version_id, content_ref)</code> <code>DocumentItemLink</code> <code>ValidationFinding</code> <code>Artifact(docx)</code></div>
+  </div>
+</section>
+
+<!-- S7 -->
+<section class="block" id="s7">
+  <div class="sh"><div><span class="no">S7</span><h2 class="t-h2">검토·결재</h2></div><div class="tags"><span class="pri p0">P0</span><span class="tagx m">T06–T07</span><span class="tagx m">FR-05</span><span class="tagx">검토자 · 결재자</span></div></div>
+  <div class="frame"><div class="app" data-nav="review" data-user="한지수" data-role="결재자 · 메인 작가">
+    <div class="main">
+      <div class="bar"><div class="crumb">검토·결재 <span>/</span> <b>3회차 오프닝 구성 회의 · 제작회의록</b></div><span class="sp"></span><span class="eg-badge eg-badge--review">검토 중 v2</span></div>
+      <div class="body" style="padding-bottom:12px">
+        <div class="policy" style="margin-bottom:16px"><span class="pp done"><svg class="ic" style="width:13px;height:13px"><use href="#i-check"/></svg>작성 · 이혜연</span><span class="ar">→</span><span class="pp done"><svg class="ic" style="width:13px;height:13px"><use href="#i-check"/></svg>검토 · 오다은</span><span class="ar">→</span><span class="pp cur">결재 · 한지수 (나)</span><span class="ar">→</span><span class="pp">결재 · 박준호</span></div>
+        <div class="docv">
+          <div class="card"><div class="card-h"><h4>v1 → v2 바뀐 부분</h4><span class="r"><span class="t-caption">반려 사유 반영</span></span></div><div class="card-b diff">
+            <p><b>3. 후속 업무</b></p>
+            <p>스튜디오 대관 확인 · 최민재 · 기한 <del>미정</del> <ins>10월 23일 (목)</ins></p>
+            <p><b>4. 보류</b></p>
+            <p>게스트 섭외 — 출연료 확인 후 다음 주 재논의 <ins>· 후보 2명 명단 첨부</ins></p>
+            <p style="margin-top:14px" class="t-caption">나머지 11개 항목은 v1과 같아요. <a class="eg-tsbtn">전체 문서 보기</a></p>
+          </div></div>
+          <div class="card"><div class="card-h"><h4>의견 기록</h4><span class="r"><span class="t-caption">지울 수 없음</span></span></div><div class="card-b" style="padding-top:2px">
+            <ul class="thread">
+              <li><span class="av">오</span><div><b>오다은</b> <span class="eg-badge eg-badge--changes" style="height:20px;font-size:11px">변경 요청 · v1</span><br>대관 기한이 빠졌어요. 민재 PD님께 확인해서 넣어 주세요.<br><small>10.21 11:20</small></div></li>
+              <li><span class="av">이</span><div><b>이혜연</b> <span class="eg-badge eg-badge--draft" style="height:20px;font-size:11px">v2 상신</span><br>기한 10/23으로 확인해 반영했어요.<br><small>10.21 11:48</small></div></li>
+              <li><span class="av">오</span><div><b>오다은</b> <span class="eg-badge eg-badge--review" style="height:20px;font-size:11px">다음 단계 전달 · v2</span><br>확인했습니다.<br><small>10.21 12:02</small></div></li>
+            </ul>
+            <textarea class="eg-textarea" style="margin-top:10px;min-height:64px" placeholder="의견을 남기세요 (선택)"></textarea>
+          </div></div>
+        </div>
+      </div>
+      <div class="reviewbar"><span class="msg" style="color:var(--muted)"><svg class="ic" style="color:var(--muted)"><use href="#i-lock"/></svg>v2만 승인돼요. 승인 뒤 고치면 v3가 새로 만들어져요.</span><span class="sp"></span><button class="eg-btn eg-btn--danger eg-btn--sm">변경 요청</button><button class="eg-btn eg-btn--primary eg-btn--sm"><svg class="ic"><use href="#i-check"/></svg>v2 승인</button></div>
+    </div>
+  </div></div>
+  <div class="spec">
+    <div><h5>목적</h5>특정 문서 버전에 의견·변경 요청·승인을 남기기. 바뀐 부분부터 보여 줘 전체 재검토를 줄임.</div>
+    <div><h5>역할별 버튼</h5><ul><li>검토자: 의견 · 변경 요청 · 다음 단계 전달</li><li>결재자: 변경 요청 · <b>버전 승인</b></li><li>필수 확인 미완료 버전은 승인 차단</li></ul></div>
+    <div><h5>상태</h5><ul><li>검토 중 새 버전이 오면 이전 요청은 <span class="eg-badge eg-badge--superseded" style="height:18px;font-size:11px">이전 요청</span></li><li>승인 후: <span class="eg-badge eg-badge--approved" style="height:18px;font-size:11px">승인됨</span>, 읽기 전용</li></ul></div>
+    <div><h5>데이터</h5><code>ReviewRequest(policy_snapshot)</code> <code>ReviewAction</code> (append-only) <code>DocumentVersion.status</code></div>
+  </div>
+</section>
+
+<!-- S8 -->
+<section class="block" id="s8">
+  <div class="sh"><div><span class="no">S8</span><h2 class="t-h2">템플릿·검토 정책</h2></div><div class="tags"><span class="pri p1">P1</span><span class="tagx m">FR-04 · FR-06</span><span class="tagx">프로그램 관리자</span></div></div>
+  <div class="frame"><div class="app" data-nav="tpl" data-user="박준호" data-role="프로그램 관리자 · 메인 PD" style="min-height:540px">
+    <div class="main">
+      <div class="bar"><div class="crumb">템플릿·정책 <span>/</span> <b>제작회의록</b></div><span class="sp"></span><span class="ver">v3 승인됨 → v4 초안</span></div>
+      <div class="body">
+        <div class="page-h"><div><h3>제작회의록 v4 (초안)</h3><p>승인된 v3는 바뀌지 않아요. 고친 내용은 v4로 저장돼요.</p></div><div class="act"><button class="eg-btn eg-btn--secondary">미리보기</button><button class="eg-btn eg-btn--primary">v4 승인</button></div></div>
+        <div class="card" style="max-width:600px">
+          <ul class="fields">
+            <li class="h"><span></span><span>항목</span><span>내용 출처</span><span>필수</span><span>배치 규칙</span></li>
+            <li><svg class="ic"><use href="#i-grip"/></svg><b>회의 개요</b><span class="mono">meta</span><span class="req">필수</span><span class="muted">회차·안건·일시·참석</span></li>
+            <li><svg class="ic"><use href="#i-grip"/></svg><b>오프닝</b><span class="mono">결정[안건=오프닝]</span><span class="req">필수</span><span class="muted">최종안 + 변경 이력 한 줄</span></li>
+            <li><svg class="ic"><use href="#i-grip"/></svg><b>결정 사항</b><span class="mono">결정[확정]</span><span class="req">필수</span><span class="muted">불릿, 근거 시각 숨김</span></li>
+            <li class="chg"><svg class="ic"><use href="#i-grip"/></svg><b>후속 업무</b><span class="mono">ActionItem</span><span class="req">필수</span><span><b>표 → 담당별 묶음</b> <span class="eg-chip eg-chip--human" style="height:20px;font-size:11px">변경</span></span></li>
+            <li><svg class="ic"><use href="#i-grip"/></svg><b>보류</b><span class="mono">결정[보류]</span><span class="muted">선택</span><span class="muted">사유·재논의 시점</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="impact">
+      <div class="ih"><span class="eg-chip eg-chip--human">영향 분석</span><h4>배치 규칙이 바뀌어요</h4><p>내용은 그대로, 배치만 달라져요. 아래 단계만 다시 실행해요.</p></div>
+      <div class="chain"><span>전사</span><span>맥락</span><span>결정·업무</span><span class="re">문서 구성</span><span class="re">출력</span><span class="re">검증</span></div>
+      <div style="padding:0 18px 14px;font-size:12.5px"><b>v4를 쓸 회의</b> · 새로 등록하는 회의부터<br><span class="muted">진행 중 회의 2건은 v3 유지 (원하면 개별 재실행)</span></div>
+      <div class="if"><button class="eg-btn eg-btn--ghost eg-btn--sm">취소</button><button class="eg-btn eg-btn--primary eg-btn--sm">확인</button></div>
+    </div>
+  </div></div>
+  <div class="spec">
+    <div><h5>목적</h5>프로그램별 양식(항목·출처·배치 규칙)과 검토 정책을 관리.</div>
+    <div><h5>핵심 규칙</h5><ul><li>승인된 <code>TemplateVersion</code>은 불변 → 새 버전</li><li>바꾸기 전 <b>영향 분석</b>: 배치 변경이면 문서 구성부터, 출력만 바뀌면 출력·서식 검사만</li></ul></div>
+    <div><h5>권한</h5><ul><li>프로그램 관리자만</li><li>AI 운영 권한과 별개 (운영자는 템플릿 수정 불가)</li></ul></div>
+    <div><h5>데이터</h5><code>Template</code> <code>TemplateVersion(rules_json, output_format)</code> <code>ArtifactDependency</code></div>
+  </div>
+</section>
+
+<!-- S9 -->
+<section class="block" id="s9">
+  <div class="sh"><div><span class="no">S9</span><h2 class="t-h2">PoC 측정</h2></div><div class="tags"><span class="pri p0">P0</span><span class="tagx m">FR-10</span><span class="tagx">발표 결과표의 근거</span></div></div>
+  <div class="frame"><div class="app" data-nav="metric">
+    <div class="main">
+      <div class="bar"><div class="crumb">PoC 측정 <span>/</span> <b>달걀 한 판 여행기 · 유사 회의 5회</b></div><span class="sp"></span><button class="eg-btn eg-btn--secondary eg-btn--sm">CSV 내보내기</button></div>
+      <div class="body">
+        <div class="stats">
+          <div class="stat"><div class="l">사람 문서 작업 (중앙값)</div><div class="v">1시간 52분</div><div class="t-caption">기준 4.5시간은 회상 추정</div></div>
+          <div class="stat"><div class="l">중대 결정 누락</div><div class="v">0<small>건 / 표본 18건</small></div><div class="t-caption">메인 작가·PD 정답셋 판정</div></div>
+          <div class="stat"><div class="l">반려</div><div class="v">3<small>회</small></div><div class="t-caption">내용 2 · 서식 1</div></div>
+          <div class="stat"><div class="l">AI 대기 (중앙값)</div><div class="v">6분</div><div class="t-caption">사람 작업과 따로 집계</div></div>
+        </div>
+        <div class="card"><div class="card-h"><h4>회의별 시간 구성</h4><span class="r"><span class="t-caption">가상 데이터 · 측정 화면 예시</span></span></div><div class="card-b">
+          <div class="keyrow"><span><i style="background:var(--ink)"></i>사람 작업</span><span><i style="background:var(--blue-500)"></i>AI 대기</span><span><i style="background:var(--yellow-500)"></i>결재 대기</span></div>
+          <div class="bars">
+            <div class="bar-row"><span>1회차 기획 · 58분</span><div class="stack"><i class="s-h" style="width:34%"></i><i class="s-a" style="width:4%"></i><i class="s-r" style="width:22%"></i></div><span class="t-num">2:02</span></div>
+            <div class="bar-row"><span>게스트 섭외 · 35분</span><div class="stack"><i class="s-h" style="width:26%"></i><i class="s-a" style="width:3%"></i><i class="s-r" style="width:15%"></i></div><span class="t-num">1:34</span></div>
+            <div class="bar-row"><span>2회차 편집 · 1시간 18분</span><div class="stack"><i class="s-h" style="width:38%"></i><i class="s-a" style="width:6%"></i><i class="s-r" style="width:28%"></i></div><span class="t-num">2:16</span></div>
+            <div class="bar-row"><span>2회차 촬영 · 3시간 52분</span><div class="stack"><i class="s-h" style="width:52%"></i><i class="s-a" style="width:12%"></i><i class="s-r" style="width:18%"></i></div><span class="t-num">3:07</span></div>
+            <div class="bar-row"><span>3회차 오프닝 · 42분</span><div class="stack"><i class="s-h" style="width:31%"></i><i class="s-a" style="width:3%"></i></div><span class="t-num">1:52</span></div>
+          </div>
+          <div class="callout y" style="margin-top:16px"><svg class="ic"><use href="#i-alert"/></svg><div>평균·중앙값·범위를 함께 보고하고, 회의 길이·참석자 수를 같이 적어요. 인건비 절감이나 야근 감소로 자동 환산하지 않아요.</div></div>
+        </div></div>
+      </div>
+    </div>
+  </div></div>
+  <div class="spec">
+    <div><h5>목적</h5>PoC 가설(4.5시간 → 2시간, 중대 누락 0건)을 실제 기록으로 확인.</div>
+    <div><h5>핵심 규칙</h5><ul><li>사람 작업 · AI 대기 · 결재 대기를 <b>분리</b></li><li>숫자 옆에 측정 출처를 항상 표기</li><li>소표본 경고 문구 고정</li></ul></div>
+    <div><h5>수집</h5><ul><li>작업 시작·종료는 화면 진입·상신 이벤트로 자동</li><li>반려 사유는 <code>ReviewAction</code>에서 집계</li></ul></div>
+    <div><h5>데이터</h5><code>MetricObservation(kind, duration_seconds, source)</code> <code>ReviewAction</code></div>
+  </div>
+</section>
+
+<footer><span><span class="eg-wordmark" style="font-size:15px">egg is going<i></i></span> &nbsp;화면 기획 v0.1 · 2026-10-20 · 기준 문서 01–05 v0.1</span><span>가상 제작사 대상 교육 프로젝트 · 가상 데이터 · 실제 기업과 무관</span></footer>
+</main>
+
+<script>
+document.querySelectorAll('.app').forEach(app=>{
+  const side=document.getElementById('shell-side').content.firstElementChild.cloneNode(true);
+  const k=app.dataset.nav; side.querySelectorAll('.navx').forEach(n=>{ if(n.dataset.k===k) n.classList.add('on'); });
+  if(app.dataset.user){ side.querySelector('[data-user]').textContent=app.dataset.user; side.querySelector('[data-role]').textContent=app.dataset.role; }
+  app.prepend(side);
+});
+</script>
+</body>
+</html>

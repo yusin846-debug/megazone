@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>egg is going 에이전트 제작 가이드</title>
+<style>/* ==========================================================================
+   egg is going — Design Tokens & Core Components  v0.1
+   가상 제작사 대상 교육 프로젝트. 실제 기업과 무관.
+   Next.js: app/globals.css 맨 위에서 @import "./tokens.css"; 로 불러 쓰세요.
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root{
+  /* ---- Brand (제안서 12장) ---- */
+  --egg-yellow:#F8E950;
+  --egg-beige:#EAE6DF;
+  --blueberry:#1E1E7F;
+
+  /* ---- Yellow scale ---- */
+  --yellow-50:#FFFCE8;
+  --yellow-100:#FDF7C4;
+  --yellow-300:#F8E950;
+  --yellow-500:#EAD024;
+  --yellow-700:#6E5F00;
+
+  /* ---- Warm neutrals ---- */
+  --cream:#FAF8F3;      /* 앱 배경 */
+  --paper:#FFFFFF;      /* 카드·패널 */
+  --beige-100:#F3F0EA;  /* 약한 면 */
+  --beige-200:#EAE6DF;  /* egg light beige */
+  --line:#E3DED4;
+  --line-strong:#CFC8BB;
+  --ink:#16150F;        /* 본문 */
+  --ink-2:#3B3934;
+  --muted:#75706A;
+  --subtle:#A39E95;
+
+  /* ---- Blueberry scale (링크·선택·포커스·숫자 강조) ---- */
+  --blue-50:#EFEFFA;
+  --blue-100:#DCDCF3;
+  --blue-500:#1E1E7F;
+  --blue-600:#15156A;
+
+  /* ---- Semantic ---- */
+  --sage-50:#EEF5EC;  --sage-300:#A9C9A4; --sage-500:#5E9A5A; --sage-700:#2E672B;
+  --tomato-50:#FEF0EA; --tomato-300:#F5A482; --tomato-500:#EF5F2D; --tomato-700:#B0411A;
+
+  /* ---- Status (색 + 글자 함께 쓰기) ---- */
+  --st-wait-bg:var(--beige-100);  --st-wait-fg:var(--muted);
+  --st-run-bg:var(--blue-50);     --st-run-fg:var(--blue-500);
+  --st-pass-bg:var(--sage-50);    --st-pass-fg:var(--sage-700);
+  --st-fix-bg:var(--tomato-50);   --st-fix-fg:var(--tomato-700);
+  --st-human-bg:var(--yellow-100);--st-human-fg:var(--yellow-700);
+
+  /* ---- Team ---- */
+  --team-writer-bg:var(--yellow-100); --team-writer-fg:var(--yellow-700);
+  --team-pd-bg:var(--sage-50);        --team-pd-fg:var(--sage-700);
+
+  /* ---- Type ---- */
+  --font-sans:"Outfit","Noto Sans KR",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+
+  /* ---- Space (4px base) ---- */
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:20px; --s-6:24px;
+  --s-8:32px; --s-10:40px; --s-14:56px; --s-20:80px;
+
+  /* ---- Radius ---- */
+  --r-xs:6px; --r-sm:10px; --r-md:14px; --r-lg:20px; --r-xl:28px; --r-pill:999px;
+
+  /* ---- Elevation (따뜻한 그림자) ---- */
+  --sh-1:0 1px 2px rgba(58,48,20,.06);
+  --sh-2:0 1px 2px rgba(58,48,20,.05),0 6px 18px rgba(58,48,20,.07);
+  --sh-3:0 2px 4px rgba(58,48,20,.05),0 20px 44px rgba(58,48,20,.12);
+  --focus:0 0 0 3px rgba(30,30,127,.26);
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+
+/* ---- Base ---- */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;font-family:var(--font-sans);font-size:15px;line-height:1.6;color:var(--ink);
+  background:var(--cream);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  word-break:keep-all;overflow-wrap:break-word;text-rendering:optimizeLegibility;
+}
+::selection{background:var(--yellow-300);color:var(--ink)}
+
+/* ---- Type scale ---- */
+.t-display{font-size:clamp(40px,6vw,64px);line-height:1.12;font-weight:900;letter-spacing:-.045em}
+.t-h1{font-size:32px;line-height:1.25;font-weight:800;letter-spacing:-.032em}
+.t-h2{font-size:24px;line-height:1.3;font-weight:800;letter-spacing:-.026em}
+.t-h3{font-size:18px;line-height:1.4;font-weight:700;letter-spacing:-.016em}
+.t-body-l{font-size:16px;line-height:1.7}
+.t-body{font-size:15px;line-height:1.6}
+.t-label{font-size:13px;line-height:1.4;font-weight:600;letter-spacing:-.005em}
+.t-caption{font-size:12px;line-height:1.5;font-weight:500;color:var(--muted)}
+.t-overline{font-size:11.5px;line-height:1.2;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.t-num{font-family:"Outfit",var(--font-sans);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.t-mono,.eg-ts{font-family:var(--font-mono);font-size:12.5px;letter-spacing:0;font-variant-numeric:tabular-nums}
+.hl{background:linear-gradient(transparent 56%,var(--yellow-300) 56%,var(--yellow-300) 92%,transparent 92%);padding:0 .06em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+
+/* ---- Wordmark ---- */
+.eg-wordmark{display:inline-flex;align-items:baseline;font-family:"Outfit",var(--font-sans);font-weight:700;font-size:20px;letter-spacing:-.04em;color:var(--ink);line-height:1;white-space:nowrap}
+.eg-wordmark i{display:inline-block;width:.36em;height:.36em;border-radius:50%;background:var(--egg-yellow);box-shadow:inset 0 -1px 0 rgba(0,0,0,.1);margin-left:.1em}
+
+/* ---- Icon ---- */
+.ic{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---- Button ---- */
+.eg-btn{--h:40px;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--h);padding:0 16px;border-radius:var(--r-sm);border:1px solid transparent;
+  font:600 14px/1 var(--font-sans);letter-spacing:-.01em;color:var(--ink);cursor:pointer;white-space:nowrap;text-decoration:none;
+  transition:background .15s var(--ease),border-color .15s var(--ease),box-shadow .15s var(--ease),transform .06s}
+.eg-btn .ic{width:16px;height:16px}
+.eg-btn:focus-visible{outline:none;box-shadow:var(--focus)}
+.eg-btn:active{transform:translateY(1px)}
+.eg-btn--primary{background:var(--egg-yellow);box-shadow:inset 0 -2px 0 rgba(0,0,0,.08)}
+.eg-btn--primary:hover{background:#F2DF36}
+.eg-btn--secondary{background:var(--paper);border-color:var(--line-strong)}
+.eg-btn--secondary:hover{background:var(--beige-100)}
+.eg-btn--ghost{background:transparent;color:var(--ink-2)}
+.eg-btn--ghost:hover{background:var(--beige-100)}
+.eg-btn--ink{background:var(--ink);color:var(--paper)}
+.eg-btn--ink:hover{background:#2B2A24}
+.eg-btn--danger{background:var(--paper);color:var(--tomato-700);border-color:var(--tomato-300)}
+.eg-btn--danger:hover{background:var(--tomato-50)}
+.eg-btn--sm{--h:32px;padding:0 12px;font-size:13px;border-radius:8px}
+.eg-btn--lg{--h:48px;padding:0 22px;font-size:15px;border-radius:12px}
+.eg-btn[disabled],.eg-btn.is-disabled{background:var(--beige-100);color:var(--subtle);border-color:transparent;box-shadow:none;cursor:not-allowed}
+
+/* ---- Status chip ---- */
+.eg-chip{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:var(--r-pill);font:600 12px/1 var(--font-sans);letter-spacing:-.005em;background:var(--beige-100);color:var(--ink-2);white-space:nowrap}
+.eg-chip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.eg-chip--plain::before{display:none}
+.eg-chip--wait{background:var(--st-wait-bg);color:var(--st-wait-fg)}
+.eg-chip--run{background:var(--st-run-bg);color:var(--st-run-fg)}
+.eg-chip--run::before{animation:eg-pulse 1.4s ease-in-out infinite}
+.eg-chip--pass{background:var(--st-pass-bg);color:var(--st-pass-fg)}
+.eg-chip--fix{background:var(--st-fix-bg);color:var(--st-fix-fg)}
+.eg-chip--human{background:var(--st-human-bg);color:var(--st-human-fg)}
+.eg-chip--done{background:var(--ink);color:var(--paper)}
+.eg-chip--fail{background:var(--tomato-500);color:#fff}
+.eg-chip--cancel{background:transparent;color:var(--muted);box-shadow:inset 0 0 0 1px var(--line-strong)}
+@keyframes eg-pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* ---- Document status badge (업무 상태: 각진 배지, 점 없음 — AI 실행 칩과 모양으로 구분) ---- */
+.eg-badge{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:6px;font:700 12px/1 var(--font-sans);letter-spacing:-.005em;white-space:nowrap}
+.eg-badge .ic{width:12px;height:12px;stroke-width:2.2}
+.eg-badge--draft{background:var(--paper);color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line-strong)}
+.eg-badge--review{background:var(--blue-50);color:var(--blue-500);box-shadow:inset 0 0 0 1px var(--blue-100)}
+.eg-badge--changes{background:var(--tomato-50);color:var(--tomato-700);box-shadow:inset 0 0 0 1px var(--tomato-300)}
+.eg-badge--approved{background:var(--ink);color:var(--paper)}
+.eg-badge--superseded{background:var(--beige-100);color:var(--subtle);text-decoration:line-through}
+
+/* ---- Item status (ItemRevision: 제안·확정·보류·폐기) ---- */
+.eg-item{display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:5px;font:700 11.5px/1 var(--font-sans);white-space:nowrap}
+.eg-item--proposed{background:var(--blue-50);color:var(--blue-500)}
+.eg-item--confirmed{background:var(--sage-50);color:var(--sage-700)}
+.eg-item--hold{background:var(--yellow-100);color:var(--yellow-700)}
+.eg-item--dropped{background:var(--beige-100);color:var(--subtle);text-decoration:line-through}
+
+/* ---- "미확인" (근거 없음, FR-02) ---- */
+.eg-unverified{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:6px;background:var(--tomato-50);color:var(--tomato-700);font:600 12.5px/1 var(--font-sans);box-shadow:inset 0 0 0 1px var(--tomato-300)}
+
+/* ---- Team tag ---- */
+.eg-team{display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:6px;font:600 11.5px/1 var(--font-sans);white-space:nowrap}
+.eg-team--writer{background:var(--team-writer-bg);color:var(--team-writer-fg)}
+.eg-team--pd{background:var(--team-pd-bg);color:var(--team-pd-fg)}
+
+/* ---- Missing value ("미정") ---- */
+.eg-missing{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:6px;background:var(--yellow-100);color:var(--yellow-700);font:600 12.5px/1 var(--font-sans)}
+
+/* ---- Card ---- */
+.eg-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-1)}
+
+/* ---- Form ---- */
+.eg-label{display:block;font:600 13px/1.4 var(--font-sans);color:var(--ink-2);margin-bottom:6px}
+.eg-input,.eg-select,.eg-textarea{width:100%;height:40px;padding:0 12px;border:1px solid var(--line-strong);border-radius:var(--r-sm);background:var(--paper);
+  font:400 14px/1.4 var(--font-sans);color:var(--ink);transition:border-color .15s,box-shadow .15s}
+.eg-textarea{height:auto;min-height:88px;padding:10px 12px;line-height:1.6;resize:vertical}
+.eg-input::placeholder,.eg-textarea::placeholder{color:var(--subtle)}
+.eg-input:focus,.eg-select:focus,.eg-textarea:focus{outline:none;border-color:var(--blue-500);box-shadow:var(--focus)}
+.eg-help{font-size:12px;color:var(--muted);margin-top:6px}
+
+/* ---- Timestamp button ---- */
+.eg-tsbtn{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 7px;border-radius:6px;background:var(--blue-50);color:var(--blue-500);font:500 12px/1 var(--font-mono);text-decoration:none;white-space:nowrap}
+.eg-tsbtn:hover{background:var(--blue-100)}
+</style>
+<style>
+.top{position:sticky;top:0;z-index:20;background:rgba(250,248,243,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1180px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;gap:14px}
+.top-in .ver{font:600 12px/1 "Outfit";color:var(--muted);padding:5px 8px;border:1px solid var(--line);border-radius:999px;white-space:nowrap}
+.layout{max-width:1180px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:220px minmax(0,1fr);gap:48px}
+.toc{position:sticky;top:84px;align-self:start;padding:32px 0;font-size:13px}
+.toc b{display:block;font:600 11.5px/1 var(--font-sans);color:var(--subtle);letter-spacing:.04em;margin:0 0 10px}
+.toc a{display:block;padding:6px 10px;border-radius:8px;color:var(--ink-2);text-decoration:none;font-weight:500}
+.toc a:hover{background:var(--beige-100)}
+.toc a small{font:600 11px "Outfit";color:var(--blue-500);margin-right:6px}
+article{padding:48px 0 80px;min-width:0;max-width:800px}
+article h1{margin:14px 0 0}
+article .lead{font-size:17px;line-height:1.75;color:var(--ink-2);margin:18px 0 0}
+article h2{font-size:24px;font-weight:800;letter-spacing:-.026em;line-height:1.3;margin:64px 0 8px;padding-top:24px;border-top:1px solid var(--line);scroll-margin-top:80px}
+article h2 small{display:block;font:700 12px/1 "Outfit";color:var(--blue-500);letter-spacing:.06em;margin-bottom:10px}
+article h3{font-size:18px;font-weight:700;letter-spacing:-.016em;margin:32px 0 8px}
+article p,article li{font-size:15.5px;line-height:1.8;color:var(--ink-2)}
+article p{margin:10px 0}
+article ul,article ol{padding-left:20px;margin:10px 0}
+article li{margin:4px 0}
+article strong{color:var(--ink)}
+code{font:500 13px var(--font-mono);background:var(--beige-100);padding:1px 5px;border-radius:5px;color:var(--ink)}
+pre{margin:14px 0;padding:18px 20px;border-radius:14px;background:#1B1A16;color:#EDE9DF;font:500 12.8px/1.75 var(--font-mono);overflow-x:auto;white-space:pre}
+pre code{background:none;padding:0;color:inherit;font:inherit}
+pre .c{color:#9A9384} pre .k{color:#F8E950} pre .s{color:#A9C9A4} pre .n{color:#B9B9F0}
+.box{border-radius:16px;padding:18px 20px;margin:18px 0;border:1px solid var(--line);background:var(--paper)}
+.box.y{background:var(--yellow-50);border-color:var(--yellow-100)}
+.box.b{background:var(--blue-50);border-color:var(--blue-100)}
+.box.r{background:var(--tomato-50);border-color:var(--tomato-300)}
+.box h4{margin:0 0 6px;font-size:15px;letter-spacing:-.015em;display:flex;align-items:center;gap:8px}
+.box h4 .ic{width:17px;height:17px}
+.box p,.box li{font-size:14.5px;line-height:1.7;margin:4px 0}
+table.t{width:100%;border-collapse:collapse;font-size:14px;margin:14px 0;background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+table.t th,table.t td{text-align:left;padding:11px 13px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.6}
+table.t th{background:var(--beige-100);font-size:12px;color:var(--muted);font-weight:600}
+table.t tr:last-child td{border-bottom:0}
+.pipe{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:20px 0}
+.pn{border-radius:14px;background:var(--paper);border:1px solid var(--line);padding:12px;font-size:12.5px;line-height:1.45}
+.pn .ic{width:18px;height:18px;color:var(--ink-2)}
+.pn b{display:block;font-size:13.5px;margin:6px 0 2px;letter-spacing:-.015em}
+.pn span{color:var(--muted)}
+.pn.tool{border-style:dashed}
+.pn .own{display:inline-block;margin-top:8px;font:700 11px/1 var(--font-sans);padding:4px 6px;border-radius:5px}
+.o-me{background:var(--ink);color:var(--egg-yellow)} .o-a{background:var(--yellow-100);color:var(--yellow-700)} .o-b{background:var(--sage-50);color:var(--sage-700)}
+.agent{border:1px solid var(--line);border-radius:22px;background:var(--paper);margin:28px 0;overflow:hidden;box-shadow:var(--sh-1);scroll-margin-top:80px}
+.agent-h{display:flex;align-items:center;gap:14px;padding:20px 22px;border-bottom:1px solid var(--line);background:var(--cream)}
+.agent-h .ai{width:44px;height:44px;border-radius:13px;background:var(--paper);border:1px solid var(--line);display:grid;place-items:center}
+.agent-h .ai .ic{width:21px;height:21px}
+.agent-h h3{margin:0;font-size:19px}
+.agent-h p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+.agent-h .r{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.agent-b{padding:6px 22px 22px}
+.agent-b h4{margin:22px 0 6px;font:700 12px/1 var(--font-sans);color:var(--muted);letter-spacing:.04em}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:6px 16px;font-size:14px;line-height:1.65}
+.kv dt{color:var(--muted);font-weight:500}
+.kv dd{margin:0;color:var(--ink-2)}
+.checks{list-style:none;padding:0;margin:8px 0}
+.checks li{display:grid;grid-template-columns:22px 1fr;gap:8px;font-size:14px;line-height:1.65;margin:4px 0}
+.checks .ic{width:16px;height:16px;margin-top:4px;color:var(--sage-700)}
+.traps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.trap{border-radius:12px;background:var(--cream);border:1px solid var(--line);padding:12px;font-size:13px;line-height:1.55}
+.trap b{display:block;font-size:13px;margin-bottom:4px}
+.steps{counter-reset:s;list-style:none;padding:0;margin:16px 0}
+.steps li{counter-increment:s;display:grid;grid-template-columns:36px 1fr;gap:12px;margin:0 0 16px;font-size:15px}
+.steps li::before{content:counter(s);width:30px;height:30px;border-radius:50%;background:var(--egg-yellow);display:grid;place-items:center;font:800 14px "Outfit";color:var(--ink)}
+.steps li b{display:block;color:var(--ink);font-size:15.5px}
+.steps li span{color:var(--ink-2);line-height:1.7}
+.tree{font:500 12.8px/1.8 var(--font-mono)}
+footer{padding:40px 0 64px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media (max-width:900px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .toc{display:none}
+  .pipe{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .traps{grid-template-columns:1fr}
+}
+@media (max-width:600px){
+  .layout,.top-in{padding:0 16px}
+  .kv{grid-template-columns:1fr}
+  .agent-h{flex-wrap:wrap}
+  .agent-h .r{margin-left:0}
+  table.t{display:block;overflow-x:auto}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="eggShade" cx="36%" cy="28%" r="78%">
+      <stop offset="0" stop-color="#FFFEFA"/><stop offset=".62" stop-color="#F6EEDD"/><stop offset="1" stop-color="#E4D6BA"/>
+    </radialGradient>
+    <radialGradient id="yolkShade" cx="38%" cy="32%" r="70%">
+      <stop offset="0" stop-color="#FFE97A"/><stop offset=".7" stop-color="#F7C928"/><stop offset="1" stop-color="#E9AE12"/>
+    </radialGradient>
+  </defs>
+  <symbol id="egg" viewBox="0 0 64 76">
+    <path d="M32 2C17 2 4 26 4 46c0 16 12.5 28 28 28s28-12 28-28C60 26 47 2 32 2Z" fill="url(#eggShade)"/>
+    <ellipse cx="23" cy="45" rx="2.6" ry="3.6" fill="#1A1814"/><ellipse cx="41" cy="45" rx="2.6" ry="3.6" fill="#1A1814"/>
+    <path d="M26.5 54c3 2.8 8 2.8 11 0" stroke="#1A1814" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+  </symbol>
+  <symbol id="yolk" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="29" fill="url(#yolkShade)"/>
+    <ellipse cx="24" cy="31" rx="2.6" ry="3.6" fill="#1A1814"/><ellipse cx="40" cy="31" rx="2.6" ry="3.6" fill="#1A1814"/>
+    <path d="M27 40c2.8 2.4 7.2 2.4 10 0" stroke="#1A1814" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+  </symbol>
+  <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 10v3M6 6v11M10 3v18M14 8v7M18 5v13M22 10v3"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6M10 22h4"/></symbol>
+  <symbol id="i-checks" viewBox="0 0 24 24"><path d="m3 17 2 2 4-4M3 7l2 2 4-4M13 6h8M13 12h8M13 18h8"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M16 13H8M16 17H8M10 9H8"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7.5"/><path d="m21 21-4.6-4.6"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12.8 2.2a2 2 0 0 0-1.6 0L2.6 6.1a1 1 0 0 0 0 1.8l8.6 3.9a2 2 0 0 0 1.6 0l8.6-3.9a1 1 0 0 0 0-1.8Z"/><path d="m22 12.6-9.2 4.2a2 2 0 0 1-1.6 0L2 12.6M22 17.6l-9.2 4.2a2 2 0 0 1-1.6 0L2 17.6"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.5 0 4.9 1 6.7 2.7L21 8"/><path d="M21 3v5h-5"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5Z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.5 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.7 1.1Z"/></symbol>
+  <symbol id="i-template" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="7" rx="1.5"/><rect x="3" y="14" width="9" height="7" rx="1.5"/><rect x="16" y="14" width="5" height="7" rx="1.5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><path d="M12 9v4M12 17h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-diff" viewBox="0 0 24 24"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7M11 18H8a2 2 0 0 1-2-2V9"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z"/></symbol>
+  <symbol id="i-grip" viewBox="0 0 24 24"><circle cx="9" cy="6" r="1" fill="currentColor"/><circle cx="15" cy="6" r="1" fill="currentColor"/><circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="15" cy="12" r="1" fill="currentColor"/><circle cx="9" cy="18" r="1" fill="currentColor"/><circle cx="15" cy="18" r="1" fill="currentColor"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+</svg>
+
+<header class="top"><div class="top-in"><span class="eg-wordmark">egg is going<i></i></span><span class="ver">에이전트 제작 가이드 v0.1</span></div></header>
+
+<div class="layout">
+<nav class="toc">
+  <b>목차</b>
+  <a href="#overview"><small>00</small>큰 그림과 담당</a>
+  <a href="#rules"><small>01</small>모든 에이전트의 규칙</a>
+  <a href="#setup"><small>02</small>작업 틀과 폴더</a>
+  <a href="#how"><small>03</small>만드는 순서 7단계</a>
+  <a href="#prompt"><small>04</small>프롬프트 쓰는 법</a>
+  <a href="#a1"><small>A1</small>전사·화자</a>
+  <a href="#a2"><small>A2</small>제작 맥락</a>
+  <a href="#a3"><small>A3</small>결정·업무</a>
+  <a href="#a4"><small>A4</small>문서 구성</a>
+  <a href="#a5"><small>A5</small>검증</a>
+  <a href="#tool"><small>T</small>출력 도구·오케스트레이터</a>
+  <a href="#vibe"><small>05</small>AI 코딩 도구에 시키기</a>
+  <a href="#done"><small>06</small>완료 체크리스트</a>
+</nav>
+
+<article>
+  <span class="t-overline">For Team · Agent Playbook</span>
+  <h1 class="t-display" style="font-size:clamp(34px,5vw,52px)">에이전트 하나씩,<br><span class="hl">직접 만들어 봅시다.</span></h1>
+  <p class="lead">개발 경험이 없어도 괜찮습니다. 우리 팀의 에이전트는 <strong>프롬프트 한 장 + 출력 형식 한 장 + 테스트 몇 개</strong>로 이루어져 있고, 공통 코드는 기술 리드가 미리 깔아 둡니다. 여러분은 “무엇을 어떻게 판단할지”를 글로 쓰고, 테스트로 확인하면 됩니다.</p>
+  <p class="t-caption">기준 문서: 03_PRD · 04_ERD · 05_AIR_Integration (v0.1, 2026-10-20). 가상 제작사 대상 교육 프로젝트입니다.</p>
+
+  <h2 id="overview"><small>00</small>큰 그림과 담당</h2>
+  <p>회의 녹음이 들어오면 다섯 에이전트가 차례로 판단하고, 마지막 파일 만들기는 규칙 기반 도구가 맡습니다. 각 에이전트는 <strong>한 가지 판단만</strong> 합니다.</p>
+  <div class="pipe">
+    <div class="pn"><svg class="ic"><use href="#i-wave"/></svg><b>A1 전사·화자</b><span>녹음 → 화자 붙은 원문</span><br><span class="own o-me">기술 리드</span></div>
+    <div class="pn"><svg class="ic"><use href="#i-bulb"/></svg><b>A2 제작 맥락</b><span>안건·아이디어 변화 이유</span><br><span class="own o-a">팀원 A</span></div>
+    <div class="pn"><svg class="ic"><use href="#i-checks"/></svg><b>A3 결정·업무</b><span>제안·확정·보류·폐기, 담당·기한</span><br><span class="own o-b">팀원 B</span></div>
+    <div class="pn"><svg class="ic"><use href="#i-doc"/></svg><b>A4 문서 구성</b><span>템플릿 칸에 배치</span><br><span class="own o-a">팀원 A</span></div>
+    <div class="pn tool"><svg class="ic"><use href="#i-layers"/></svg><b>T 문서 출력</b><span>글꼴·서식 · 규칙 코드</span><br><span class="own o-me">기술 리드</span></div>
+    <div class="pn"><svg class="ic"><use href="#i-search"/></svg><b>A5 검증</b><span>누락·모순·추가·불명확</span><br><span class="own o-b">팀원 B</span></div>
+  </div>
+  <table class="t">
+    <thead><tr><th>사람</th><th>맡는 에이전트</th><th>왜 이렇게 나눴나</th></tr></thead>
+    <tbody>
+      <tr><td><strong>기술 리드</strong></td><td>A1 전사·화자 · T 문서 출력 · 오케스트레이터 · 공통 틀</td><td>외부 음성 인식 API와 키, 파일 처리, 실행 상태 관리가 필요한 부분</td></tr>
+      <tr><td><strong>팀원 A</strong></td><td>A2 제작 맥락 · A4 문서 구성</td><td>“왜 바뀌었나”와 “어디에 놓을까” — 기획·글 구성 감각이 중요한 부분</td></tr>
+      <tr><td><strong>팀원 B</strong></td><td>A3 결정·업무 · A5 검증</td><td>“확정인가 보류인가”와 “빠진 게 없나” — 꼼꼼함과 기준 세우기가 중요한 부분</td></tr>
+    </tbody>
+  </table>
+  <div class="box y"><h4><svg class="ic"><use href="#i-bulb"/></svg>한 번씩 다 만들어 보고 싶다면</h4><p>담당 에이전트를 끝낸 뒤, 다른 사람의 에이전트에 <strong>테스트 2개</strong>를 추가해 주세요. 남이 만든 에이전트를 깨뜨려 보는 게 가장 빠른 공부입니다.</p></div>
+
+  <h2 id="rules"><small>01</small>모든 에이전트가 지키는 규칙</h2>
+  <p>이 다섯 가지는 PRD의 요구사항이자, 검증 에이전트가 실제로 검사하는 기준입니다.</p>
+  <ol>
+    <li><strong>원문에 없는 내용은 만들지 않는다.</strong> 담당·기한이 언급되지 않았으면 <code>null</code>로 둡니다. 화면에는 “미정”으로 나옵니다. (FR-03)</li>
+    <li><strong>모든 판단에 근거를 붙인다.</strong> 근거는 원문 발언(<code>segment_id</code>)으로 연결합니다. 근거가 없으면 화면에 “미확인”으로 나옵니다. (FR-02)</li>
+    <li><strong>제작 방향을 대신 정하지 않는다.</strong> 에이전트는 회의에서 정한 것을 <em>찾을</em> 뿐, 더 좋은 안을 <em>제안</em>하지 않습니다.</li>
+    <li><strong>모르면 사람에게 묻는다.</strong> 확신이 낮으면 <code>questions_for_human</code>에 질문을 남깁니다. 질문은 한 문장, 원문 근거 포함.</li>
+    <li><strong>정해진 형식(JSON)으로만 답한다.</strong> 형식은 팀의 약속(계약)입니다. 바꾸려면 팀 전체가 합의합니다.</li>
+  </ol>
+  <h3>모든 에이전트가 함께 쓰는 조각</h3>
+<pre><code><span class="c">// 원문 발언 (A1이 만들고, 모두가 읽음) — ERD: Segment</span>
+{ <span class="n">"segment_id"</span>: <span class="s">"seg_07"</span>, <span class="n">"start_ms"</span>: 48000, <span class="n">"end_ms"</span>: 50600,
+  <span class="n">"speaker"</span>: <span class="s">"p_han"</span>, <span class="n">"text"</span>: <span class="s">"우천이면 리스크 크니까 실내로 돌리죠."</span>, <span class="n">"uncertain"</span>: <span class="k">false</span> }
+
+<span class="c">// 근거 (모든 판단에 붙음) — ERD: EvidenceLink</span>
+<span class="n">"evidence"</span>: [ { <span class="n">"segment_id"</span>: <span class="s">"seg_07"</span>, <span class="n">"relation"</span>: <span class="s">"supports"</span> } ]
+
+<span class="c">// 사람에게 묻기 — ERD: HumanTask 의 재료</span>
+<span class="n">"questions_for_human"</span>: [ { <span class="n">"target"</span>: <span class="s">"action_items[0].due_at"</span>,
+  <span class="n">"question"</span>: <span class="s">"‘스튜디오 대관 확인’ 기한이 원문에 없어요. 지정할까요?"</span>,
+  <span class="n">"evidence"</span>: [ { <span class="n">"segment_id"</span>: <span class="s">"seg_11"</span> } ] } ]</code></pre>
+  <p class="t-caption">시간은 저장할 때 밀리초(<code>start_ms</code>), 화면에 보일 때 <code>00:48</code> 형식입니다.</p>
+
+  <h2 id="setup"><small>02</small>작업 틀과 폴더</h2>
+  <p>기술 리드가 공통 틀을 먼저 만들어 둡니다. 여러분이 주로 여는 파일은 <strong>굵게</strong> 표시한 세 가지뿐입니다.</p>
+<pre class="tree"><code>agents/
+  decision/                  <span class="c">← A3 결정·업무 (예시)</span>
+    <span class="k">prompt.md</span>                <span class="c">← 에이전트에게 주는 지시문. 가장 많이 고칠 파일</span>
+    <span class="k">schema.json</span>              <span class="c">← 출력 형식(계약). 팀 합의 없이 바꾸지 않기</span>
+    <span class="k">examples/</span>                <span class="c">← 테스트</span>
+      01_basic.input.json
+      01_basic.check.json    <span class="c">← “이건 꼭 나와야 / 이건 절대 안 돼” 목록</span>
+      02_reversal.input.json
+      02_reversal.check.json
+    index.ts                 <span class="c">← runAgent("decision", input) 한 줄. 거의 안 건드림</span>
+lib/
+  runAgent.ts                <span class="c">← AI 호출 · 형식 검사 · 1회 재시도 · 기록 (기술 리드)</span>
+  devRunner.ts               <span class="c">← 개발용 실행기. 나중에 AIR Studio 어댑터로 교체</span>
+fixtures/meetings/           <span class="c">← 가상 회의 5개 녹취록과 정답지 (팀원 A가 관리)</span></code></pre>
+  <p>테스트 실행은 한 줄입니다.</p>
+<pre><code>npm run agent:test decision          <span class="c"># A3의 모든 테스트</span>
+npm run agent:test decision 02       <span class="c"># 02번 테스트만</span></code></pre>
+<pre><code><span class="c">결과 예시</span>
+<span class="s">✓</span> 01_basic        확정 3 · 보류 1 · 업무 2      필수 항목 모두 찾음
+<span class="k">✗</span> 02_reversal     ‘오프닝 장소’ 최종값이 "실내" (정답: "스튜디오")
+<span class="s">✓</span> 03_noise        잡담 속 결정 1건 찾음 · 지어낸 담당 0
+   토큰 4,812 · 7.3초 · prompt decision@3</code></pre>
+  <div class="box b"><h4><svg class="ic"><use href="#i-layers"/></svg>AIR Studio와의 관계</h4><p>지금은 <code>devRunner</code>(개발용 실행기)로 돌립니다. 05_AIR_Integration의 1단계 그대로입니다. 나중에 실행 계층만 AIR Studio로 바꾸고, 여러분의 <code>prompt.md</code>·<code>schema.json</code>은 그대로 씁니다. AIR Studio의 실제 API는 아직 확인 전이라 직접 호출하지 않습니다.</p></div>
+
+  <h2 id="how"><small>03</small>만드는 순서 7단계</h2>
+  <ol class="steps">
+    <li><div><b>역할을 한 문장으로 쓴다</b><span>“나는 회의 원문에서 <em>확정된 결정</em>과 <em>후속 업무</em>를 찾는다.” 두 문장이 필요하면 에이전트를 쪼개야 한다는 신호입니다.</span></div></li>
+    <li><div><b>입력을 눈으로 본다</b><span><code>fixtures/meetings/</code>의 녹취록 하나를 직접 읽고, 내가 사람이라면 무엇을 뽑을지 손으로 적어 봅니다. 이게 첫 정답지입니다.</span></div></li>
+    <li><div><b>출력 형식을 확인한다</b><span><code>schema.json</code>을 열어 칸 이름과 필수 여부를 봅니다. 아래 에이전트 카드에 예시가 있습니다.</span></div></li>
+    <li><div><b>프롬프트 초안을 쓴다</b><span>에이전트 카드의 “프롬프트 시작본”을 복사해 <code>prompt.md</code>에 붙이고 우리 말로 다듬습니다.</span></div></li>
+    <li><div><b>테스트 3개를 만든다</b><span>쉬운 것 1 · 함정 1 · 애매한 것 1. 함정은 카드의 “꼭 넣을 함정”에서 고릅니다.</span></div></li>
+    <li><div><b>돌려 보고 고친다</b><span>실패하면 프롬프트를 고치고 다시 돌립니다. 한 번에 한 가지만 고치고, 무엇을 고쳤는지 커밋 메시지에 남깁니다.</span></div></li>
+    <li><div><b>완료 기준을 확인하고 올린다</b><span>카드의 완료 기준을 모두 통과하면 브랜치를 올리고 기술 리드에게 검토를 요청합니다.</span></div></li>
+  </ol>
+
+  <h2 id="prompt"><small>04</small>프롬프트 쓰는 법</h2>
+  <p>좋은 프롬프트는 길이보다 <strong>구조</strong>가 중요합니다. 모든 <code>prompt.md</code>는 이 순서를 따릅니다.</p>
+<pre><code><span class="k"># 역할</span>
+한 문장.
+
+<span class="k"># 입력</span>
+무엇이 들어오는지 (원문 발언 목록, 이전 단계 결과 등)
+
+<span class="k"># 해야 할 일</span>
+1. … 2. … 3. …
+
+<span class="k"># 판단 기준</span>
+말투·신호로 구분하는 표 (아래 예시)
+
+<span class="k"># 하지 말 것</span>
+- 원문에 없는 담당·기한·이유를 채우지 않는다
+- 더 좋은 안을 제안하지 않는다
+
+<span class="k"># 출력</span>
+schema.json 형식의 JSON만. 설명 문장 금지.
+
+<span class="k"># 예시</span>
+짧은 입력 1개 → 출력 1개</code></pre>
+  <h3>판단 기준은 “말의 신호” 표로</h3>
+  <table class="t">
+    <thead><tr><th>상태</th><th>회의에서 들리는 말</th><th>주의</th></tr></thead>
+    <tbody>
+      <tr><td><span class="eg-item eg-item--proposed">제안</span></td><td>“~어때요?”, “~하면 좋겠어요”, “~도 방법이죠”</td><td>누가 동의해도 정리 발언이 없으면 아직 제안</td></tr>
+      <tr><td><span class="eg-item eg-item--confirmed">확정</span></td><td>“~로 하죠”, “~로 정리합시다”, “그걸로 가요”, “확정”</td><td>결정권자(메인 작가·PD)의 정리 발언인지 확인</td></tr>
+      <tr><td><span class="eg-item eg-item--hold">보류</span></td><td>“다음에 다시”, “일단 보고”, “확인하고 얘기해요”</td><td>재논의 시점·사유가 있으면 함께 기록</td></tr>
+      <tr><td><span class="eg-item eg-item--dropped">폐기</span></td><td>“그건 빼죠”, “이번엔 안 하는 걸로”</td><td>폐기도 기록 대상. 지우지 않는다</td></tr>
+    </tbody>
+  </table>
+  <div class="box r"><h4><svg class="ic"><use href="#i-alert"/></svg>가장 흔한 실수</h4><ul><li>“친절하게” 빈칸을 채움 → 담당자를 추측해 넣음. <strong>빈칸은 null이 정답입니다.</strong></li><li>설명 문장을 JSON 앞뒤에 붙임 → 형식 검사 실패. “JSON만 출력”을 마지막 줄에 다시 씁니다.</li><li>한 번에 여러 곳을 고침 → 무엇 때문에 좋아졌는지 모름.</li></ul></div>
+
+  <!-- A1 -->
+  <h2 id="agents"><small>A</small>에이전트 카드</h2>
+  <p>각 카드에는 입력 · 출력 · 프롬프트 시작본 · 꼭 넣을 함정 · 완료 기준이 있습니다. ERD 이름은 저장되는 테이블입니다.</p>
+
+  <section class="agent" id="a1">
+    <div class="agent-h"><span class="ai"><svg class="ic"><use href="#i-wave"/></svg></span><div><h3>A1 전사·화자</h3><p>녹음을 시간·화자가 붙은 원문으로</p></div><div class="r"><span class="own o-me" style="font:700 11px/1 var(--font-sans);padding:5px 7px;border-radius:5px">기술 리드</span><span class="eg-chip eg-chip--plain">ERD · TranscriptVersion · Segment</span></div></div>
+    <div class="agent-b">
+      <h4>역할</h4><p>음성 인식 도구를 실행하고, 참석자 명단으로 화자 이름을 붙이고, 확신이 낮은 구간을 표시한다. <strong>내용을 고치거나 요약하지 않는다.</strong></p>
+      <h4>입력 → 출력</h4>
+      <dl class="kv"><dt>입력</dt><dd>녹음 파일 참조(임시 링크) · 참석자 후보 목록. MVP는 이미 전사된 텍스트도 허용</dd><dt>출력</dt><dd><code>segments[]</code> · <code>uncertain_spans[]</code> · <code>unmatched_speakers[]</code></dd></dl>
+<pre><code>{ <span class="n">"transcript_version"</span>: 1,
+  <span class="n">"segments"</span>: [ { <span class="n">"segment_id"</span>:<span class="s">"seg_01"</span>, <span class="n">"start_ms"</span>:12000, <span class="n">"end_ms"</span>:16400, <span class="n">"speaker"</span>:<span class="s">"p_park"</span>, <span class="n">"text"</span>:<span class="s">"오프닝은 야외에서 가죠. 한강 공원 어때요?"</span>, <span class="n">"uncertain"</span>:<span class="k">false</span> } ],
+  <span class="n">"uncertain_spans"</span>: [ { <span class="n">"start_ms"</span>:125000, <span class="n">"end_ms"</span>:132000, <span class="n">"reason"</span>:<span class="s">"발화 겹침으로 화자 구분 불확실"</span> } ],
+  <span class="n">"unmatched_speakers"</span>: [] }</code></pre>
+      <h4>꼭 넣을 함정</h4>
+      <div class="traps"><div class="trap"><b>말 겹침</b>두 사람이 동시에 말하는 구간 → 화자 null + 불확실 표시</div><div class="trap"><b>호칭으로만 등장</b>“PD님이 말한 거” → 명단과 맞추되 확신 없으면 표시</div><div class="trap"><b>긴 회의</b>4시간 녹음 → 나눠 처리 후 시간 이어 붙이기가 맞는지</div></div>
+      <h4>완료 기준</h4>
+      <ul class="checks"><li><svg class="ic"><use href="#i-check"/></svg>모든 발언이 <code>0 ≤ start &lt; end ≤ 녹음 길이</code></li><li><svg class="ic"><use href="#i-check"/></svg>원본 전사는 덮어쓰지 않고, 정정은 새 버전</li><li><svg class="ic"><use href="#i-check"/></svg>불확실 구간이 사람 확인 요청으로 이어짐</li></ul>
+    </div>
+  </section>
+
+  <section class="agent" id="a2">
+    <div class="agent-h"><span class="ai"><svg class="ic"><use href="#i-bulb"/></svg></span><div><h3>A2 제작 맥락</h3><p>안건별 의도와 아이디어가 바뀐 이유</p></div><div class="r"><span class="own o-a" style="font:700 11px/1 var(--font-sans);padding:5px 7px;border-radius:5px">팀원 A</span><span class="eg-chip eg-chip--plain">ERD · DiscussionItem · ItemRevision · EvidenceLink</span></div></div>
+    <div class="agent-b">
+      <h4>역할</h4><p>회의를 안건 단위로 나누고, 각 안건에서 아이디어가 <strong>어떤 순서로, 왜</strong> 바뀌었는지 기록한다. 확정 여부는 판단하지 않는다 (A3의 일).</p>
+      <h4>입력 → 출력</h4>
+      <dl class="kv"><dt>입력</dt><dd>A1의 <code>segments</code> · 프로그램 규칙(안건 이름 예시)</dd><dt>출력</dt><dd><code>topics[]</code> — 각 안건의 <code>idea_changes[]</code></dd></dl>
+<pre><code>{ <span class="n">"topics"</span>: [ { <span class="n">"item_id"</span>:<span class="s">"t_opening"</span>, <span class="n">"title"</span>:<span class="s">"오프닝 장소"</span>,
+    <span class="n">"intent"</span>: <span class="k">null</span>,                          <span class="c">// 의도가 말로 나오지 않았으면 null</span>
+    <span class="n">"idea_changes"</span>: [
+      { <span class="n">"from"</span>:<span class="k">null</span>, <span class="n">"to"</span>:<span class="s">"야외(한강 공원)"</span>, <span class="n">"reason"</span>:<span class="k">null</span>, <span class="n">"evidence"</span>:[{<span class="n">"segment_id"</span>:<span class="s">"seg_01"</span>}] },
+      { <span class="n">"from"</span>:<span class="s">"야외(한강 공원)"</span>, <span class="n">"to"</span>:<span class="s">"실내"</span>, <span class="n">"reason"</span>:<span class="s">"촬영일 오후 비 예보"</span>, <span class="n">"evidence"</span>:[{<span class="n">"segment_id"</span>:<span class="s">"seg_02"</span>},{<span class="n">"segment_id"</span>:<span class="s">"seg_03"</span>}] },
+      { <span class="n">"from"</span>:<span class="s">"실내"</span>, <span class="n">"to"</span>:<span class="s">"스튜디오"</span>, <span class="n">"reason"</span>:<span class="k">null</span>, <span class="n">"evidence"</span>:[{<span class="n">"segment_id"</span>:<span class="s">"seg_04"</span>}] } ] } ] }</code></pre>
+      <h4>프롬프트 시작본</h4>
+<pre><code><span class="k"># 역할</span>
+너는 방송 제작회의 원문에서 안건별로 아이디어가 어떻게, 왜 바뀌었는지 기록한다.
+<span class="k"># 해야 할 일</span>
+1. 원문을 안건(오프닝, 게스트, 촬영 장소 등) 단위로 묶는다.
+2. 안건마다 아이디어가 바뀐 순서를 from → to 로 적는다.
+3. 바뀐 이유가 원문에 <span class="s">말로 나온 경우에만</span> reason에 적는다. 없으면 null.
+4. 모든 변화에 근거 segment_id를 붙인다.
+<span class="k"># 하지 말 것</span>
+- 확정·보류를 판단하지 않는다. - 이유를 추측하지 않는다. - 더 좋은 안을 제안하지 않는다.
+<span class="k"># 출력</span>
+schema.json 형식의 JSON만 출력한다.</code></pre>
+      <h4>꼭 넣을 함정</h4>
+      <div class="traps"><div class="trap"><b>이유 없는 변경</b>“실내 → 스튜디오”처럼 이유가 말로 안 나옴 → reason null</div><div class="trap"><b>되돌아간 아이디어</b>야외 → 실내 → 다시 야외 검토 → 세 번째 변화로 기록</div><div class="trap"><b>안건 넘나들기</b>오프닝 얘기 중 게스트 얘기 → 다른 안건으로 분리</div></div>
+      <h4>완료 기준</h4>
+      <ul class="checks"><li><svg class="ic"><use href="#i-check"/></svg>가상 회의 5개에서 정답지의 “변경 이유”를 모두 찾음</li><li><svg class="ic"><use href="#i-check"/></svg>원문에 없는 이유를 쓴 경우 0건</li><li><svg class="ic"><use href="#i-check"/></svg>모든 변화에 근거 1개 이상</li></ul>
+    </div>
+  </section>
+
+  <section class="agent" id="a3">
+    <div class="agent-h"><span class="ai"><svg class="ic"><use href="#i-checks"/></svg></span><div><h3>A3 결정·업무</h3><p>제안·확정·보류·폐기를 가르고 담당·기한을 뽑기</p></div><div class="r"><span class="own o-b" style="font:700 11px/1 var(--font-sans);padding:5px 7px;border-radius:5px">팀원 B</span><span class="eg-chip eg-chip--plain">ERD · ItemRevision(status) · ActionItem</span></div></div>
+    <div class="agent-b">
+      <h4>역할</h4><p>A2가 정리한 안건마다 최종 상태를 판단하고, 회의에서 생긴 할 일을 담당·기한과 함께 뽑는다. <strong>담당·기한이 말로 안 나왔으면 null.</strong></p>
+      <h4>입력 → 출력</h4>
+      <dl class="kv"><dt>입력</dt><dd>A1 <code>segments</code> · A2 <code>topics</code> · 참석자 명단</dd><dt>출력</dt><dd><code>decisions[]</code> · <code>action_items[]</code> · <code>questions_for_human[]</code></dd></dl>
+<pre><code>{ <span class="n">"decisions"</span>: [
+    { <span class="n">"item_id"</span>:<span class="s">"t_opening"</span>, <span class="n">"status"</span>:<span class="s">"confirmed"</span>, <span class="n">"value"</span>:<span class="s">"스튜디오"</span>,
+      <span class="n">"evidence"</span>:[{<span class="n">"segment_id"</span>:<span class="s">"seg_03"</span>},{<span class="n">"segment_id"</span>:<span class="s">"seg_04"</span>}], <span class="n">"confidence"</span>:0.92 },
+    { <span class="n">"item_id"</span>:<span class="s">"t_guest"</span>, <span class="n">"status"</span>:<span class="s">"on_hold"</span>, <span class="n">"value"</span>:<span class="k">null</span>,
+      <span class="n">"hold_reason"</span>:<span class="s">"출연료 확인 필요"</span>, <span class="n">"revisit"</span>:<span class="s">"다음 주 회의"</span>, <span class="n">"evidence"</span>:[{<span class="n">"segment_id"</span>:<span class="s">"seg_14"</span>}], <span class="n">"confidence"</span>:0.58 } ],
+  <span class="n">"action_items"</span>: [
+    { <span class="n">"description"</span>:<span class="s">"스튜디오 대관 가능 여부 확인"</span>, <span class="n">"assignee"</span>:<span class="s">"p_choi"</span>, <span class="n">"due_at"</span>:<span class="k">null</span>, <span class="n">"evidence"</span>:[{<span class="n">"segment_id"</span>:<span class="s">"seg_11"</span>}] } ],
+  <span class="n">"questions_for_human"</span>: [
+    { <span class="n">"target"</span>:<span class="s">"decisions[1].status"</span>, <span class="n">"question"</span>:<span class="s">"‘게스트 섭외’는 확정인가요, 보류인가요?"</span>, <span class="n">"evidence"</span>:[{<span class="n">"segment_id"</span>:<span class="s">"seg_14"</span>}] } ] }</code></pre>
+      <p class="t-caption">status 값: <code>proposed</code> 제안 · <code>confirmed</code> 확정 · <code>on_hold</code> 보류 · <code>dropped</code> 폐기 · confidence 0.7 미만이면 질문을 함께 남깁니다.</p>
+      <h4>프롬프트 시작본</h4>
+<pre><code><span class="k"># 역할</span>
+너는 방송 제작회의에서 확정된 결정과 후속 업무를 찾는다.
+<span class="k"># 해야 할 일</span>
+1. 안건마다 status를 proposed/confirmed/on_hold/dropped 중 하나로 정한다. (판단 기준 표 참고)
+2. 확정은 결정권자(메인 작가·메인 PD)의 정리 발언이 있을 때만 confirmed로 한다.
+3. 누가 하겠다고 말한 일은 action_items에 넣는다. assignee·due_at은 원문에 있을 때만 채운다.
+4. 확신이 0.7 미만이면 questions_for_human에 한 문장 질문을 남긴다.
+<span class="k"># 하지 말 것</span>
+- 담당자·기한을 추측하지 않는다. - 폐기된 안건도 지우지 않는다.
+<span class="k"># 출력</span>
+schema.json 형식의 JSON만 출력한다.</code></pre>
+      <h4>꼭 넣을 함정</h4>
+      <div class="traps"><div class="trap"><b>정리 발언 없음</b>모두 “좋네요”만 하고 끝 → 확정 아님, 제안 + 질문</div><div class="trap"><b>담당만 있고 기한 없음</b>“제가 확인할게요” → assignee만, due_at null</div><div class="trap"><b>보류 같은 확정</b>“일단 스튜디오로 하고 날씨 보죠” → 확정 + 조건 메모, 애매하면 질문</div></div>
+      <h4>완료 기준</h4>
+      <ul class="checks"><li><svg class="ic"><use href="#i-check"/></svg>가상 회의 5개에서 <strong>중대한 결정 누락 0건</strong> (PRD 통과 기준)</li><li><svg class="ic"><use href="#i-check"/></svg>지어낸 담당·기한 0건</li><li><svg class="ic"><use href="#i-check"/></svg>보류·폐기도 빠짐없이 기록</li></ul>
+    </div>
+  </section>
+
+  <section class="agent" id="a4">
+    <div class="agent-h"><span class="ai"><svg class="ic"><use href="#i-doc"/></svg></span><div><h3>A4 문서 구성</h3><p>검토된 항목을 템플릿 칸에 배치</p></div><div class="r"><span class="own o-a" style="font:700 11px/1 var(--font-sans);padding:5px 7px;border-radius:5px">팀원 A</span><span class="eg-chip eg-chip--plain">ERD · DocumentVersion · DocumentItemLink</span></div></div>
+    <div class="agent-b">
+      <h4>역할</h4><p>템플릿 버전의 규칙에 따라 각 항목을 알맞은 칸에 넣고 문장을 다듬는다. <strong>새 내용을 만들지 않고</strong>, 넣을 곳이 없는 항목은 버리지 말고 <code>unplaced</code>에 남긴다. 글꼴·자간 같은 서식은 출력 도구가 한다.</p>
+      <h4>입력 → 출력</h4>
+      <dl class="kv"><dt>입력</dt><dd>A2·A3 결과(사람이 고친 값 포함) · <code>TemplateVersion.rules_json</code></dd><dt>출력</dt><dd><code>sections[]</code>(칸별 내용 + 사용한 항목 id) · <code>unplaced[]</code></dd></dl>
+<pre><code><span class="c">// 입력: 템플릿 규칙 (제작회의록 v3)</span>
+{ <span class="n">"fields"</span>: [
+  { <span class="n">"id"</span>:<span class="s">"opening"</span>, <span class="n">"label"</span>:<span class="s">"오프닝"</span>, <span class="n">"source"</span>:<span class="s">"decisions[item=오프닝*]"</span>, <span class="n">"rule"</span>:<span class="s">"최종안 + 변경 이력 한 줄"</span>, <span class="n">"required"</span>:<span class="k">true</span> },
+  { <span class="n">"id"</span>:<span class="s">"actions"</span>, <span class="n">"label"</span>:<span class="s">"후속 업무"</span>, <span class="n">"source"</span>:<span class="s">"action_items"</span>, <span class="n">"format"</span>:<span class="s">"table"</span>, <span class="n">"required"</span>:<span class="k">true</span> },
+  { <span class="n">"id"</span>:<span class="s">"pending"</span>, <span class="n">"label"</span>:<span class="s">"보류"</span>, <span class="n">"source"</span>:<span class="s">"decisions[status=on_hold]"</span> } ] }
+
+<span class="c">// 출력</span>
+{ <span class="n">"sections"</span>: [
+  { <span class="n">"field_id"</span>:<span class="s">"opening"</span>, <span class="n">"content"</span>:{ <span class="n">"final"</span>:<span class="s">"스튜디오"</span>, <span class="n">"history"</span>:<span class="s">"야외(한강 공원) → 실내(우천 예보) → 스튜디오"</span> },
+    <span class="n">"item_refs"</span>:[<span class="s">"t_opening@rev3"</span>] } ],
+  <span class="n">"unplaced"</span>: [] }</code></pre>
+      <h4>꼭 넣을 함정</h4>
+      <div class="traps"><div class="trap"><b>칸이 없는 항목</b>템플릿에 “드론” 칸 없음 → unplaced로, 버리지 않기</div><div class="trap"><b>미정 값</b>기한 null → 문서에 “미정” 그대로. 날짜를 만들지 않기</div><div class="trap"><b>템플릿 변경</b>표 → 담당별 묶음으로 규칙만 바뀜 → 내용은 같고 배치만 다른지</div></div>
+      <h4>완료 기준</h4>
+      <ul class="checks"><li><svg class="ic"><use href="#i-check"/></svg>모든 문장에 <code>item_refs</code>가 있음</li><li><svg class="ic"><use href="#i-check"/></svg>입력에 없는 사실이 문서에 0건</li><li><svg class="ic"><use href="#i-check"/></svg>필수 칸이 비면 빈 칸이 아니라 “미정”·“해당 없음”으로 명시</li></ul>
+    </div>
+  </section>
+
+  <section class="agent" id="a5">
+    <div class="agent-h"><span class="ai"><svg class="ic"><use href="#i-search"/></svg></span><div><h3>A5 검증</h3><p>원문과 대조해 누락·모순·추가·불명확 찾기</p></div><div class="r"><span class="own o-b" style="font:700 11px/1 var(--font-sans);padding:5px 7px;border-radius:5px">팀원 B</span><span class="eg-chip eg-chip--plain">ERD · ValidationFinding</span></div></div>
+    <div class="agent-b">
+      <h4>역할</h4><p>완성된 문서를 원문·항목과 비교해 문제를 찾고, 문제마다 <strong>어느 단계로 돌려보낼지</strong>(<code>route_to</code>) 정한다. 직접 고치지 않는다.</p>
+      <h4>입력 → 출력</h4>
+      <dl class="kv"><dt>입력</dt><dd>A1 원문 · A2·A3 항목 · A4 문서</dd><dt>출력</dt><dd><code>verdict</code> · <code>findings[]</code></dd></dl>
+<pre><code>{ <span class="n">"verdict"</span>: <span class="s">"needs_human"</span>,             <span class="c">// pass | needs_fix | needs_human</span>
+  <span class="n">"findings"</span>: [
+    { <span class="n">"type"</span>:<span class="s">"missing"</span>, <span class="n">"severity"</span>:<span class="s">"critical"</span>, <span class="n">"target"</span>:<span class="s">"pending"</span>,
+      <span class="n">"message"</span>:<span class="s">"03:20 ‘게스트 섭외 보류’가 문서에 없습니다."</span>, <span class="n">"evidence"</span>:[{<span class="n">"segment_id"</span>:<span class="s">"seg_14"</span>}], <span class="n">"route_to"</span>:<span class="s">"decision"</span> },
+    { <span class="n">"type"</span>:<span class="s">"unclear"</span>, <span class="n">"severity"</span>:<span class="s">"normal"</span>, <span class="n">"target"</span>:<span class="s">"actions[0].due_at"</span>,
+      <span class="n">"message"</span>:<span class="s">"기한이 원문에 없습니다."</span>, <span class="n">"evidence"</span>:[{<span class="n">"segment_id"</span>:<span class="s">"seg_11"</span>}], <span class="n">"route_to"</span>:<span class="s">"human"</span> } ] }</code></pre>
+      <table class="t">
+        <thead><tr><th>type</th><th>뜻</th><th>보통 route_to</th></tr></thead>
+        <tbody>
+          <tr><td><code>missing</code> 누락</td><td>원문에 있는 결정·보류·업무가 문서에 없음</td><td><code>decision</code> 또는 <code>compose</code></td></tr>
+          <tr><td><code>conflict</code> 모순</td><td>문서와 원문(또는 항목끼리)이 서로 다름</td><td><code>context</code> / <code>decision</code></td></tr>
+          <tr><td><code>added</code> 추가</td><td>원문에 없는 내용이 문서에 있음</td><td><code>compose</code></td></tr>
+          <tr><td><code>unclear</code> 불명확</td><td>원문만으로 판단이 어려움</td><td><code>human</code></td></tr>
+        </tbody>
+      </table>
+      <h4>꼭 넣을 함정</h4>
+      <div class="traps"><div class="trap"><b>일부러 뺀 문서</b>정답 문서에서 보류 1건을 지운 것 → missing으로 잡는지</div><div class="trap"><b>일부러 넣은 문서</b>원문에 없는 기한을 넣은 것 → added로 잡는지</div><div class="trap"><b>문제 없는 문서</b>정답 그대로 → pass (괜히 문제 만들지 않기)</div></div>
+      <h4>완료 기준</h4>
+      <ul class="checks"><li><svg class="ic"><use href="#i-check"/></svg>심어 둔 문제를 모두 찾음</li><li><svg class="ic"><use href="#i-check"/></svg>문제 없는 문서에 거짓 경보 0건</li><li><svg class="ic"><use href="#i-check"/></svg>모든 finding에 근거와 <code>route_to</code></li></ul>
+    </div>
+  </section>
+
+  <h2 id="tool"><small>T</small>문서 출력 도구와 오케스트레이터</h2>
+  <p>이 둘은 AI가 아닌 <strong>규칙 코드</strong>입니다. 기술 리드가 만들지만, 모두가 규칙을 알고 있어야 테스트를 제대로 짤 수 있습니다.</p>
+  <h3>문서 출력 도구</h3>
+  <ul><li>A4의 <code>sections</code>를 템플릿 파일(docx 1종)에 넣고, 글꼴(Noto Sans KR)·자간·강조(변경 이력 형광펜)를 규칙대로 적용</li><li>서식 검사: 필수 칸 · 날짜 형식 · 참석자 명단에 있는 이름인지</li><li>템플릿 출력 형식만 바뀌면 이 단계와 서식 검사만 다시 실행</li></ul>
+  <h3>오케스트레이터 규칙</h3>
+  <table class="t">
+    <thead><tr><th>상황</th><th>다음 행동</th></tr></thead>
+    <tbody>
+      <tr><td>검증 <code>pass</code></td><td>실행 “완료” → 작성자 검토. <strong>문서는 여전히 초안</strong> (자동 승인 없음)</td></tr>
+      <tr><td>검증 <code>needs_fix</code></td><td><code>route_to</code> 단계부터 재실행 → 문서 구성 → 검증. 단계당 자동 <strong>2회</strong>까지 (설정 가능)</td></tr>
+      <tr><td>검증 <code>needs_human</code> · 재시도 한도 도달</td><td>사람 확인 요청 생성, 실행은 “사람 확인 대기”</td></tr>
+      <tr><td>사람이 응답</td><td>응답 값 고정 → 새 입력 버전 → 영향받는 단계부터 새 하위 실행</td></tr>
+      <tr><td>전사 정정</td><td>제작 맥락 이후 결과 무효화 후 재실행</td></tr>
+      <tr><td>결정 정정</td><td>문서 구성 이후 결과 무효화 후 재실행</td></tr>
+      <tr><td>외부 서비스 오류</td><td>재시도 또는 “실패”, 재시작 위치 표시. 결과를 모르는 요청은 다시 보내지 말고 상태 조회</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="vibe"><small>05</small>AI 코딩 도구에 이렇게 시키기</h2>
+  <p>Cursor나 Claude Code 같은 도구에 아래 문장을 그대로 붙여 넣고, <code>[ ]</code> 부분만 바꿔 쓰세요.</p>
+<pre><code><span class="c">① 실패 원인 찾기 (코드는 건드리지 않게)</span>
+agents/[decision]/prompt.md 와 schema.json 을 읽고,
+`npm run agent:test [decision] [02]` 를 실행한 뒤 실패한 이유를 설명해 줘.
+코드는 수정하지 말고, prompt.md 수정안만 diff로 보여 줘.
+
+<span class="c">② 테스트 추가</span>
+agents/[decision]/examples 에 '[정리 발언 없이 끝난 안건]' 테스트를 추가해 줘.
+입력은 fixtures/meetings/[03_noise].json 의 [seg_20~seg_26] 구간을 쓰고,
+check 파일에는 "t_bgm 의 status 가 confirmed 가 아니어야 함"을 넣어 줘.
+
+<span class="c">③ 결과 정리</span>
+`npm run agent:test [decision]` 결과를 표로 정리해 줘.
+열: 테스트 이름 / 통과 여부 / 실패 이유 / 토큰 / 시간</code></pre>
+  <div class="box r"><h4><svg class="ic"><use href="#i-lock"/></svg>지켜 주세요</h4><ul><li><code>lib/</code> 공통 코드와 <code>schema.json</code>은 혼자 바꾸지 않습니다. 바꿔야 하면 팀 채팅에 먼저 올리기.</li><li>API 키를 코드나 커밋에 넣지 않습니다. <code>.env.local</code>에만.</li><li>실제 사람의 회의 녹음·이름을 쓰지 않습니다. 가상 회의 데이터만.</li><li>내 브랜치에서 작업하고, 기술 리드 검토 후 합칩니다.</li></ul></div>
+
+  <h2 id="done"><small>06</small>완료 체크리스트</h2>
+  <ul class="checks">
+    <li><svg class="ic"><use href="#i-check"/></svg><strong>역할 한 문장</strong>이 prompt.md 맨 위에 있다</li>
+    <li><svg class="ic"><use href="#i-check"/></svg>테스트가 <strong>3개 이상</strong>(쉬운 것·함정·애매한 것) 있고 모두 통과한다</li>
+    <li><svg class="ic"><use href="#i-check"/></svg>가상 회의 5개로 돌렸을 때 <strong>지어낸 값 0건</strong></li>
+    <li><svg class="ic"><use href="#i-check"/></svg>모든 판단에 <code>segment_id</code> 근거가 있다</li>
+    <li><svg class="ic"><use href="#i-check"/></svg>애매한 경우 <code>questions_for_human</code>이 나온다</li>
+    <li><svg class="ic"><use href="#i-check"/></svg>프롬프트 버전(<code>@3</code> 등)을 올리고 무엇을 바꿨는지 기록했다</li>
+    <li><svg class="ic"><use href="#i-check"/></svg>다른 사람 에이전트에 테스트 2개를 추가했다 (선택)</li>
+  </ul>
+
+  <footer><span><span class="eg-wordmark" style="font-size:15px">egg is going<i></i></span> &nbsp;에이전트 제작 가이드 v0.1 · 2026-10-20</span><span>가상 제작사 대상 교육 프로젝트 · AIR Studio 확정 API와 무관</span></footer>
+</article>
+</div>
+</body>
+</html>
