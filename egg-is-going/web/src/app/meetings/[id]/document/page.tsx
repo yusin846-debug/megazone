@@ -1,4 +1,5 @@
-import Link from "next/link";
+import SubmitButton from "@/components/SubmitButton";
+import Link from "@/components/NavigationLink";
 import { db, parse } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import Shell, { MeetingTabs } from "@/components/Shell";
@@ -62,7 +63,7 @@ export default async function DocumentPage({ params, searchParams }: { params: I
               <form action={submitDoc}>
                 <input type="hidden" name="docVersionId" value={dv.id} />
                 <input type="hidden" name="meetingId" value={id} />
-                <button className="eg-btn eg-btn--primary eg-btn--sm" disabled={blockers.length > 0}><Icon id="i-send" />상신</button>
+                <SubmitButton pendingLabel="상신 중…" className="eg-btn eg-btn--primary eg-btn--sm" disabled={blockers.length > 0}><Icon id="i-send" />상신</SubmitButton>
               </form>
             )}
           </div>

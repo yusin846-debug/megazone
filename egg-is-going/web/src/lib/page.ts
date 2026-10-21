@@ -1,7 +1,7 @@
 // 화면 공용: 쿼리 읽기, 회의 접근 확인
 import { notFound } from "next/navigation";
 import { db } from "./db";
-import { canReadContent, rolesIn } from "./auth";
+import { rolesIn } from "./auth";
 
 export type SP = Promise<Record<string, string | string[] | undefined>>;
 export type IdParams = Promise<{ id: string }>;
@@ -16,7 +16,7 @@ export async function meetingFor(id: string, userId: string, opts: { content?: b
   const meeting = await db.meeting.findUnique({ where: { id }, include: { program: true, participants: true } });
   if (!meeting) notFound();
   const roles = await rolesIn(userId, meeting.programId);
-  const readable = await canReadContent(userId, meeting.programId);
+  const readable = roles.some(r => r !== "operator");
   if (opts.content && !readable) throw new Error("운영자 권한으로는 회의 내용을 볼 수 없어요. 실행 상태만 볼 수 있어요.");
   return { meeting, roles, readable };
 }

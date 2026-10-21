@@ -1,4 +1,5 @@
-import Link from "next/link";
+import SubmitButton from "@/components/SubmitButton";
+import Link from "@/components/NavigationLink";
 import { db, parse } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import Shell, { MeetingTabs } from "@/components/Shell";
@@ -62,14 +63,14 @@ export default async function RunPage({ params, searchParams }: { params: IdPara
           {active && canRun && (
             <form action={cancelRun}>
               <input type="hidden" name="runId" value={run!.id} />
-              <button className="eg-btn eg-btn--ghost eg-btn--sm" disabled={run!.cancelRequested}><Icon id="i-x" />실행 취소</button>
+              <SubmitButton pendingLabel="취소 요청 중…" className="eg-btn eg-btn--ghost eg-btn--sm" disabled={run!.cancelRequested}><Icon id="i-x" />실행 취소</SubmitButton>
             </form>
           )}
           {!active && canRun && (
             <form action={rerunFrom}>
               <input type="hidden" name="meetingId" value={id} />
               <input type="hidden" name="step" value="transcript" />
-              <button className="eg-btn eg-btn--secondary eg-btn--sm"><Icon id="i-refresh" />처음부터 다시</button>
+              <SubmitButton pendingLabel="실행 준비 중…" className="eg-btn eg-btn--secondary eg-btn--sm"><Icon id="i-refresh" />처음부터 다시</SubmitButton>
             </form>
           )}
         </div>
@@ -103,7 +104,7 @@ export default async function RunPage({ params, searchParams }: { params: IdPara
                 <form action={rerunFrom}>
                   <input type="hidden" name="meetingId" value={id} />
                   <input type="hidden" name="step" value={k} />
-                  <button className="eg-btn eg-btn--ghost eg-btn--sm" style={{ width: "100%" }} title={`${STEP_LABEL[k]}부터 다시 실행`}><Icon id="i-refresh" />여기부터</button>
+                  <SubmitButton pendingLabel="실행 준비 중…" className="eg-btn eg-btn--ghost eg-btn--sm" style={{ width: "100%" }} title={`${STEP_LABEL[k]}부터 다시 실행`}><Icon id="i-refresh" />여기부터</SubmitButton>
                 </form>
               )}
             </div>

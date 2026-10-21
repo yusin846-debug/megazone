@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/NavigationLink";
 import { db, parse } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import Shell from "@/components/Shell";

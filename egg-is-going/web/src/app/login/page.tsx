@@ -1,3 +1,4 @@
+import SubmitButton from "@/components/SubmitButton";
 export const dynamic = "force-dynamic";
 
 import { db } from "@/lib/db";
@@ -20,7 +21,7 @@ export default async function LoginPage() {
         </div>
         <form action={login} className="card-b" style={{ display: "grid", gap: 8, padding: "16px 28px 28px" }}>
           {users.map((u) => (
-            <button key={u.id} name="userId" value={u.id} className="person" style={{ fontFamily: "inherit", textAlign: "left" }}>
+            <SubmitButton pendingLabel="로그인 중…" key={u.id} name="userId" value={u.id} className="person" style={{ fontFamily: "inherit", textAlign: "left" }}>
               <svg style={{ width: 24, height: 28, flex: "none" }}><use href="#egg" /></svg>
               <span style={{ flex: 1 }}>
                 <b>{u.name}</b> <span className="muted" style={{ fontSize: 12.5 }}>{u.title}</span>
@@ -28,7 +29,7 @@ export default async function LoginPage() {
                 <small className="muted">{[...new Set(u.memberships.map((m) => ROLE_LABEL[m.role as Role]))].join(" · ")}</small>
               </span>
               {u.title.includes("운영") ? <Team team="external" label="운영" /> : <Team team={/PD/.test(u.title) ? "pd" : "writer"} label={/PD/.test(u.title) ? "PD" : "작가"} />}
-            </button>
+            </SubmitButton>
           ))}
         </form>
         <p className="muted" style={{ fontSize: 11.5, padding: "0 28px 20px", margin: 0 }}>가상 제작사 대상 교육 프로젝트 · 실제 기업·인물과 무관</p>

@@ -1,4 +1,5 @@
-import Link from "next/link";
+import SubmitButton from "@/components/SubmitButton";
+import Link from "@/components/NavigationLink";
 import { db, parse } from "@/lib/db";
 import { canReadContent, requireUser } from "@/lib/auth";
 import Shell from "@/components/Shell";
@@ -124,7 +125,7 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
                     <Icon id="i-lock" />
                     <div>답한 값은 고정돼요. 이후 실행에서 AI가 이 값을 바꾸지 않고, 같은 질문을 다시 하지 않아요.</div>
                   </div>
-                  <button className="eg-btn eg-btn--primary" style={{ justifySelf: "end" }}><Icon id="i-check" />응답 고정</button>
+                  <SubmitButton pendingLabel="응답 저장 중…" className="eg-btn eg-btn--primary" style={{ justifySelf: "end" }}><Icon id="i-check" />응답 고정</SubmitButton>
                 </form>
               ) : (
                 <div className="callout g">

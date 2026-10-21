@@ -1,13 +1,14 @@
 // 개발용 로그인: 쿠키에 사용자 id. (실제 배포에서는 SSO/IAM으로 교체)
+import { cache } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { db } from "./db";
 
-export async function currentUser() {
+export const currentUser = cache(async () => {
   const id = (await cookies()).get("eg_user")?.value;
   if (!id) return null;
   return db.user.findUnique({ where: { id }, include: { memberships: true } });
-}
+});
 
 export async function requireUser() {
   const u = await currentUser();

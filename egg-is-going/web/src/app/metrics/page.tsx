@@ -1,3 +1,4 @@
+import SubmitButton from "@/components/SubmitButton";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import Shell from "@/components/Shell";
@@ -84,7 +85,7 @@ export default async function MetricsPage({ searchParams }: { searchParams: SP }
                 </select>
                 <input className="eg-input" name="minutes" type="number" min={1} max={1439} placeholder="분" required />
               </div>
-              <button className="eg-btn eg-btn--ink eg-btn--sm" style={{ justifySelf: "end" }}><Icon id="i-clock" />기록</button>
+              <SubmitButton pendingLabel="기록 중…" className="eg-btn eg-btn--ink eg-btn--sm" style={{ justifySelf: "end" }}><Icon id="i-clock" />기록</SubmitButton>
             </div>
           </form>
           <div className="callout b">

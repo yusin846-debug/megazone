@@ -190,3 +190,23 @@ details.raw pre{white-space:pre-wrap;font:500 11.5px/1.6 var(--font-mono);backgr
   .bar{padding:0 16px}
   .people,.fg-row{grid-template-columns:1fr}
 }
+
+/* Immediate feedback for route transitions and server actions. */
+.feedback-spinner{display:inline-block;width:14px;height:14px;flex:0 0 14px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:feedback-spin .75s linear infinite;vertical-align:middle}
+.link-pending{display:inline-flex;margin-left:8px;align-items:center;color:var(--blue-500)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+button[aria-busy="true"]{cursor:wait;opacity:.8;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.route-loading{min-height:100vh;display:flex;background:var(--cream)}
+.route-loading__rail{position:fixed;inset:0 0 auto;height:3px;overflow:hidden;background:var(--yellow-100);z-index:100}
+.route-loading__rail:after{content:"";display:block;width:35%;height:100%;background:var(--blue-500);animation:feedback-travel 1.1s ease-in-out infinite}
+.route-loading__side{width:232px;flex-shrink:0;padding:30px 22px;background:var(--paper);border-right:1px solid var(--line)}
+.route-loading__main{padding:42px;max-width:1200px;width:100%}
+.route-loading__label{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);margin:0 0 32px}
+.route-loading__cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.skeleton{border-radius:10px;background:linear-gradient(90deg,var(--beige-100) 25%,var(--beige-200) 50%,var(--beige-100) 75%);background-size:200% 100%;animation:feedback-shimmer 1.5s ease-in-out infinite}
+.live-update{display:flex;align-items:center;gap:8px;color:var(--blue-500);font-size:12px;margin-bottom:16px}
+@keyframes feedback-spin{to{transform:rotate(360deg)}}
+@keyframes feedback-travel{from{transform:translateX(-100%)}to{transform:translateX(390%)}}
+@keyframes feedback-shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+@media(max-width:760px){.route-loading__side{display:none}.route-loading__main{padding:28px 20px}.route-loading__cards{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.feedback-spinner,.skeleton,.route-loading__rail:after{animation:none}}

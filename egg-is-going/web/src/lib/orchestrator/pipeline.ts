@@ -280,7 +280,7 @@ async function saveTranscript(meetingId: string, recordingId: string, out: Trans
       createdBy: "agent:transcript",
       note: prev ? "다시 전사" : "원본",
       segments: {
-        create: out.segments.map((s) => ({ segKey: s.segment_id, speakerParticipantId: s.speaker ? toId.get(s.speaker) ?? null : null, startMs: s.start_ms, endMs: s.end_ms, text: s.text, uncertain: s.uncertain })),
+        createMany: { data: out.segments.map((s) => ({ segKey: s.segment_id, speakerParticipantId: s.speaker ? toId.get(s.speaker) ?? null : null, startMs: s.start_ms, endMs: s.end_ms, text: s.text, uncertain: s.uncertain })) },
       },
     },
   });

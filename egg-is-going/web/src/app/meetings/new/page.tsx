@@ -1,4 +1,5 @@
-import Link from "next/link";
+import SubmitButton from "@/components/SubmitButton";
+import Link from "@/components/NavigationLink";
 import { readdirSync } from "node:fs";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
@@ -81,7 +82,7 @@ export default async function NewMeetingPage({ searchParams }: { searchParams: S
             </div>
             <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
               <Link href="/meetings" className="eg-btn eg-btn--ghost">취소</Link>
-              <button className="eg-btn eg-btn--primary"><Icon id="i-play" />등록하고 AI 실행</button>
+              <SubmitButton pendingLabel="등록 중…" className="eg-btn eg-btn--primary"><Icon id="i-play" />등록하고 AI 실행</SubmitButton>
             </div>
           </div>
         </form>

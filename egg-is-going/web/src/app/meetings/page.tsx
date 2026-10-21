@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/NavigationLink";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import Shell from "@/components/Shell";
@@ -11,17 +11,18 @@ import { q, type SP } from "@/lib/page";
 export default async function MeetingsPage({ searchParams }: { searchParams: SP }) {
   const sp = await searchParams;
   const user = await requireUser();
-  const meetings = await db.meeting.findMany({
+  const [meetings, openTasks, inReview, approved] = await Promise.all([db.meeting.findMany({
     orderBy: { occurredAt: "desc" },
     include: {
       participants: true,
       runs: { orderBy: { createdAt: "desc" }, take: 1, include: { steps: true, humanTasks: { where: { status: "open" } } } },
       documents: { include: { versions: { orderBy: { version: "desc" }, take: 1 } } },
     },
-  });
-  const openTasks = await db.humanTask.count({ where: { status: "open", required: true } });
-  const inReview = await db.documentVersion.count({ where: { status: "in_review" } });
-  const approved = await db.documentVersion.count({ where: { status: "approved" } });
+  }),
+    db.humanTask.count({ where: { status: "open", required: true } }),
+    db.documentVersion.count({ where: { status: "in_review" } }),
+    db.documentVersion.count({ where: { status: "approved" } }),
+  ]);
   const running = meetings.filter((m) => ["queued", "running"].includes(m.runs[0]?.status ?? "")).length;
 
   return (

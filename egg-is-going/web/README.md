@@ -105,7 +105,7 @@ DB를 처음 상태로 되돌리려면 `npm run db:reset` (개발 DB 전용).
 - 전용 PostgreSQL을 연결하고 `DATABASE_URL`을 배포 환경에 설정해야 합니다. 기존 다른 제품의 DB를 재사용하거나 초기화하지 않습니다.
 - DB 연결 후 마이그레이션과 시드를 한 번 실행합니다. 빌드마다 DB를 초기화하지 않습니다.
 - 녹취록은 Recording.contentText, DOCX는 DocumentVersion.artifactBytes에 저장하여 인스턴스 교체·재배포 후에도 보존합니다. 텍스트 녹취록 중심 MVP이며 큰 음성 파일은 별도 오브젝트 저장소로 확장합니다.
-- 실행을 요청 내에서 await하여 응답 후 작업이 중단되는 문제를 방지합니다. 현재 최대 300초이며, 긴 LLM 실행·장애 후 자동 재개는 별도 durable worker/AIR Studio 어댑터가 필요합니다.
+- Vercel에서는 Next.js after()로 응답을 먼저 반환한 뒤 실행을 이어갑니다. 실행 상태 화면에서 진행 상황을 자동 갱신합니다. 현재 최대 300초이며, 긴 LLM 실행·장애 후 자동 재개는 별도 durable worker/AIR Studio 어댑터가 필요합니다. CLI에서는 기존처럼 실행 완료를 기다립니다.
 - API 키를 연결하지 않으면 `mock` 기준선 모드입니다. 실제 LLM 품질 검증을 의미하지 않습니다.
 - 개발용 역할 선택 로그인은 유지했습니다. 현재 Vercel Deployment Protection을 유지하고, 사내 실사용 전에 SSO를 구현해야 합니다.
 

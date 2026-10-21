@@ -1,4 +1,5 @@
-import Link from "next/link";
+import SubmitButton from "@/components/SubmitButton";
+import Link from "@/components/NavigationLink";
 import { db, parse } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import Shell, { MeetingTabs } from "@/components/Shell";
@@ -128,7 +129,7 @@ export default async function WorkspacePage({ params, searchParams }: { params: 
                           </select>
                           <input className="eg-input" name="value" defaultValue={content.value ?? ""} placeholder="확정 내용 (확정일 때)" />
                         </div>
-                        <button className="eg-btn eg-btn--ink eg-btn--sm" style={{ justifySelf: "end" }}>고정하고 문서 다시 만들기</button>
+                        <SubmitButton pendingLabel="변경 저장 중…" className="eg-btn eg-btn--ink eg-btn--sm" style={{ justifySelf: "end" }}>고정하고 문서 다시 만들기</SubmitButton>
                       </form>
                     )}
                   </div>
@@ -169,7 +170,7 @@ export default async function WorkspacePage({ params, searchParams }: { params: 
                           </select>
                           <input className="eg-input" name="dueAt" defaultValue={a.dueAt ?? ""} placeholder="기한 (비우면 미정)" />
                         </div>
-                        <button className="eg-btn eg-btn--ink eg-btn--sm" style={{ justifySelf: "end" }}>고정하고 문서 다시 만들기</button>
+                        <SubmitButton pendingLabel="변경 저장 중…" className="eg-btn eg-btn--ink eg-btn--sm" style={{ justifySelf: "end" }}>고정하고 문서 다시 만들기</SubmitButton>
                       </form>
                     </details>
                   )}

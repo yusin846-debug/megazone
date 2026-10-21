@@ -1,4 +1,5 @@
-import Link from "next/link";
+import SubmitButton from "@/components/SubmitButton";
+import Link from "@/components/NavigationLink";
 import { db, parse } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import Shell, { MeetingTabs } from "@/components/Shell";
@@ -97,10 +98,10 @@ export default async function ReviewPage({ params, searchParams }: { params: IdP
                     <textarea className="eg-textarea" name="comment" rows={3} placeholder="의견 (변경 요청에는 꼭 적어 주세요)" />
                     {myTurn && step?.role === "approver" && blockers.length > 0 && <div className="callout r"><Icon id="i-alert" /><div>{blockers.join(" · ")}</div></div>}
                     <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "flex-end" }}>
-                      <button name="action" value="comment" className="eg-btn eg-btn--ghost eg-btn--sm">의견만</button>
-                      {myTurn && <button name="action" value="request_changes" className="eg-btn eg-btn--danger eg-btn--sm">변경 요청</button>}
-                      {myTurn && step?.role === "reviewer" && <button name="action" value="forward" className="eg-btn eg-btn--ink eg-btn--sm"><Icon id="i-arrow" />다음 단계 전달</button>}
-                      {myTurn && step?.role === "approver" && <button name="action" value="approve" className="eg-btn eg-btn--primary eg-btn--sm" disabled={blockers.length > 0}><Icon id="i-check" />승인</button>}
+                      <SubmitButton pendingLabel="의견 저장 중…" name="action" value="comment" className="eg-btn eg-btn--ghost eg-btn--sm">의견만</SubmitButton>
+                      {myTurn && <SubmitButton pendingLabel="요청 중…" name="action" value="request_changes" className="eg-btn eg-btn--danger eg-btn--sm">변경 요청</SubmitButton>}
+                      {myTurn && step?.role === "reviewer" && <SubmitButton pendingLabel="전달 중…" name="action" value="forward" className="eg-btn eg-btn--ink eg-btn--sm"><Icon id="i-arrow" />다음 단계 전달</SubmitButton>}
+                      {myTurn && step?.role === "approver" && <SubmitButton pendingLabel="승인 중…" name="action" value="approve" className="eg-btn eg-btn--primary eg-btn--sm" disabled={blockers.length > 0}><Icon id="i-check" />승인</SubmitButton>}
                     </div>
                   </div>
                 </form>

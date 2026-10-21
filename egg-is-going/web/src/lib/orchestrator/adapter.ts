@@ -1,6 +1,7 @@
 // 실행 어댑터 (05_AIR_Integration 의 계약). 화면은 이 인터페이스만 호출한다.
 //   DevExecutionAdapter: 지금 쓰는 개발용 실행기 (같은 프로세스에서 실행)
 //   AirStudioAdapter:    AIR Studio 연결용 자리. 실제 API는 확인 후 구현한다.
+import { after } from "next/server";
 import { createHash } from "node:crypto";
 import { db } from "../db";
 import { currentProvider } from "../agents/runAgent";
@@ -19,10 +20,13 @@ const WORKFLOW = { name: "meeting-doc", version: "0.4" };
 
 class DevExecutionAdapter implements ExecutionAdapter {
   async startRun(meetingId: string, opts: { startStep?: StepKey; parentRunId?: string | null; reason: string }) {
-    const meeting = await db.meeting.findUniqueOrThrow({ where: { id: meetingId } });
-    const tv = await latestTranscript(meetingId);
+    const [meeting, tv, answered, locked] = await Promise.all([
+      db.meeting.findUniqueOrThrow({ where: { id: meetingId } }),
+      latestTranscript(meetingId),
+      db.humanTask.count({ where: { run: { meetingId }, status: "answered" } }),
+      lockedState(meetingId),
+    ]);
     const startStep: StepKey = opts.startStep ?? (tv ? "context" : "transcript");
-    const answered = await db.humanTask.findMany({ where: { run: { meetingId }, status: "answered" }, select: { id: true, responseJson: true } });
     const manifest = {
       workflow: `${WORKFLOW.name}@${WORKFLOW.version}`,
       provider: currentProvider(),
@@ -30,8 +34,8 @@ class DevExecutionAdapter implements ExecutionAdapter {
       transcriptVersionId: tv?.id ?? null,
       templateVersionId: meeting.templateVersionId,
       startStep,
-      locked: createHash("sha256").update(JSON.stringify(await lockedState(meetingId))).digest("hex").slice(0, 12),
-      answers: answered.length,
+      locked: createHash("sha256").update(JSON.stringify(locked)).digest("hex").slice(0, 12),
+      answers: answered,
     };
     let key = createHash("sha256").update(meetingId + JSON.stringify(manifest)).digest("hex");
     const existing = await db.run.findUnique({ where: { idempotencyKey: key } });
@@ -41,8 +45,10 @@ class DevExecutionAdapter implements ExecutionAdapter {
     const run = await db.run.create({
       data: { meetingId, workflowVersionId: wf.id, parentRunId: opts.parentRunId ?? null, startStep, inputManifestJson: JSON.stringify({ ...manifest, reason: opts.reason }), idempotencyKey: key, provider: manifest.provider },
     });
-    // 요청이 끝나기 전에 실행을 완료한다. 긴 모델 실행은 추후 durable worker로 이전.
-    await executeRun(run.id);
+    // Vercel은 응답 직후 실행을 이어가도록 수명주기를 보장한다 (최대 300초).
+    // CLI fixture 실행은 요청 컨텍스트가 없으므로 완료까지 기다린다.
+    if (process.env.VERCEL) after(() => executeRun(run.id));
+    else await executeRun(run.id);
     return { runId: run.id, duplicate: false };
   }
   async getRun(runId: string) {

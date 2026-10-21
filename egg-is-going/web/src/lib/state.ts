@@ -24,8 +24,10 @@ export async function participantsOf(meetingId: string) {
 }
 
 export async function meetingIn(meetingId: string): Promise<MeetingIn & { program: string }> {
-  const m = await db.meeting.findUniqueOrThrow({ where: { id: meetingId }, include: { program: true } });
-  const { list } = await participantsOf(meetingId);
+  const [m, { list }] = await Promise.all([
+    db.meeting.findUniqueOrThrow({ where: { id: meetingId }, include: { program: true } }),
+    participantsOf(meetingId),
+  ]);
   const occurred = fmtKst(m.occurredAt);
   return { title: m.title, occurred_at: occurred, participants: list, program: m.program.name };
 }
@@ -39,9 +41,8 @@ export async function latestTranscript(meetingId: string) {
 }
 
 export async function segmentsIn(meetingId: string): Promise<SegmentIn[]> {
-  const tv = await latestTranscript(meetingId);
+  const [tv, { toKey }] = await Promise.all([latestTranscript(meetingId), participantsOf(meetingId)]);
   if (!tv) return [];
-  const { toKey } = await participantsOf(meetingId);
   return tv.segments.map((s) => ({
     segment_id: s.segKey,
     start_ms: s.startMs,
@@ -88,8 +89,10 @@ export async function decisionsAndTopics(meetingId: string): Promise<{ decisions
 }
 
 export async function actionsOut(meetingId: string): Promise<ActionOut[]> {
-  const { toKey } = await participantsOf(meetingId);
-  const rows = await db.actionItem.findMany({ where: { meetingId, active: true }, orderBy: { key: "asc" } });
+  const [{ toKey }, rows] = await Promise.all([
+    participantsOf(meetingId),
+    db.actionItem.findMany({ where: { meetingId, active: true }, orderBy: { key: "asc" } }),
+  ]);
   return rows.map((a) => ({
     action_key: a.key,
     description: a.description,
@@ -100,9 +103,10 @@ export async function actionsOut(meetingId: string): Promise<ActionOut[]> {
 }
 
 export async function lockedState(meetingId: string): Promise<LockedState> {
-  const { toKey } = await participantsOf(meetingId);
-  const cur = await currentItems(meetingId);
-  const actions = await db.actionItem.findMany({ where: { meetingId, active: true, locked: true } });
+  const [{ toKey }, cur, actions] = await Promise.all([
+    participantsOf(meetingId), currentItems(meetingId),
+    db.actionItem.findMany({ where: { meetingId, active: true, locked: true } }),
+  ]);
   return {
     items: cur
       .filter((x) => x.rev!.locked && x.rev!.status !== "unknown")
@@ -118,9 +122,11 @@ export async function lockedState(meetingId: string): Promise<LockedState> {
 
 /** 사람이 답했거나 고정한 target — 검증·질문에서 다시 묻지 않는다 */
 export async function humanConfirmed(meetingId: string): Promise<string[]> {
-  const tasks = await db.humanTask.findMany({ where: { run: { meetingId }, status: "answered" } });
-  const cur = await currentItems(meetingId);
-  const locked = await db.actionItem.findMany({ where: { meetingId, active: true, locked: true } });
+  const [tasks, cur, locked] = await Promise.all([
+    db.humanTask.findMany({ where: { run: { meetingId }, status: "answered" }, select: { target: true } }),
+    currentItems(meetingId),
+    db.actionItem.findMany({ where: { meetingId, active: true, locked: true }, select: { key: true } }),
+  ]);
   return [
     ...tasks.map((t) => t.target),
     ...cur.filter((x) => x.rev!.locked).map((x) => `d:${x.item.key}.status`),

@@ -1,3 +1,4 @@
+import SubmitButton from "@/components/SubmitButton";
 import { db, parse } from "@/lib/db";
 import { requireUser, rolesIn, ROLE_LABEL, type Role } from "@/lib/auth";
 import Shell from "@/components/Shell";
@@ -63,7 +64,7 @@ export default async function TemplatesPage({ searchParams }: { searchParams: SP
                     <input type="hidden" name="templateId" value={t.id} />
                     <textarea className="eg-textarea mono" name="rules" rows={12} defaultValue={JSON.stringify(rules, null, 2)} style={{ fontSize: 11.5 }} />
                     <p className="eg-help">fields 배열을 고쳐요. source는 meta · confirmed · topic_changes · actions · on_hold · dropped 중 하나예요.</p>
-                    <button className="eg-btn eg-btn--ink eg-btn--sm"><Icon id="i-plus" />v{(latest?.version ?? 0) + 1}로 승인</button>
+                    <SubmitButton pendingLabel="승인 중…" className="eg-btn eg-btn--ink eg-btn--sm"><Icon id="i-plus" />v{(latest?.version ?? 0) + 1}로 승인</SubmitButton>
                   </div>
                 </form>
               ) : (
@@ -79,7 +80,7 @@ export default async function TemplatesPage({ searchParams }: { searchParams: SP
                     {t.versions.map((v) => <option key={v.id} value={v.id}>{t.name} v{v.version}</option>)}
                   </select>
                   <p className="eg-help" style={{ margin: 0 }}>문서 구성 → 출력 → 검증만 다시 실행해요. 전사·결정은 그대로 써요. 승인된 회의는 고를 수 없어요.</p>
-                  <button className="eg-btn eg-btn--secondary eg-btn--sm" style={{ justifySelf: "end" }}><Icon id="i-refresh" />적용하고 다시 만들기</button>
+                  <SubmitButton pendingLabel="적용 중…" className="eg-btn eg-btn--secondary eg-btn--sm" style={{ justifySelf: "end" }}><Icon id="i-refresh" />적용하고 다시 만들기</SubmitButton>
                 </div>
               </form>
             </div>

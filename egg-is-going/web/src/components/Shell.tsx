@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/NavigationLink";
 import type { ReactNode } from "react";
 import { db } from "@/lib/db";
 import { ROLE_LABEL, type Role } from "@/lib/auth";
@@ -9,9 +9,12 @@ type User = { id: string; name: string; title: string; memberships: { role: stri
 export default async function Shell({
   user, nav, crumbs, right, children, footer,
 }: { user: User; nav: "home" | "tasks" | "review" | "tpl" | "metric"; crumbs: (string | [string, string])[]; right?: ReactNode; children: ReactNode; footer?: ReactNode }) {
-  const program = await db.program.findFirst();
-  const openTasks = await db.humanTask.count({ where: { status: "open" } });
-  const myReviews = (await db.reviewRequest.findMany({ where: { status: "open" } })).filter((r) => {
+  const [program, openTasks, reviews] = await Promise.all([
+    db.program.findFirst({ select: { name: true } }),
+    db.humanTask.count({ where: { status: "open" } }),
+    db.reviewRequest.findMany({ where: { status: "open" }, select: { policySnapshotJson: true, currentStep: true } }),
+  ]);
+  const myReviews = reviews.filter((r) => {
     const p = JSON.parse(r.policySnapshotJson) as { userIds: string[] }[];
     return p[r.currentStep]?.userIds.includes(user.id);
   }).length;
