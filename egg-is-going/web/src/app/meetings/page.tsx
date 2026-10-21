@@ -16,7 +16,7 @@ export default async function MeetingsPage({ searchParams }: { searchParams: SP 
   const term = (q(sp, "q") ?? "").trim().slice(0, 100);
   const status = q(sp, "status") ?? "";
   const writer = user.memberships.some(m => m.programId === program.id && m.role === "writer");
-  const [meetings, openTasks, inReview, approved] = await Promise.all([db.meeting.findMany({
+  const [meetings, openTasks, inReview, approved, total, running] = await Promise.all([db.meeting.findMany({
     where: { programId: program.id, ...(term ? { OR: [
       { title: { contains: term, mode: "insensitive" as const } },
       { items: { some: { title: { contains: term, mode: "insensitive" as const } } } },
@@ -32,8 +32,9 @@ export default async function MeetingsPage({ searchParams }: { searchParams: SP 
     db.humanTask.count({ where: { status: "open", required: true, run: { meeting: { programId: program.id } } } }),
     db.documentVersion.count({ where: { status: "in_review", document: { meeting: { programId: program.id } } } }),
     db.documentVersion.count({ where: { status: "approved", document: { meeting: { programId: program.id } } } }),
+    db.meeting.count({ where: { programId: program.id } }),
+    db.meeting.count({ where: { programId: program.id, runs: { some: { status: { in: ["queued", "running"] } } } } }),
   ]);
-  const running = meetings.filter((m) => ["queued", "running"].includes(m.runs[0]?.status ?? "")).length;
 
   const filtered = meetings.filter(m => !status || m.runs[0]?.status === status);
 
@@ -49,7 +50,7 @@ export default async function MeetingsPage({ searchParams }: { searchParams: SP 
       </div>
       <div className="stats">
         <div className={`stat${openTasks ? " hot" : ""}`}><div className="l">필수 확인 대기</div><div className="v">{openTasks}<small>건</small></div><div className="c">답하면 이어서 실행돼요</div></div>
-        <div className="stat"><div className="l">AI 실행 중</div><div className="v">{running}<small>건</small></div><div className="c">전체 회의 {meetings.length}건</div></div>
+        <div className="stat"><div className="l">AI 실행 중</div><div className="v">{running}<small>건</small></div><div className="c">전체 회의 {total}건</div></div>
         <div className="stat"><div className="l">검토 중</div><div className="v">{inReview}<small>건</small></div><div className="c">검토자·결재자 차례</div></div>
         <div className="stat"><div className="l">승인된 문서</div><div className="v">{approved}<small>건</small></div><div className="c">승인본은 바꿀 수 없어요</div></div>
       </div>
