@@ -162,20 +162,21 @@ footer{padding:40px 0 64px;border-top:1px solid var(--line);color:var(--muted);f
 
   <h2 id="setup"><small>02</small>작업 틀과 폴더</h2>
   <p>기술 리드가 공통 틀을 먼저 만들어 둡니다. 여러분이 주로 여는 파일은 <strong>굵게</strong> 표시한 세 가지뿐입니다.</p>
-<pre class="tree"><code>agents/
-  decision/                  <span class="c">← A3 결정·업무 (예시)</span>
-    <span class="k">prompt.md</span>                <span class="c">← 에이전트에게 주는 지시문. 가장 많이 고칠 파일</span>
-    <span class="k">schema.json</span>              <span class="c">← 출력 형식(계약). 팀 합의 없이 바꾸지 않기</span>
-    <span class="k">examples/</span>                <span class="c">← 테스트</span>
-      01_basic.input.json
-      01_basic.check.json    <span class="c">← “이건 꼭 나와야 / 이건 절대 안 돼” 목록</span>
-      02_reversal.input.json
-      02_reversal.check.json
-    index.ts                 <span class="c">← runAgent("decision", input) 한 줄. 거의 안 건드림</span>
-lib/
-  runAgent.ts                <span class="c">← AI 호출 · 형식 검사 · 1회 재시도 · 기록 (기술 리드)</span>
-  devRunner.ts               <span class="c">← 개발용 실행기. 나중에 AIR Studio 어댑터로 교체</span>
-fixtures/meetings/           <span class="c">← 가상 회의 5개 녹취록과 정답지 (팀원 A가 관리)</span></code></pre>
+<pre class="tree"><code>web/                         <span class="c">← 실제 코드 (egg-is-going/web)</span>
+  agents/
+    decision/                <span class="c">← A3 결정·업무 (예시)</span>
+      <span class="k">prompt.md</span>              <span class="c">← 에이전트에게 주는 지시문. 가장 많이 고칠 파일</span>
+      <span class="k">schema.json</span>            <span class="c">← 출력 형식(계약). 팀 합의 없이 바꾸지 않기</span>
+      <span class="k">examples/</span>              <span class="c">← 테스트</span>
+        01_opening.input.json
+        01_opening.check.json <span class="c">← “이건 꼭 나와야 / 이건 절대 안 돼” 목록</span>
+        02_reversal.input.json …
+      baseline.ts            <span class="c">← 규칙 기반 기준선 (API 키 없이 도는 mock 모드)</span>
+  src/lib/agents/
+    runAgent.ts              <span class="c">← AI 호출 · 형식 검사 · 1회 재시도 (기술 리드)</span>
+  src/lib/orchestrator/
+    adapter.ts               <span class="c">← 개발용 실행기. 나중에 AIR Studio 어댑터로 교체</span>
+  fixtures/meetings/         <span class="c">← 가상 회의 5개 녹취록과 정답지 (팀원 A가 관리)</span></code></pre>
   <p>테스트 실행은 한 줄입니다.</p>
 <pre><code>npm run agent:test decision          <span class="c"># A3의 모든 테스트</span>
 npm run agent:test decision 02       <span class="c"># 02번 테스트만</span></code></pre>
@@ -184,7 +185,7 @@ npm run agent:test decision 02       <span class="c"># 02번 테스트만</span>
 <span class="k">✗</span> 02_reversal     ‘오프닝 장소’ 최종값이 "실내" (정답: "스튜디오")
 <span class="s">✓</span> 03_noise        잡담 속 결정 1건 찾음 · 지어낸 담당 0
    토큰 4,812 · 7.3초 · prompt decision@3</code></pre>
-  <div class="box b"><h4><svg class="ic"><use href="#i-layers"/></svg>AIR Studio와의 관계</h4><p>지금은 <code>devRunner</code>(개발용 실행기)로 돌립니다. 05_AIR_Integration의 1단계 그대로입니다. 나중에 실행 계층만 AIR Studio로 바꾸고, 여러분의 <code>prompt.md</code>·<code>schema.json</code>은 그대로 씁니다. AIR Studio의 실제 API는 아직 확인 전이라 직접 호출하지 않습니다.</p></div>
+  <div class="box b"><h4><svg class="ic"><use href="#i-layers"/></svg>AIR Studio와의 관계</h4><p>지금은 <code>DevExecutionAdapter</code>(개발용 실행기)로 돌립니다. 05_AIR_Integration의 1단계 그대로입니다. 나중에 실행 계층만 AIR Studio로 바꾸고, 여러분의 <code>prompt.md</code>·<code>schema.json</code>은 그대로 씁니다. AIR Studio의 실제 API는 아직 확인 전이라 직접 호출하지 않습니다.</p></div>
 
   <h2 id="how"><small>03</small>만드는 순서 7단계</h2>
   <ol class="steps">
