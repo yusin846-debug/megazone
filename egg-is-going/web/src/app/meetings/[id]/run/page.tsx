@@ -97,7 +97,7 @@ export default async function RunPage({ params, searchParams }: { params: IdPara
               <div>
                 <div className="eg-step__name">{STEP_LABEL[k]}</div>
                 <div className="eg-step__meta">
-                  {reused ? "이전 실행 결과 사용" : s ? s.status === "failed" ? "문제가 생겼어요. 다시 실행해 주세요." : s.status === "running" ? "정리 중…" : s.status === "succeeded" ? "완료" : "대기" : active ? "대기" : "-"}
+                  {reused ? "이전 실행 결과 사용" : s ? s.status === "failed" ? "문제가 생겼어요. 다시 실행해 주세요." : s.status === "running" ? "정리 중…" : s.status === "succeeded" ? (human ? `확인 질문 ${openTasks.length}건` : k === "verify" ? (verdict === "pass" ? "검증 통과" : "검증 결과 확인") : s.note?.replace(/^docx · /, "") ?? "완료") : "대기" : active ? "대기" : "-"}
                   {TOOL.includes(k) && <><br /><span className="muted">{k === "transcript" ? "녹취록 읽기" : "문서 파일 만들기"}</span></>}
                 </div>
               </div>
