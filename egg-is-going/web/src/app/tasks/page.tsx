@@ -1,13 +1,12 @@
 import { activeProgram } from "@/lib/programs";
-import SubmitButton from "@/components/SubmitButton";
+import TaskResponseForm from "@/components/TaskResponseForm";
 import Link from "@/components/NavigationLink";
 import { db, parse } from "@/lib/db";
 import { canReadContent, requireUser } from "@/lib/auth";
 import Shell from "@/components/Shell";
-import { Flash, Icon, Team } from "@/components/ui";
+import { Flash, Icon } from "@/components/ui";
 import { latestTranscript } from "@/lib/state";
 import { fmtMs } from "@/lib/agents/types";
-import { answerTask } from "../actions";
 import { ago, q, type SP } from "@/lib/page";
 
 const KIND_LABEL: Record<string, string> = { item_status: "결정 상태", action_due: "업무 기한", action_assignee: "업무 담당", speaker: "화자", other: "기타" };
@@ -42,31 +41,27 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
       <div className="page-h">
         <div>
           <h1>확인 요청</h1>
-          <p>판단이 필요한 항목을 확인해 주세요. 필수 항목에 답하면 회의록 정리가 이어집니다.</p>
+          <p>회의록에 남길 내용을 확인하세요.</p>
         </div>
       </div>
       <div className="task-workspace">
         <section className="task-inbox" aria-label="확인 요청 목록">
-          <header className="task-inbox__header"><h2><Icon id="i-inbox"/>받은 요청 <span>{tasks.length}</span></h2><div className="tabs">
+          <header className="task-inbox__header"><h2>받은 요청 <span>{tasks.length}</span></h2><div className="tabs">
             <Link href={`/tasks${meetingId ? `?meeting=${meetingId}` : ""}`} className={show === "open" ? "on" : ""}>대기</Link>
-            <Link href={`/tasks?show=answered${meetingId ? `&meeting=${meetingId}` : ""}`} className={show === "answered" ? "on" : ""}>답한 것</Link>
+            <Link href={`/tasks?show=answered${meetingId ? `&meeting=${meetingId}` : ""}`} className={show === "answered" ? "on" : ""}>완료</Link>
             {meetingId && <Link href="/tasks">모든 회의</Link>}
           </div></header>
           <div className="task-inbox__scroll">
           {tasks.length === 0 && (
             <div className="empty">
-              <svg><use href="#egg" /></svg>
+              <Icon id="i-inbox"/>
               <h3>{show === "open" ? "기다리는 확인 요청이 없어요" : "아직 답한 요청이 없어요"}</h3>
-              <p>AI가 애매한 결정을 만나면 여기로 물어봐요.</p>
+              <p>확인이 필요한 내용이 생기면 이곳에 표시됩니다.</p>
             </div>
           )}
           {tasks.map((t) => (
             <Link key={t.id} href={link({ id: t.id })} aria-current={t.id === task?.id ? "true" : undefined} className={`tq${t.id === task?.id ? " on" : ""}`}>
-              <span style={{ display: "flex", gap: 6, alignItems: "center" }}>
-                <span className={`eg-chip ${t.required ? "eg-chip--human" : "eg-chip--plain"}`}>{t.required ? "필수" : "선택"}</span>
-                <span className="eg-chip eg-chip--plain">{KIND_LABEL[t.kind] ?? t.kind}</span>
-                <small style={{ marginLeft: "auto" }}>{ago(t.answeredAt ?? t.createdAt)}</small>
-              </span>
+              <span className="task-inbox__meta"><span>{KIND_LABEL[t.kind] ?? t.kind}</span>{t.required ? <span className="task-inbox__required">필수</span> : null}<time>{ago(t.answeredAt ?? t.createdAt)}</time></span>
               <b>{t.question}</b>
               <small>{t.run.meeting.title}</small>
             </Link>
@@ -77,62 +72,33 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
         {task ? (
           <section className="task-detail" aria-label="요청 상세">
             <header className="card-h task-detail__header">
-              <h2>{KIND_LABEL[task.kind] ?? task.kind} 확인</h2>
-              <span className="r"><Link href={`/meetings/${task.run.meetingId}/run`} className="eg-btn eg-btn--ghost eg-btn--sm">실행 상태<Icon id="i-arrow" /></Link></span>
+              <span className="task-detail__category">{KIND_LABEL[task.kind] ?? task.kind}{task.required ? " · 필수 확인" : ""}</span>
+              <span className="r"><Link href={`/meetings/${task.run.meetingId}/run`} className="task-detail__back">회의 열기<Icon id="i-arrow" /></Link></span>
             </header>
             <div className="card-b task-detail__scroll">
-              <p style={{ fontSize: 17, fontWeight: 700, letterSpacing: "-.02em", margin: "0 0 4px" }}>{task.question}</p>
-              <p className="mono muted" style={{ margin: "0 0 14px" }}>{task.run.meeting.title}</p>
-              <div className="eg-label">근거 발언</div>
-              {!readable && <p className="muted" style={{ fontSize: 13 }}>운영자 권한으로는 발언 내용을 볼 수 없어요.</p>}
-              {readable && segs.length === 0 && <p className="muted" style={{ fontSize: 13 }}>연결된 발언이 없어요.</p>}
-              <div style={{ border: "1px solid var(--line)", borderRadius: 12, marginBottom: 16, overflow: "hidden" }}>
+              <div className="task-reading">
+              <p className="task-detail__meeting">{task.run.meeting.title}</p>
+              <h2 className="task-detail__question">{task.question}</h2>
+              <section className="task-evidence" aria-label="근거 발언">
+              <h3>근거 발언</h3>
+              {!readable && <p className="muted">운영자 권한으로는 발언 내용을 볼 수 없습니다.</p>}
+              {readable && segs.length === 0 && <p className="muted">연결된 발언이 없습니다.</p>}
                 {segs.map((s) => {
                   const p = s!.speakerParticipantId ? pById.get(s!.speakerParticipantId) : null;
                   return (
-                    <Link key={s!.id} href={`/meetings/${task.run.meetingId}/workspace#${s!.segKey}`} className={`eg-line is-evidence${s!.uncertain ? " is-uncertain" : ""}`} style={{ borderRadius: 0, color: "inherit", textDecoration: "none" }}>
-                      <span className="eg-ts">{fmtMs(s!.startMs)}</span>
-                      <div>
-                        <div className="who">{p ? <>{p.displayName} <Team team={p.team} label={p.roleLabel} /></> : <span className="eg-missing">화자 미확인</span>}</div>
-                        <div className="tx">{s!.text}</div>
-                      </div>
+                    <Link key={s!.id} href={`/meetings/${task.run.meetingId}/workspace#${s!.segKey}`} className="task-quote">
+                      <div className="task-quote__meta"><b>{p?.displayName ?? "화자 미확인"}</b>{p ? <span>{p.roleLabel}</span> : null}<span className="task-quote__time">{fmtMs(s!.startMs)} <Icon id="i-arrow"/></span></div>
+                      <blockquote>{s!.text}</blockquote>
+                      {s!.uncertain ? <small>발언 내용을 확인해 주세요.</small> : null}
                     </Link>
                   );
                 })}
-              </div>
+              </section>
 
               {task.status === "open" ? (
-                <form action={answerTask} style={{ display: "grid", gap: 8 }}>
-                  <input type="hidden" name="taskId" value={task.id} />
-                  <div className="eg-label">응답</div>
-                  {options.map((o, i) => (
-                    <label key={o.value} className="opt">
-                      <input type="radio" name="choice" value={o.value} defaultChecked={i === 0 && options.length === 1} required />
-                      {o.label}
-                    </label>
-                  ))}
-                  {(task.kind === "item_status" || task.kind === "action_due") && (
-                    <div className="fg" style={{ margin: "6px 0 0" }}>
-                      <label className="eg-label" htmlFor="value">{task.kind === "item_status" ? "확정 내용 (확정을 고를 때)" : "기한 (지정을 고를 때)"}</label>
-                      <input className="eg-input" id="value" name="value" placeholder={task.kind === "item_status" ? "예) 강릉 안목해변" : "예) 2026-10-24 또는 금요일"} />
-                    </div>
-                  )}
-                  {(task.kind === "action_assignee" || task.kind === "speaker") && (
-                    <div className="fg" style={{ margin: "6px 0 0" }}>
-                      <label className="eg-label" htmlFor="pid">{task.kind === "speaker" ? "실제 화자" : "담당자"}</label>
-                      <select className="eg-select" id="pid" name="participantId">
-                        {task.run.meeting.participants.map((p) => <option key={p.id} value={p.id}>{p.displayName} ({p.roleLabel})</option>)}
-                      </select>
-                    </div>
-                  )}
-                  <div className="callout b" style={{ marginTop: 4 }}>
-                    <Icon id="i-lock" />
-                    <div>답한 값은 고정돼요. 이후 실행에서 AI가 이 값을 바꾸지 않고, 같은 질문을 다시 하지 않아요.</div>
-                  </div>
-                  <SubmitButton pendingLabel="응답 저장 중…" className="eg-btn eg-btn--primary" style={{ justifySelf: "end" }}><Icon id="i-check" />응답 고정</SubmitButton>
-                </form>
+                <TaskResponseForm key={task.id} taskId={task.id} kind={task.kind} options={options} participants={task.run.meeting.participants.map(p => ({id:p.id, displayName:p.displayName, roleLabel:p.roleLabel}))}/>
               ) : (
-                <div className="callout g">
+                <div className="task-answer-receipt">
                   <Icon id="i-check" />
                   <div>
                     {responder?.name ?? "누군가"}님이 <b>{options.find((o) => o.value === response?.choice)?.label ?? response?.choice}</b>
@@ -140,6 +106,7 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
                   </div>
                 </div>
               )}
+              </div>
             </div>
           </section>
         ) : (
