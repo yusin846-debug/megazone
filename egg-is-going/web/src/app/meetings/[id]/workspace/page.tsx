@@ -17,9 +17,10 @@ export default async function WorkspacePage({ params, searchParams }: { params: 
   const { meeting, roles, readable } = await meetingFor(id, user.id);
   const tab = q(sp, "tab") === "actions" ? "actions" : "items";
   const sel = q(sp, "item");
+  const term = (q(sp,"q") ?? "").trim().slice(0,100);
   const canEdit = roles.includes("writer");
   const crumbs: (string | [string, string])[] = [["회의", "/meetings"], [meeting.title, `/meetings/${id}/run`], "작업실"];
-  if (!readable) return <Shell user={user} nav="home" crumbs={crumbs}><MeetingTabs id={id} on="workspace" /><NoContent /></Shell>;
+  if (!readable) return <Shell programId={meeting.programId} user={user} nav="home" crumbs={crumbs}><MeetingTabs id={id} on="workspace" /><NoContent /></Shell>;
 
   const tv = await latestTranscript(id);
   const items = (await currentItems(id)).sort((a, b) => a.item.key.localeCompare(b.item.key));
@@ -34,7 +35,7 @@ export default async function WorkspacePage({ params, searchParams }: { params: 
   const counts = { items: items.length, actions: actions.length };
 
   return (
-    <Shell user={user} nav="home" crumbs={crumbs} right={tv && <span className="muted" style={{ fontSize: 12.5 }}>녹취록 v{tv.version}{tv.note ? ` · ${tv.note}` : ""}</span>}>
+    <Shell programId={meeting.programId} user={user} nav="home" crumbs={crumbs} right={tv && <span className="muted" style={{ fontSize: 12.5 }}>녹취록 v{tv.version}{tv.note ? ` · ${tv.note}` : ""}</span>}>
       <Flash error={q(sp, "error")} ok={q(sp, "ok")} />
       <MeetingTabs id={id} on="workspace" />
       <div className="grid2e">
@@ -45,9 +46,11 @@ export default async function WorkspacePage({ params, searchParams }: { params: 
               {selected ? <>근거 {evid.size}곳 강조 · <Link href={`/meetings/${id}/workspace`}>해제</Link></> : "항목을 고르면 근거 발언이 강조돼요"}
             </span>
           </div>
+          <form action={`/meetings/${id}/workspace`} className="transcript-search" role="search"><input type="hidden" name="tab" value={tab}/>{sel ? <input type="hidden" name="item" value={sel}/> : null}<label htmlFor="transcript-q" className="sr-only">녹취록 검색</label><input id="transcript-q" name="q" type="search" className="eg-input" defaultValue={term} placeholder="발언·화자 검색" maxLength={100}/><button className="eg-btn eg-btn--ghost eg-btn--sm">검색</button>{term ? <Link className="eg-btn eg-btn--ghost eg-btn--sm" href={`/meetings/${id}/workspace?${new URLSearchParams({tab,...(sel ? {item:sel}: {})})}`}>해제</Link> : null}</form>
+          {term && <p className="eg-help" role="status" style={{padding:"0 16px"}}>일치 {tv?.segments.filter(s => `${s.text} ${s.speakerParticipantId ? pById.get(s.speakerParticipantId)?.displayName : ""}`.toLocaleLowerCase().includes(term.toLocaleLowerCase())).length ?? 0}곳 · 연결된 근거 발언은 함께 표시해요.</p>}
           <div style={{ padding: "8px 4px", maxHeight: "calc(100vh - 240px)", overflowY: "auto" }}>
             {!tv && <p className="muted" style={{ padding: 14, fontSize: 13 }}>아직 전사 결과가 없어요.</p>}
-            {tv?.segments.map((s) => {
+            {tv?.segments.filter(s => !term || evid.has(s.segKey) || `${s.text} ${s.speakerParticipantId ? pById.get(s.speakerParticipantId)?.displayName : ""}`.toLocaleLowerCase().includes(term.toLocaleLowerCase())).map((s) => {
               const p = s.speakerParticipantId ? pById.get(s.speakerParticipantId) : null;
               return (
                 <div key={s.id} id={s.segKey} className={`eg-line${evid.has(s.segKey) ? " is-evidence" : ""}${s.uncertain ? " is-uncertain" : ""}`}>
@@ -81,7 +84,7 @@ export default async function WorkspacePage({ params, searchParams }: { params: 
                       <ItemTag status={rev!.status} />
                       <Link href={`/meetings/${id}/workspace?item=${item.key}#${rev!.evidence[0]?.segment.segKey ?? ""}`}>{item.title}</Link>
                       <span className="r">
-                        <span className="mono muted">{item.key}</span>
+                        
                         {rev!.locked && <span className="eg-chip eg-chip--done" title="사람이 고정한 값 — AI가 바꾸지 않아요"><Icon id="i-lock" />고정</span>}
                       </span>
                     </div>
@@ -119,7 +122,7 @@ export default async function WorkspacePage({ params, searchParams }: { params: 
                       <form action={editItem} style={{ marginTop: 12, display: "grid", gap: 8, padding: 12, border: "1px dashed var(--line-strong)", borderRadius: 12 }}>
                         <input type="hidden" name="meetingId" value={id} />
                         <input type="hidden" name="key" value={item.key} />
-                        <div className="eg-label" style={{ margin: 0 }}><Icon id="i-pencil" /> 직접 고치기 — 고친 값은 고정돼서 AI가 다시 바꾸지 않아요</div>
+                        <div className="eg-label" style={{ margin: 0 }}><Icon id="i-pencil" /> 결정 수정</div>
                         <div className="fg-row" style={{ gap: 8 }}>
                           <select className="eg-select" name="status" defaultValue={rev!.status === "unknown" ? "proposed" : rev!.status}>
                             <option value="confirmed">확정</option>
@@ -129,7 +132,7 @@ export default async function WorkspacePage({ params, searchParams }: { params: 
                           </select>
                           <input className="eg-input" name="value" defaultValue={content.value ?? ""} placeholder="확정 내용 (확정일 때)" />
                         </div>
-                        <SubmitButton pendingLabel="변경 저장 중…" className="eg-btn eg-btn--ink eg-btn--sm" style={{ justifySelf: "end" }}>고정하고 문서 다시 만들기</SubmitButton>
+                        <SubmitButton pendingLabel="변경 저장 중…" className="eg-btn eg-btn--ink eg-btn--sm" style={{ justifySelf: "end" }}>저장하고 회의록 업데이트</SubmitButton>
                       </form>
                     )}
                   </div>
@@ -170,7 +173,7 @@ export default async function WorkspacePage({ params, searchParams }: { params: 
                           </select>
                           <input className="eg-input" name="dueAt" defaultValue={a.dueAt ?? ""} placeholder="기한 (비우면 미정)" />
                         </div>
-                        <SubmitButton pendingLabel="변경 저장 중…" className="eg-btn eg-btn--ink eg-btn--sm" style={{ justifySelf: "end" }}>고정하고 문서 다시 만들기</SubmitButton>
+                        <SubmitButton pendingLabel="변경 저장 중…" className="eg-btn eg-btn--ink eg-btn--sm" style={{ justifySelf: "end" }}>저장하고 회의록 업데이트</SubmitButton>
                       </form>
                     </details>
                   )}

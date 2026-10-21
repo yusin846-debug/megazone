@@ -1,3 +1,4 @@
+import { activeProgram } from "@/lib/programs";
 import SubmitButton from "@/components/SubmitButton";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
@@ -10,14 +11,15 @@ import { fmtDur, q, type SP } from "@/lib/page";
 export default async function MetricsPage({ searchParams }: { searchParams: SP }) {
   const sp = await searchParams;
   const user = await requireUser();
-  const meetings = await db.meeting.findMany({ orderBy: { occurredAt: "desc" }, include: { metrics: true } });
+  const program = await activeProgram(user.id);
+  const meetings = await db.meeting.findMany({ where: { programId: program.id }, orderBy: { occurredAt: "desc" }, include: { metrics: true } });
   const rows = meetings.map((m) => {
     const sum = (k: string) => m.metrics.filter((x) => x.kind === k).reduce((a, b) => a + b.durationSeconds, 0);
     return { m, ai: sum("ai_wait"), human: sum("human_work"), review: sum("review_wait"), baseline: sum("baseline_manual"), diary: m.metrics.filter((x) => x.source === "diary").length };
   });
-  const tasks = await db.humanTask.groupBy({ by: ["status"], _count: true });
-  const reruns = await db.stepRun.count({ where: { attempt: { gt: 1 } } });
-  const totalSteps = await db.stepRun.count();
+  const tasks = await db.humanTask.groupBy({ by: ["status"], where: { run: { meeting: { programId: program.id } } }, _count: true });
+  const reruns = await db.stepRun.count({ where: { attempt: { gt: 1 }, run: { meeting: { programId: program.id } } } });
+  const totalSteps = await db.stepRun.count({ where: { run: { meeting: { programId: program.id } } } });
   const measured = rows.filter((r) => r.human > 0);
   const avg = (xs: number[]) => (xs.length ? Math.round(xs.reduce((a, b) => a + b, 0) / xs.length) : 0);
   const avgHuman = avg(measured.map((r) => r.human));
@@ -28,12 +30,12 @@ export default async function MetricsPage({ searchParams }: { searchParams: SP }
   const open = tasks.find((t) => t.status === "open")?._count ?? 0;
 
   return (
-    <Shell user={user} nav="metric" crumbs={["PoC 측정"]}>
+    <Shell user={user} nav="metric" crumbs={["업무 시간"]}>
       <Flash error={q(sp, "error")} ok={q(sp, "ok")} />
       <div className="page-h">
         <div>
-          <h1>PoC 측정</h1>
-          <p>회의가 끝나고 승인되기까지 걸린 시간을 AI 대기 · 사람 작업 · 검토 대기로 나눠 봐요. 자동 측정과 업무일지 기록을 함께 써요.</p>
+          <h1>업무 시간</h1>
+          <p>회의록 작성과 검토에 걸린 시간을 확인하세요.</p>
         </div>
       </div>
       <div className="stats">

@@ -1,3 +1,7 @@
+import RoleAvatar from "./RoleAvatar";
+import SubmitButton from "./SubmitButton";
+import { activeProgram, programsFor } from "@/lib/programs";
+import { selectProgram } from "@/app/actions";
 import Link from "@/components/NavigationLink";
 import type { ReactNode } from "react";
 import { db } from "@/lib/db";
@@ -7,12 +11,14 @@ import { Icon } from "./ui";
 type User = { id: string; name: string; title: string; memberships: { role: string }[] };
 
 export default async function Shell({
-  user, nav, crumbs, right, children, footer,
-}: { user: User; nav: "home" | "tasks" | "review" | "tpl" | "metric"; crumbs: (string | [string, string])[]; right?: ReactNode; children: ReactNode; footer?: ReactNode }) {
-  const [program, openTasks, reviews] = await Promise.all([
-    db.program.findFirst({ select: { name: true } }),
-    db.humanTask.count({ where: { status: "open" } }),
-    db.reviewRequest.findMany({ where: { status: "open" }, select: { policySnapshotJson: true, currentStep: true } }),
+  user, nav, crumbs, right, children, footer, programId,
+}: { user: User; programId?: string; nav: "dashboard" | "programs" | "home" | "tasks" | "review" | "tpl" | "metric"; crumbs: (string | [string, string])[]; right?: ReactNode; children: ReactNode; footer?: ReactNode }) {
+  const [defaultProgram, programs] = await Promise.all([activeProgram(user.id), programsFor(user.id)]);
+  const program = programs.find(p => p.id === programId) ?? defaultProgram;
+  const visible = { programId: program.id };
+  const [openTasks, reviews] = await Promise.all([
+    db.humanTask.count({ where: { status: "open", run: { meeting: visible } } }),
+    db.reviewRequest.findMany({ where: { status: "open", documentVersion: { document: { meeting: visible } } }, select: { policySnapshotJson: true, currentStep: true } }),
   ]);
   const myReviews = reviews.filter((r) => {
     const p = JSON.parse(r.policySnapshotJson) as { userIds: string[] }[];
@@ -29,19 +35,25 @@ export default async function Shell({
   return (
     <div className="app">
       <aside className="side">
-        <Link href="/meetings" className="brand">
+        <Link href="/" className="brand">
           <span className="eg-wordmark" style={{ fontSize: 19 }}>egg is going<i /></span>
         </Link>
-        <div className="prog"><small>프로그램</small><b>{program?.name}</b></div>
+        <form action={selectProgram} className="prog program-switch">
+          <label htmlFor="active-program">프로그램</label>
+          <select id="active-program" name="programId" className="eg-select" defaultValue={program.id}>{programs.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}</select>
+          <SubmitButton className="eg-btn eg-btn--ghost eg-btn--sm" pendingLabel="전환 중…">이 프로그램 열기</SubmitButton>
+        </form>
+        {item("dashboard", "/", "i-home", "홈")}
+        {item("programs", "/programs", "i-template", "프로그램") }
         {item("home", "/meetings", "i-home", "회의")}
         {item("tasks", "/tasks", "i-inbox", "확인 요청", openTasks)}
         {item("review", "/review", "i-send", "검토·결재", myReviews)}
         <div className="grp">관리</div>
         {item("tpl", "/templates", "i-template", "템플릿·정책")}
-        {item("metric", "/metrics", "i-clock", "PoC 측정")}
+        {item("metric", "/metrics", "i-clock", "업무 시간")}
         <Link href="/login" className="me" title="사용자 바꾸기">
-          <svg><use href="#egg" /></svg>
-          <div><b>{user.name}</b><small>{roles || user.title}</small></div>
+          <RoleAvatar title={user.title} name={user.name} />
+          <div><b>{user.name}</b><small>{user.title} · {roles}</small></div>
         </Link>
       </aside>
       <div className="main">
@@ -55,6 +67,7 @@ export default async function Shell({
             ))}
           </div>
           <span className="sp" />
+          <form action="/meetings" className="global-search" role="search"><label className="sr-only" htmlFor="global-q">회의·결정 검색</label><input id="global-q" name="q" type="search" placeholder="회의·결정 검색" maxLength={100}/><button aria-label="회의·결정 검색"><Icon id="i-search" /></button></form>
           {right}
         </div>
         <div className="body">{children}</div>

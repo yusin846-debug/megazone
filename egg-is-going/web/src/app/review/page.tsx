@@ -1,3 +1,4 @@
+import { activeProgram } from "@/lib/programs";
 import Link from "@/components/NavigationLink";
 import { db, parse } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
@@ -8,7 +9,9 @@ import { ago } from "@/lib/page";
 
 export default async function ReviewListPage() {
   const user = await requireUser();
+  const program = await activeProgram(user.id);
   const reqs = await db.reviewRequest.findMany({
+    where: { documentVersion: { document: { meeting: { programId: program.id } } } },
     orderBy: { createdAt: "desc" },
     take: 50,
     include: { documentVersion: { include: { document: { include: { meeting: true } } } } },

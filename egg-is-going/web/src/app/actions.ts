@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { validateTemplateFields } from "@/lib/templateValidation";
 import { db } from "@/lib/db";
 import { requireRole, requireUser } from "@/lib/auth";
 import { createMeeting } from "@/lib/meetings";
@@ -32,7 +33,7 @@ const kst = (v: string) => (v ? new Date(/[zZ]|[+-]\d{2}:\d{2}$/.test(v) ? v : `
 export async function login(formData: FormData) {
   const id = String(formData.get("userId"));
   (await cookies()).set("eg_user", id, { httpOnly: true, sameSite: "lax", path: "/" });
-  redirect("/meetings");
+  redirect("/");
 }
 
 export async function newMeeting(formData: FormData) {
@@ -41,6 +42,8 @@ export async function newMeeting(formData: FormData) {
     const programId = String(formData.get("programId"));
     const transcript = String(formData.get("transcript") ?? "");
     const file = formData.get("file");
+    if (file instanceof File && file.size > 2000000) throw new Error("텍스트 파일은 2MB 이내로 올려 주세요.");
+    if (file instanceof File && file.size && !file.name.toLowerCase().endsWith(".txt")) throw new Error(".txt 파일을 선택해 주세요.");
     const text = file instanceof File && file.size ? await file.text() : transcript;
     const m = await createMeeting(user.id, {
       programId,
@@ -190,8 +193,8 @@ export async function newTemplateVersion(formData: FormData) {
     await requireRole(user.id, t.programId, ["program_admin"]);
     const raw = String(formData.get("rules"));
     const parsed = JSON.parse(raw) as { fields?: unknown[] };
-    if (!Array.isArray(parsed.fields) || !parsed.fields.length) throw new Error("fields 배열이 필요해요.");
-    const v = await db.templateVersion.create({ data: { templateId, version: (t.versions[0]?.version ?? 0) + 1, rulesJson: JSON.stringify({ fields: parsed.fields }), outputFormat: "docx", status: "approved" } });
+    const fields = validateTemplateFields(parsed.fields);
+    const v = await db.templateVersion.create({ data: { templateId, version: (t.versions[0]?.version ?? 0) + 1, rulesJson: JSON.stringify({ fields }), outputFormat: "docx", status: "approved" } });
     await audit(user.id, "template.version", "TemplateVersion", v.id);
   });
   back("/templates", "새 템플릿 버전을 승인했어요. 새로 등록하는 회의부터 쓰여요.", "ok");
@@ -204,6 +207,10 @@ export async function applyTemplate(formData: FormData) {
   await guard("/templates", async () => {
     const m = await db.meeting.findUniqueOrThrow({ where: { id: meetingId } });
     await requireRole(user.id, m.programId, ["writer", "program_admin"]);
+    const template = await db.templateVersion.findFirst({ where: { id: tvId, status: "approved", template: { programId: m.programId } } });
+    if (!template) throw new Error("이 프로그램의 승인된 양식을 선택해 주세요.");
+    const approved = await db.documentVersion.findFirst({ where: { document: { meetingId }, status: "approved" } });
+    if (approved) throw new Error("승인된 회의록에는 다른 양식을 적용할 수 없어요.");
     await db.meeting.update({ where: { id: meetingId }, data: { templateVersionId: tvId } });
     // 배치 규칙이 바뀌므로 문서 구성 → 출력 → 검증만 다시
     await executor.startRun(meetingId, { startStep: "compose", reason: "템플릿 변경" });
@@ -220,4 +227,13 @@ export async function logDiary(formData: FormData) {
     await db.metricObservation.create({ data: { meetingId, userId: user.id, kind: String(formData.get("kind") || "human_work"), durationSeconds: Math.round(minutes * 60), source: "diary" } });
   });
   back("/metrics", "업무일지 시간을 기록했어요.", "ok");
+}
+
+export async function selectProgram(formData: FormData) {
+  const user = await requireUser();
+  const id = String(formData.get("programId") ?? "");
+  const member = await db.membership.findFirst({ where: { userId: user.id, programId: id } });
+  if (!member) throw new Error("참여 중인 프로그램을 골라 주세요.");
+  (await cookies()).set("eg_program", id, { httpOnly: true, sameSite: "lax", path: "/" });
+  redirect("/");
 }

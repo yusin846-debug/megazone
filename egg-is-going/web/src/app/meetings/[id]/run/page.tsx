@@ -15,12 +15,12 @@ export default async function RunPage({ params, searchParams }: { params: IdPara
   const { id } = await params;
   const sp = await searchParams;
   const user = await requireUser();
-  const { meeting, roles } = await meetingFor(id, user.id);
+  const { meeting, roles, readable } = await meetingFor(id, user.id);
   const runs = await db.run.findMany({ where: { meetingId: id }, orderBy: { createdAt: "desc" }, select: { id: true, status: true, startStep: true, createdAt: true, cancelRequested: true, inputManifestJson: true } });
   const runId = q(sp, "run") ?? runs[0]?.id;
   const run = runId
-    ? await db.run.findUnique({
-        where: { id: runId },
+    ? await db.run.findFirst({
+        where: { id: runId, meetingId: id },
         include: { steps: { orderBy: [{ startedAt: "asc" }, { attempt: "asc" }], include: { findings: true, artifacts: { select: { type: true, contentJson: true } } } }, humanTasks: { orderBy: { createdAt: "asc" } } },
       })
     : null;
@@ -38,6 +38,7 @@ export default async function RunPage({ params, searchParams }: { params: IdPara
 
   return (
     <Shell
+      programId={meeting.programId}
       user={user}
       nav="home"
       crumbs={[["회의", "/meetings"], meeting.title]}
@@ -52,7 +53,7 @@ export default async function RunPage({ params, searchParams }: { params: IdPara
           <p>
             {run ? (
               <>
-                {STEP_LABEL[run.startStep as StepKey]}부터 시작 · {fmtDur(elapsed)} · 자동 재실행 {autoReruns}회 · {String(manifest.provider ?? run.provider)} 모드
+                {STEP_LABEL[run.startStep as StepKey]}부터 시작 · {fmtDur(elapsed)} · 자동 재실행 {autoReruns}회 · {String(manifest.provider ?? run.provider) === "mock" ? "샘플 분석" : "AI 분석"}
               </>
             ) : (
               "아직 실행한 적이 없어요."
@@ -77,7 +78,7 @@ export default async function RunPage({ params, searchParams }: { params: IdPara
       </div>
 
       {run?.error && (
-        <div className="callout r flash"><Icon id="i-alert" /><div><b>실행이 멈췄어요.</b> {run.error}</div></div>
+        <div className="callout r flash"><Icon id="i-alert" /><div><b>회의록 정리가 멈췄어요.</b> 문제가 생긴 단계부터 다시 실행해 주세요. {roles.includes("operator") && <details className="raw"><summary>진단 정보</summary><pre>{run.error}</pre></details>}</div></div>
       )}
 
       <div className="board">
@@ -96,8 +97,8 @@ export default async function RunPage({ params, searchParams }: { params: IdPara
               <div>
                 <div className="eg-step__name">{STEP_LABEL[k]}</div>
                 <div className="eg-step__meta">
-                  {reused ? "이전 실행 결과 사용" : s ? s.error ?? s.note ?? (s.status === "running" ? "처리 중…" : "") : active ? "대기" : "-"}
-                  {TOOL.includes(k) && <><br /><span className="muted">규칙 도구</span></>}
+                  {reused ? "이전 실행 결과 사용" : s ? s.status === "failed" ? "문제가 생겼어요. 다시 실행해 주세요." : s.status === "running" ? "정리 중…" : s.status === "succeeded" ? "완료" : "대기" : active ? "대기" : "-"}
+                  {TOOL.includes(k) && <><br /><span className="muted">{k === "transcript" ? "녹취록 읽기" : "문서 파일 만들기"}</span></>}
                 </div>
               </div>
               {!active && canRun && run && (
@@ -115,28 +116,28 @@ export default async function RunPage({ params, searchParams }: { params: IdPara
       <div className="branch">
         <div className={`br${verdict === "pass" && run?.status === "succeeded" ? " on ok" : ""}`}>
           <b><Icon id="i-check" />통과</b>
-          문서 초안이 준비됐어요. 사람이 보고 상신해요.
+          {run?.status === "succeeded" ? "초안을 확인하고 상신해 주세요." : "초안 검토 대기"}
         </div>
         <div className={`br${autoReruns > 0 ? " on" : ""}`}>
           <b><Icon id="i-refresh" />자동 수정</b>
-          검증 결과에 따라 해당 단계만 다시 (단계당 최대 2회). 지금까지 {autoReruns}회.
+          {autoReruns ? `문제를 발견해 ${autoReruns}회 다시 정리했어요.` : "다시 정리한 항목이 없어요."}
         </div>
         <div className={`br${openTasks.length ? " on" : ""}`}>
           <b><Icon id="i-help" />사람 확인</b>
-          {openTasks.length ? `확인 요청 ${openTasks.length}건 (필수 ${openTasks.filter((t) => t.required).length})` : "애매한 결정은 추측하지 않고 물어봐요."}
+          {openTasks.length ? `확인 요청 ${openTasks.length}건 (필수 ${openTasks.filter((t) => t.required).length})` : "확인할 질문이 없어요."}
         </div>
       </div>
 
       <div className="grid2" style={{ marginTop: 16 }}>
         <div className="stack">
-          {openTasks.length > 0 && (
+          {readable && openTasks.length > 0 && (
             <div className="card">
               <div className="card-h"><h2>확인 요청</h2><span className="r"><Link href={`/tasks?meeting=${id}`} className="eg-btn eg-btn--ghost eg-btn--sm">모두 보기</Link></span></div>
               {openTasks.map((t) => (
                 <Link key={t.id} href={`/tasks?id=${t.id}`} className="tq">
                   <span className={`eg-chip ${t.required ? "eg-chip--human" : "eg-chip--plain"}`}>{t.required ? "필수" : "선택"}</span>
                   <b>{t.question}</b>
-                  <small className="mono">{t.target}</small>
+
                 </Link>
               ))}
             </div>
@@ -153,8 +154,8 @@ export default async function RunPage({ params, searchParams }: { params: IdPara
                         <b>{STEP_LABEL[s.stepKey as StepKey]}</b>
                         {s.attempt > 1 && <span className="muted"> · 재실행 #{s.attempt}</span>}
                         <span className="muted"> · {s.status === "succeeded" ? "완료" : s.status === "failed" ? "실패" : "진행 중"}</span>
-                        {(s.note || s.error) && <div className="muted">{s.error ?? s.note}</div>}
-                        {s.findings.map((f) => (
+                        {roles.includes("operator") && (s.note || s.error) && <details className="raw"><summary>진단 정보</summary><pre>{s.error ?? s.note}</pre></details>}
+                        {(readable ? s.findings : []).map((f) => (
                           <div key={f.id} style={{ fontSize: 12, marginTop: 4 }}>
                             <span className={`eg-chip ${f.routeTo === "human" ? "eg-chip--human" : "eg-chip--fix"}`} style={{ height: 20 }}>{f.routeTo === "human" ? "사람" : `→ ${STEP_LABEL[f.routeTo as StepKey] ?? f.routeTo}`}</span>{" "}
                             {f.message}
@@ -172,14 +173,13 @@ export default async function RunPage({ params, searchParams }: { params: IdPara
         </div>
         <div className="stack">
           <div className="card">
-            <div className="card-h"><h2>입력 고정값</h2></div>
+            <div className="card-h"><h2>분석 정보</h2></div>
             <div className="card-b">
-              <dl className="meta-grid">
+              <details className="raw"><summary>실행 상세 정보</summary><dl className="meta-grid">
                 {Object.entries(manifest).map(([k, v]) => (
                   <span key={k} style={{ display: "contents" }}><dt>{k}</dt><dd>{String(v ?? "-")}</dd></span>
                 ))}
-              </dl>
-              <p className="eg-help" style={{ marginBottom: 0 }}>같은 입력으로 다시 실행하면 새로 돌리지 않고 이 실행을 보여 줘요 (실패·취소는 예외).</p>
+              </dl></details>
             </div>
           </div>
           <div className="card">

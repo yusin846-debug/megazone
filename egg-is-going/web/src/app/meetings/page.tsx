@@ -1,3 +1,4 @@
+import { activeProgram } from "@/lib/programs";
 import Link from "@/components/NavigationLink";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
@@ -11,7 +12,15 @@ import { q, type SP } from "@/lib/page";
 export default async function MeetingsPage({ searchParams }: { searchParams: SP }) {
   const sp = await searchParams;
   const user = await requireUser();
+  const program = await activeProgram(user.id);
+  const term = (q(sp, "q") ?? "").trim().slice(0, 100);
+  const status = q(sp, "status") ?? "";
   const [meetings, openTasks, inReview, approved] = await Promise.all([db.meeting.findMany({
+    where: { programId: program.id, ...(term ? { OR: [
+      { title: { contains: term, mode: "insensitive" as const } },
+      { items: { some: { title: { contains: term, mode: "insensitive" as const } } } },
+      { actionItems: { some: { active: true, description: { contains: term, mode: "insensitive" as const } } } },
+    ] } : {}) },
     orderBy: { occurredAt: "desc" },
     include: {
       participants: true,
@@ -19,11 +28,13 @@ export default async function MeetingsPage({ searchParams }: { searchParams: SP 
       documents: { include: { versions: { orderBy: { version: "desc" }, take: 1 } } },
     },
   }),
-    db.humanTask.count({ where: { status: "open", required: true } }),
-    db.documentVersion.count({ where: { status: "in_review" } }),
-    db.documentVersion.count({ where: { status: "approved" } }),
+    db.humanTask.count({ where: { status: "open", required: true, run: { meeting: { programId: program.id } } } }),
+    db.documentVersion.count({ where: { status: "in_review", document: { meeting: { programId: program.id } } } }),
+    db.documentVersion.count({ where: { status: "approved", document: { meeting: { programId: program.id } } } }),
   ]);
   const running = meetings.filter((m) => ["queued", "running"].includes(m.runs[0]?.status ?? "")).length;
+
+  const filtered = meetings.filter(m => !status || m.runs[0]?.status === status);
 
   return (
     <Shell user={user} nav="home" crumbs={["회의"]} right={<Link href="/meetings/new" className="eg-btn eg-btn--primary eg-btn--sm"><Icon id="i-plus" />회의 등록</Link>}>
@@ -41,12 +52,17 @@ export default async function MeetingsPage({ searchParams }: { searchParams: SP 
         <div className="stat"><div className="l">검토 중</div><div className="v">{inReview}<small>건</small></div><div className="c">검토자·결재자 차례</div></div>
         <div className="stat"><div className="l">승인된 문서</div><div className="v">{approved}<small>건</small></div><div className="c">승인본은 바꿀 수 없어요</div></div>
       </div>
+      <form action="/meetings" role="search" className="search-toolbar">
+        <label htmlFor="meeting-q" className="sr-only">회의·결정·업무 검색</label><input id="meeting-q" className="eg-input" type="search" name="q" defaultValue={term} maxLength={100} placeholder="회의 제목·안건·업무 검색"/>
+        <label htmlFor="meeting-status" className="sr-only">실행 상태</label><select id="meeting-status" className="eg-select" name="status" defaultValue={status}><option value="">전체 실행 상태</option><option value="running">실행 중</option><option value="waiting_for_human">사람 확인 대기</option><option value="succeeded">완료</option><option value="failed">실패</option><option value="cancelled">취소됨</option><option value="queued">대기</option></select>
+        <button className="eg-btn eg-btn--ink">검색</button>{term || status ? <Link href="/meetings" className="eg-btn eg-btn--ghost">초기화</Link> : null}
+      </form><p className="eg-help" role="status">{term ? `“${term}” 검색 · ` : ""}{filtered.length}개 회의{term ? " · 회의 제목, 안건과 업무 설명에서 찾아요" : ""}</p>
       <div className="card">
-        {meetings.length === 0 ? (
+        {filtered.length === 0 ? (
           <div className="empty">
             <svg><use href="#egg" /></svg>
-            <h3>아직 등록한 회의가 없어요</h3>
-            <p>가상 회의 샘플로 바로 시작해 볼 수 있어요.</p>
+            <h3>{term || status ? "검색 결과가 없어요" : "아직 등록한 회의가 없어요"}</h3>
+            <p>{term || status ? "다른 검색어를 입력하거나 필터를 초기화해 주세요." : "가상 회의 샘플로 바로 시작해 볼 수 있어요."}</p>
             <Link href="/meetings/new" className="eg-btn eg-btn--primary"><Icon id="i-plus" />회의 등록</Link>
           </div>
         ) : (
@@ -56,7 +72,7 @@ export default async function MeetingsPage({ searchParams }: { searchParams: SP 
                 <tr><th>회의</th><th>AI 단계</th><th>실행</th><th>문서</th><th>확인</th></tr>
               </thead>
               <tbody>
-                {meetings.map((m) => {
+                {filtered.map((m) => {
                   const run = m.runs[0];
                   const dv = m.documents[0]?.versions[0];
                   const done = new Set(run?.steps.filter((s) => s.status === "succeeded").map((s) => s.stepKey));

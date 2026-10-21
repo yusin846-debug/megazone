@@ -1,3 +1,4 @@
+import EggLoader from "@/components/EggLoader";
 export default function Loading() {
   return (
     <div className="route-loading" role="status" aria-live="polite" aria-busy="true">
@@ -8,7 +9,7 @@ export default function Loading() {
         {[0, 1, 2, 3].map(i => <div key={i} className="skeleton" style={{ height: 28, marginTop: 20 }} />)}
       </aside>
       <main className="route-loading__main">
-        <p className="route-loading__label"><span className="feedback-spinner" aria-hidden="true" />화면을 불러오고 있어요</p>
+        <p className="route-loading__label"><EggLoader />화면을 불러오고 있어요</p>
         <div className="skeleton" style={{ width: "38%", height: 32, marginBottom: 18 }} />
         <div className="skeleton" style={{ width: "62%", height: 16, marginBottom: 36 }} />
         <div className="route-loading__cards">{[0, 1, 2].map(i => <div key={i} className="skeleton" style={{ height: 100 }} />)}</div>

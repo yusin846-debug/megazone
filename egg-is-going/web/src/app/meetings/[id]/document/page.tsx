@@ -19,7 +19,7 @@ export default async function DocumentPage({ params, searchParams }: { params: I
   const user = await requireUser();
   const { meeting, roles, readable } = await meetingFor(id, user.id);
   const crumbs: (string | [string, string])[] = [["회의", "/meetings"], [meeting.title, `/meetings/${id}/run`], "문서"];
-  if (!readable) return <Shell user={user} nav="home" crumbs={crumbs}><MeetingTabs id={id} on="document" /><NoContent /></Shell>;
+  if (!readable) return <Shell programId={meeting.programId} user={user} nav="home" crumbs={crumbs}><MeetingTabs id={id} on="document" /><NoContent /></Shell>;
 
   const latest = await latestDocumentVersion(id);
   const versions = await db.documentVersion.findMany({ where: { document: { meetingId: id } }, orderBy: { version: "desc" }, select: { id: true, version: true, status: true, createdAt: true } });
@@ -39,6 +39,7 @@ export default async function DocumentPage({ params, searchParams }: { params: I
 
   return (
     <Shell
+      programId={meeting.programId}
       user={user}
       nav="home"
       crumbs={crumbs}
@@ -48,13 +49,13 @@ export default async function DocumentPage({ params, searchParams }: { params: I
           <div className="reviewbar">
             <div className="msg">
               {dv.status === "approved" ? (
-                <><Icon id="i-lock" />승인된 문서는 바꿀 수 없어요. 고치려면 새 버전을 만들어요.</>
+                <><Icon id="i-lock" />승인본입니다. 변경 사항은 새 버전으로 작성해 주세요.</>
               ) : dv.status === "in_review" ? (
                 <><Icon id="i-send" />검토 중이에요. <Link href={`/meetings/${id}/review`}>검토·결재 보기</Link></>
               ) : blockers.length ? (
                 <><Icon id="i-alert" />{blockers.join(" · ")}</>
               ) : (
-                <><Icon id="i-check" />상신할 수 있어요. 상신 후에는 검토자 → 결재자 순서로 진행돼요.</>
+                <><Icon id="i-check" />초안 검토가 끝났다면 상신해 주세요.</>
               )}
             </div>
             <span className="sp" />
@@ -104,7 +105,7 @@ export default async function DocumentPage({ params, searchParams }: { params: I
                     {verify.findings.map((f) => (
                       <li key={f.id}>
                         <span className={`vdot ${f.routeTo === "human" ? "qq" : f.resolution === "auto_rerun" ? "ok" : "fix"}`}><Icon id={f.routeTo === "human" ? "i-help" : f.resolution === "auto_rerun" ? "i-refresh" : "i-alert"} /></span>
-                        <div><b>{f.message}</b><small className="mono">{f.type} · {f.target}</small></div>
+                        <div><b>{f.message}</b><small>{{missing:"누락",conflict:"모순",added:"추가된 내용",unclear:"사람 확인"}[f.type] ?? "검토 항목"}</small></div>
                         <span className="muted" style={{ fontSize: 11.5 }}>{f.resolution === "auto_rerun" ? "자동 수정" : f.resolution === "human_task" ? "확인 요청" : ""}</span>
                       </li>
                     ))}
@@ -132,7 +133,7 @@ export default async function DocumentPage({ params, searchParams }: { params: I
                 </ul>
               </div>
             </div>
-            <p className="eg-help">노란 형광펜은 회의 중 바뀐 아이디어, 테두리는 미정 값이에요. 내용을 고치려면 작업실에서 항목을 고치세요. 고친 값은 고정되고 문서가 새 버전으로 다시 만들어져요.</p>
+            <p className="eg-help">내용 수정은 작업실에서 할 수 있어요.</p>
           </div>
         </div>
       )}

@@ -29,12 +29,17 @@ export function validateTranscript(text: string) {
 
 export async function createMeeting(actorId: string, m: NewMeeting) {
   await requireRole(actorId, m.programId, ["writer"]);
+  if (!m.title.trim() || m.title.length > 200) throw new Error("회의 제목을 200자 이내로 입력해 주세요.");
+  if (Number.isNaN(m.occurredAt.getTime())) throw new Error("회의 일시를 확인해 주세요.");
+  if (m.transcript.length > 500000) throw new Error("녹취록은 50만 자 이내로 올려 주세요.");
   const err = validateTranscript(m.transcript);
   if (err) throw new Error(err);
   const tv = await db.templateVersion.findUniqueOrThrow({ where: { id: m.templateVersionId }, include: { template: true } });
   if (tv.template.programId !== m.programId || tv.status !== "approved") throw new Error("이 프로그램의 승인된 템플릿 버전이 아니에요.");
 
-  const users = await db.user.findMany({ where: { id: { in: m.participantUserIds } } });
+  const users = await db.user.findMany({ where: { id: { in: m.participantUserIds }, memberships: { some: { programId: m.programId, role: { not: "operator" } } } } });
+  if (users.length !== new Set(m.participantUserIds).size) throw new Error("프로그램에 참여 중인 참석자를 골라 주세요.");
+  if (!users.length && !m.externalNames.some(n => n.trim())) throw new Error("참석자를 한 명 이상 선택해 주세요.");
   const lastStamp = m.transcript.trim().split(/\r?\n/).at(-1)?.match(/^\[(?:(\d+):)?(\d{1,3}):(\d{2})\]/);
   const durationMs = lastStamp ? ((Number(lastStamp[1] ?? 0) * 60 + Number(lastStamp[2])) * 60 + Number(lastStamp[3]) + 5) * 1000 : 0;
   const meeting = await db.meeting.create({

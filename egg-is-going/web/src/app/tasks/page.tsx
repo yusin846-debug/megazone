@@ -1,3 +1,4 @@
+import { activeProgram } from "@/lib/programs";
 import SubmitButton from "@/components/SubmitButton";
 import Link from "@/components/NavigationLink";
 import { db, parse } from "@/lib/db";
@@ -14,16 +15,17 @@ const KIND_LABEL: Record<string, string> = { item_status: "결정 상태", actio
 export default async function TasksPage({ searchParams }: { searchParams: SP }) {
   const sp = await searchParams;
   const user = await requireUser();
+  const program = await activeProgram(user.id);
   const meetingId = q(sp, "meeting");
   const show = q(sp, "show") === "answered" ? "answered" : "open";
   const tasks = await db.humanTask.findMany({
-    where: { status: show, ...(meetingId ? { run: { meetingId } } : {}) },
+    where: { status: show, run: { meeting: { programId: program.id, program: { memberships: { some: { userId: user.id, role: {not: "operator"} } } } }, ...(meetingId ? { meetingId } : {}) } },
     orderBy: show === "open" ? [{ required: "desc" }, { createdAt: "asc" }] : { answeredAt: "desc" },
     take: 50,
     include: { run: { include: { meeting: { include: { participants: true } } } } },
   });
   const selId = q(sp, "id") ?? tasks[0]?.id;
-  const task = selId ? await db.humanTask.findUnique({ where: { id: selId }, include: { run: { include: { meeting: { include: { participants: true } } } } } }) : null;
+  const task = selId ? await db.humanTask.findFirst({ where: { id: selId, run: { meeting: { program: { memberships: { some: { userId: user.id, role: {not: "operator"} } } } } } }, include: { run: { include: { meeting: { include: { participants: true } } } } } }) : null;
   const readable = task ? await canReadContent(user.id, task.run.meeting.programId) : false;
   const tv = task && readable ? await latestTranscript(task.run.meetingId) : null;
   const evidence = task ? parse<{ segment_id: string }[]>(task.evidenceJson, []) : [];
@@ -35,12 +37,12 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
   const link = (extra: Record<string, string>) => `/tasks?${new URLSearchParams({ ...(meetingId ? { meeting: meetingId } : {}), ...(show === "answered" ? { show } : {}), ...extra })}`;
 
   return (
-    <Shell user={user} nav="tasks" crumbs={["확인 요청"]}>
+    <Shell programId={task?.run.meeting.programId} user={user} nav="tasks" crumbs={["확인 요청"]}>
       <Flash error={q(sp, "error")} ok={q(sp, "ok")} />
       <div className="page-h">
         <div>
           <h1>확인 요청</h1>
-          <p>AI가 추측하지 않고 넘긴 질문이에요. 필수 확인에 모두 답하면 영향받는 단계부터 이어서 실행돼요.</p>
+          <p>판단이 필요한 항목을 확인해 주세요. 필수 항목에 답하면 회의록 정리가 이어집니다.</p>
         </div>
       </div>
       <div className="grid2" style={{ gridTemplateColumns: "minmax(0,.9fr) minmax(0,1.4fr)" }}>
@@ -78,7 +80,7 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
             </div>
             <div className="card-b">
               <p style={{ fontSize: 17, fontWeight: 700, letterSpacing: "-.02em", margin: "0 0 4px" }}>{task.question}</p>
-              <p className="mono muted" style={{ margin: "0 0 14px" }}>{task.target} · {task.run.meeting.title}</p>
+              <p className="mono muted" style={{ margin: "0 0 14px" }}>{task.run.meeting.title}</p>
               <div className="eg-label">근거 발언</div>
               {!readable && <p className="muted" style={{ fontSize: 13 }}>운영자 권한으로는 발언 내용을 볼 수 없어요.</p>}
               {readable && segs.length === 0 && <p className="muted" style={{ fontSize: 13 }}>연결된 발언이 없어요.</p>}

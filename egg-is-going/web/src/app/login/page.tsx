@@ -1,3 +1,4 @@
+import RoleAvatar from "@/components/RoleAvatar";
 import SubmitButton from "@/components/SubmitButton";
 export const dynamic = "force-dynamic";
 
@@ -16,13 +17,13 @@ export default async function LoginPage() {
           <span className="eg-wordmark" style={{ fontSize: 26 }}>egg is going<i /></span>
           <h1 style={{ fontSize: 20, margin: "18px 0 4px", letterSpacing: "-.03em" }}>누구로 들어갈까요?</h1>
           <p className="muted" style={{ margin: 0, fontSize: 13.5 }}>
-            개발용 로그인이에요. 역할에 따라 할 수 있는 일이 달라져요. 실제 배포에서는 회사 계정(SSO)으로 바뀌어요.
+            체험할 팀원을 선택해 주세요.
           </p>
         </div>
         <form action={login} className="card-b" style={{ display: "grid", gap: 8, padding: "16px 28px 28px" }}>
           {users.map((u) => (
             <SubmitButton pendingLabel="로그인 중…" key={u.id} name="userId" value={u.id} className="person" style={{ fontFamily: "inherit", textAlign: "left" }}>
-              <svg style={{ width: 24, height: 28, flex: "none" }}><use href="#egg" /></svg>
+              <RoleAvatar title={u.title} name={u.name} />
               <span style={{ flex: 1 }}>
                 <b>{u.name}</b> <span className="muted" style={{ fontSize: 12.5 }}>{u.title}</span>
                 <br />
@@ -32,7 +33,7 @@ export default async function LoginPage() {
             </SubmitButton>
           ))}
         </form>
-        <p className="muted" style={{ fontSize: 11.5, padding: "0 28px 20px", margin: 0 }}>가상 제작사 대상 교육 프로젝트 · 실제 기업·인물과 무관</p>
+        <p className="muted" style={{ fontSize: 11.5, padding: "0 28px 20px", margin: 0 }}>체험 공간 · 샘플 팀원</p>
       </div>
     </main>
   );

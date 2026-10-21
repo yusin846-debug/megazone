@@ -1,3 +1,5 @@
+import TemplateFieldsEditor from "@/components/TemplateFieldsEditor";
+import { activeProgram } from "@/lib/programs";
 import SubmitButton from "@/components/SubmitButton";
 import { db, parse } from "@/lib/db";
 import { requireUser, rolesIn, ROLE_LABEL, type Role } from "@/lib/auth";
@@ -13,7 +15,8 @@ const FORMAT_LABEL: Record<string, string> = { paragraph: "문단", bullets: "�
 export default async function TemplatesPage({ searchParams }: { searchParams: SP }) {
   const sp = await searchParams;
   const user = await requireUser();
-  const program = await db.program.findFirstOrThrow({ include: { memberships: { include: { user: true } } } });
+  const active = await activeProgram(user.id);
+  const program = await db.program.findUniqueOrThrow({ where: { id: active.id }, include: { memberships: { include: { user: true } } } });
   const roles = await rolesIn(user.id, program.id);
   const templates = await db.template.findMany({ where: { programId: program.id }, include: { versions: { orderBy: { version: "desc" } } } });
   const meetings = await db.meeting.findMany({ where: { programId: program.id }, orderBy: { occurredAt: "desc" }, include: { documents: { include: { versions: { orderBy: { version: "desc" }, take: 1 } } } } });
@@ -26,7 +29,7 @@ export default async function TemplatesPage({ searchParams }: { searchParams: SP
       <div className="page-h">
         <div>
           <h1>템플릿·정책</h1>
-          <p>문서에 무엇을 어디에 넣을지(배치 규칙)와 결재 경로예요. 바꾸면 새 버전이 생기고, 이미 만든 문서는 그대로예요.</p>
+          <p>회의록 양식과 검토·결재 담당자를 관리하세요.</p>
         </div>
       </div>
       {templates.map((t) => {
@@ -46,7 +49,7 @@ export default async function TemplatesPage({ searchParams }: { searchParams: SP
                     {rules.fields.map((f, i) => (
                       <tr key={f.id}>
                         <td className="muted">{i + 1}</td>
-                        <td className="tt"><b>{f.label}{f.required && <span style={{ color: "var(--tomato-500)" }}> *</span>}</b><small className="mono">{f.id}</small></td>
+                        <td className="tt"><b>{f.label}{f.required && <span style={{ color: "var(--tomato-500)" }}> *</span>}</b></td>
                         <td>{SOURCE_LABEL[f.source] ?? f.source}</td>
                         <td>{FORMAT_LABEL[f.format] ?? f.format}{f.columns ? <small className="muted" style={{ display: "block" }}>{f.columns.join(" / ")}</small> : null}</td>
                         <td className="muted" style={{ fontSize: 12.5 }}>{f.rule}</td>
@@ -59,11 +62,10 @@ export default async function TemplatesPage({ searchParams }: { searchParams: SP
             <div className="stack">
               {isAdmin ? (
                 <form action={newTemplateVersion} className="card">
-                  <div className="card-h"><h2>새 버전 만들기</h2></div>
+                  <div className="card-h"><h2>양식 수정</h2></div>
                   <div className="card-b">
                     <input type="hidden" name="templateId" value={t.id} />
-                    <textarea className="eg-textarea mono" name="rules" rows={12} defaultValue={JSON.stringify(rules, null, 2)} style={{ fontSize: 11.5 }} />
-                    <p className="eg-help">fields 배열을 고쳐요. source는 meta · confirmed · topic_changes · actions · on_hold · dropped 중 하나예요.</p>
+                    <TemplateFieldsEditor initial={rules.fields} />
                     <SubmitButton pendingLabel="승인 중…" className="eg-btn eg-btn--ink eg-btn--sm"><Icon id="i-plus" />v{(latest?.version ?? 0) + 1}로 승인</SubmitButton>
                   </div>
                 </form>
@@ -76,11 +78,11 @@ export default async function TemplatesPage({ searchParams }: { searchParams: SP
                   <select className="eg-select" name="meetingId" required>
                     {meetings.filter((m) => m.documents[0]?.versions[0]?.status !== "approved").map((m) => <option key={m.id} value={m.id}>{m.title}</option>)}
                   </select>
-                  <select className="eg-select" name="templateVersionId">
+                  <select aria-label="적용할 양식 버전" className="eg-select" name="templateVersionId">
                     {t.versions.map((v) => <option key={v.id} value={v.id}>{t.name} v{v.version}</option>)}
                   </select>
-                  <p className="eg-help" style={{ margin: 0 }}>문서 구성 → 출력 → 검증만 다시 실행해요. 전사·결정은 그대로 써요. 승인된 회의는 고를 수 없어요.</p>
-                  <SubmitButton pendingLabel="적용 중…" className="eg-btn eg-btn--secondary eg-btn--sm" style={{ justifySelf: "end" }}><Icon id="i-refresh" />적용하고 다시 만들기</SubmitButton>
+                  <p className="eg-help" style={{ margin: 0 }}>선택한 회의에 새 양식을 적용해요. 승인본은 변경할 수 없어요.</p>
+                  <SubmitButton disabled={!meetings.some(m => m.documents[0]?.versions[0]?.status !== "approved")} pendingLabel="적용 중…" className="eg-btn eg-btn--secondary eg-btn--sm" style={{ justifySelf: "end" }}><Icon id="i-refresh" />적용하고 다시 만들기</SubmitButton>
                 </div>
               </form>
             </div>
@@ -88,7 +90,7 @@ export default async function TemplatesPage({ searchParams }: { searchParams: SP
         );
       })}
       <div className="card">
-        <div className="card-h"><h2>결재 정책</h2><span className="r"><span className="eg-chip eg-chip--plain">현업 확인 전 가정</span></span></div>
+        <div className="card-h"><h2>결재 정책</h2><span className="r"><span className="eg-chip eg-chip--plain">기본 경로</span></span></div>
         <div className="card-b">
           <div className="policy" style={{ marginBottom: 12 }}>
             <span className="pp done">작성 · {byRole("writer").length}명</span>
@@ -103,7 +105,7 @@ export default async function TemplatesPage({ searchParams }: { searchParams: SP
               <span key={r} style={{ display: "contents" }}><dt>{ROLE_LABEL[r]}</dt><dd style={{ fontFamily: "inherit" }}>{byRole(r).join(", ")}</dd></span>
             ))}
           </dl>
-          <p className="eg-help" style={{ marginBottom: 0 }}>상신하는 순간의 경로를 검토 요청에 저장해요. 나중에 역할이 바뀌어도 진행 중인 결재는 그 경로대로 가요. 필수 확인이 남아 있으면 상신·승인이 막혀요.</p>
+          <p className="eg-help" style={{ marginBottom: 0 }}>진행 중인 결재는 상신 당시의 담당자가 처리해요.</p>
         </div>
       </div>
     </Shell>

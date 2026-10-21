@@ -1,3 +1,4 @@
+import RoleAvatar from "@/components/RoleAvatar";
 import SubmitButton from "@/components/SubmitButton";
 import Link from "@/components/NavigationLink";
 import { db, parse } from "@/lib/db";
@@ -20,7 +21,7 @@ export default async function ReviewPage({ params, searchParams }: { params: IdP
   const user = await requireUser();
   const { meeting, readable } = await meetingFor(id, user.id);
   const crumbs: (string | [string, string])[] = [["회의", "/meetings"], [meeting.title, `/meetings/${id}/run`], "검토·결재"];
-  if (!readable) return <Shell user={user} nav="review" crumbs={crumbs}><MeetingTabs id={id} on="review" /><NoContent /></Shell>;
+  if (!readable) return <Shell programId={meeting.programId} user={user} nav="review" crumbs={crumbs}><MeetingTabs id={id} on="review" /><NoContent /></Shell>;
 
   const dv = await latestDocumentVersion(id);
   const req = dv?.reviewRequests[0] ?? null;
@@ -41,7 +42,7 @@ export default async function ReviewPage({ params, searchParams }: { params: IdP
   for (const a of history) if (!actors.has(a.actorId)) { const u = await db.user.findUnique({ where: { id: a.actorId } }); if (u) actors.set(u.id, u); }
 
   return (
-    <Shell user={user} nav="review" crumbs={crumbs} right={dv && <DocBadge status={dv.status} version={dv.version} />}>
+    <Shell programId={meeting.programId} user={user} nav="review" crumbs={crumbs} right={dv && <DocBadge status={dv.status} version={dv.version} />}>
       <Flash error={q(sp, "error")} ok={q(sp, "ok")} />
       <MeetingTabs id={id} on="review" />
       {!dv || !tpl || !doc ? (
@@ -95,7 +96,7 @@ export default async function ReviewPage({ params, searchParams }: { params: IdP
                   <div className="card-b" style={{ display: "grid", gap: 10 }}>
                     <input type="hidden" name="reviewRequestId" value={req.id} />
                     <input type="hidden" name="meetingId" value={id} />
-                    <textarea className="eg-textarea" name="comment" rows={3} placeholder="의견 (변경 요청에는 꼭 적어 주세요)" />
+                    <label className="sr-only" htmlFor="review-comment">검토 의견</label><textarea id="review-comment" className="eg-textarea" name="comment" rows={3} placeholder="의견 (변경 요청에는 꼭 적어 주세요)" />
                     {myTurn && step?.role === "approver" && blockers.length > 0 && <div className="callout r"><Icon id="i-alert" /><div>{blockers.join(" · ")}</div></div>}
                     <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "flex-end" }}>
                       <SubmitButton pendingLabel="의견 저장 중…" name="action" value="comment" className="eg-btn eg-btn--ghost eg-btn--sm">의견만</SubmitButton>
@@ -113,14 +114,14 @@ export default async function ReviewPage({ params, searchParams }: { params: IdP
                 <div className="callout y"><Icon id="i-pencil" /><div>변경 요청을 받았어요. <Link href={`/meetings/${id}/workspace`}>작업실</Link>에서 고치면 새 버전이 만들어지고, 다시 상신할 수 있어요.</div></div>
               )}
               <div className="card">
-                <div className="card-h"><h2>검토 기록</h2><span className="r muted" style={{ fontSize: 12 }}>지울 수 없는 기록</span></div>
+                <div className="card-h"><h2>검토 기록</h2></div>
                 <div className="card-b" style={{ paddingTop: 4, paddingBottom: 4 }}>
                   <ul className="thread">
                     {history.map((a) => {
                       const u = actors.get(a.actorId);
                       return (
                         <li key={a.id}>
-                          <span className="av">{u?.name.slice(-2) ?? "?"}</span>
+                          <RoleAvatar title={u?.title ?? "팀원"} name={u?.name} size={28} />
                           <div>
                             <b>{u?.name ?? "알 수 없음"}</b> <span className={`eg-chip ${a.action === "approve" ? "eg-chip--pass" : a.action === "request_changes" ? "eg-chip--fail" : "eg-chip--plain"}`} style={{ height: 20 }}>{ACTION_LABEL[a.action] ?? a.action}</span>{" "}
                             <small>v{a.reviewRequest.documentVersion.version} · {ago(a.createdAt)}</small>

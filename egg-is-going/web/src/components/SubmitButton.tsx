@@ -1,4 +1,5 @@
 "use client";
+import EggLoader from "@/components/EggLoader";
 
 import type { ComponentProps } from "react";
 import { useFormStatus } from "react-dom";
@@ -12,7 +13,7 @@ export default function SubmitButton({ children, pendingLabel = "저장 중…",
   return (
     <button {...props} type={props.type ?? "submit"} name={name} value={value}
       disabled={disabled || pending} aria-busy={busy}>
-      {busy ? <><span className="feedback-spinner" aria-hidden="true" /><span role="status">{pendingLabel}</span></> : children}
+      {busy ? <><EggLoader /><span role="status">{pendingLabel}</span></> : children}
     </button>
   );
 }

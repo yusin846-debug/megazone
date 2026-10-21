@@ -1,4 +1,5 @@
 "use client";
+import EggLoader from "@/components/EggLoader";
 
 import { useRouter } from "next/navigation";
 import { useEffect, useTransition } from "react";
@@ -21,5 +22,5 @@ export default function AutoRefresh({ active, ms = 2500 }: { active: boolean; ms
       document.removeEventListener("visibilitychange", onVisible);
     };
   }, [active, ms, pending, router]);
-  return active ? <div className="live-update" role="status"><span className="feedback-spinner" aria-hidden="true" />{pending ? "실행 상태 업데이트 중…" : "처리 중 · 상태가 자동으로 업데이트돼요"}</div> : null;
+  return active ? <div className="live-update" role="status"><EggLoader />{pending ? "실행 상태 업데이트 중…" : "처리 중 · 상태가 자동으로 업데이트돼요"}</div> : null;
 }
