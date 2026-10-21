@@ -1,0 +1,54 @@
+{
+  "note": "01_opening 정답 항목을 템플릿 v3에 배치",
+  "checks": [
+    {
+      "type": "sections_match_template",
+      "label": "템플릿 칸 6개를 순서대로 모두 만듦"
+    },
+    {
+      "type": "refs_cover",
+      "refs": [
+        "d:t_opening_location",
+        "d:t_drone",
+        "d:t_opening_ment",
+        "d:t_guest",
+        "a:a_studio",
+        "a:a_minutes",
+        "a:a_cuesheet"
+      ],
+      "label": "결정 4개·업무 3개를 모두 배치 (버리지 않음)"
+    },
+    {
+      "type": "find",
+      "path": "sections[].blocks",
+      "parentWhere": {
+        "field_id": {
+          "eq": "actions"
+        }
+      },
+      "where": {
+        "refs": "a_studio",
+        "flags": "missing_due"
+      },
+      "label": "기한 없는 ‘스튜디오 대관’에 missing_due 표시"
+    },
+    {
+      "type": "none",
+      "path": "sections[].blocks",
+      "where": {
+        "text": [
+          "10월",
+          "월요일",
+          "화요일",
+          "수요일",
+          "목요일"
+        ]
+      },
+      "label": "원문에 없는 날짜를 만들지 않음"
+    },
+    {
+      "type": "no_unknown_refs",
+      "label": "입력에 없는 항목을 참조하지 않음"
+    }
+  ]
+}

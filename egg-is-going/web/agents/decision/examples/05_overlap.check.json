@@ -1,0 +1,66 @@
+{
+  "note": "말이 겹치는 구간에서 예산 숫자가 갈린다. 확정하지 말고 보류/확인 요청으로.",
+  "checks": [
+    {
+      "type": "find",
+      "path": "decisions",
+      "where": {
+        "title": [
+          "첫 미션",
+          "장보기"
+        ],
+        "status": {
+          "eq": "confirmed"
+        },
+        "value": "장보기"
+      },
+      "label": "[중대] ‘첫 미션|장보기’ = confirmed (장보기)",
+      "critical": true
+    },
+    {
+      "type": "find",
+      "path": "decisions",
+      "where": {
+        "title": [
+          "예산"
+        ],
+        "status": {
+          "eq": "on_hold"
+        }
+      },
+      "label": "[중대] ‘예산’ = on_hold",
+      "critical": true
+    },
+    {
+      "type": "find",
+      "path": "decisions",
+      "where": {
+        "title": [
+          "두 번째 미션",
+          "맛집"
+        ],
+        "status": {
+          "eq": "dropped"
+        }
+      },
+      "label": "‘두 번째 미션|맛집’ = dropped",
+      "critical": false
+    },
+    {
+      "type": "find",
+      "path": "action_items",
+      "where": {
+        "description": "답사",
+        "assignee": {
+          "eq": "p6"
+        },
+        "due_at": "목요일"
+      },
+      "label": "업무 ‘답사’ · 담당 윤하람 · 기한 목요일"
+    },
+    {
+      "type": "evidence_valid",
+      "label": "모든 근거가 원문 발언 id"
+    }
+  ]
+}

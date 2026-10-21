@@ -1,0 +1,470 @@
+{
+  "meeting": {
+    "title": "3회차 오프닝 구성 회의",
+    "occurred_at": "2026-10-21 10:00",
+    "participants": [
+      {
+        "key": "p1",
+        "name": "한지수",
+        "role_label": "메인 작가",
+        "team": "writer"
+      },
+      {
+        "key": "p2",
+        "name": "오다은",
+        "role_label": "서브 작가",
+        "team": "writer"
+      },
+      {
+        "key": "p3",
+        "name": "이혜연",
+        "role_label": "막내 작가",
+        "team": "writer"
+      },
+      {
+        "key": "p4",
+        "name": "박준호",
+        "role_label": "메인 PD",
+        "team": "pd"
+      },
+      {
+        "key": "p5",
+        "name": "최민재",
+        "role_label": "서브 PD",
+        "team": "pd"
+      },
+      {
+        "key": "p6",
+        "name": "윤하람",
+        "role_label": "막내 PD",
+        "team": "pd"
+      }
+    ]
+  },
+  "segments": [
+    {
+      "segment_id": "seg_01",
+      "start_ms": 5000,
+      "end_ms": 12000,
+      "speaker": "p1",
+      "text": "3회차 오프닝부터 정리할게요.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_02",
+      "start_ms": 12000,
+      "end_ms": 31000,
+      "speaker": "p4",
+      "text": "오프닝은 야외에서 가죠. 한강 공원 어때요?",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_03",
+      "start_ms": 31000,
+      "end_ms": 48000,
+      "speaker": "p2",
+      "text": "그날 오후에 비 소식 있던데요.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_04",
+      "start_ms": 48000,
+      "end_ms": 51000,
+      "speaker": "p1",
+      "text": "우천이면 리스크 크니까 실내로 돌리죠.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_05",
+      "start_ms": 51000,
+      "end_ms": 65000,
+      "speaker": "p4",
+      "text": "그럼 스튜디오에서 오프닝 찍는 걸로 정리합시다.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_06",
+      "start_ms": 65000,
+      "end_ms": 72000,
+      "speaker": "p4",
+      "text": "드론 촬영은 예산 때문에 이번엔 빼죠.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_07",
+      "start_ms": 72000,
+      "end_ms": 80000,
+      "speaker": "p1",
+      "text": "네, 드론은 빼는 걸로 하죠.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_08",
+      "start_ms": 80000,
+      "end_ms": 100000,
+      "speaker": "p5",
+      "text": "스튜디오 대관은 제가 확인해 볼게요.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_09",
+      "start_ms": 100000,
+      "end_ms": 112000,
+      "speaker": "p2",
+      "text": "오프닝 멘트는 밝은 여행 브이로그 톤 어때요?",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_10",
+      "start_ms": 112000,
+      "end_ms": 125000,
+      "speaker": "p1",
+      "text": "좋아요, 브이로그 톤으로 가죠.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_11",
+      "start_ms": 125000,
+      "end_ms": 194000,
+      "speaker": null,
+      "text": "그 부분은... (겹침) 다시 얘기하는 걸로",
+      "uncertain": true
+    },
+    {
+      "segment_id": "seg_12",
+      "start_ms": 194000,
+      "end_ms": 200000,
+      "speaker": "p4",
+      "text": "게스트 후보 두 명 중에 누구로 갈까요?",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_13",
+      "start_ms": 200000,
+      "end_ms": 221000,
+      "speaker": "p1",
+      "text": "게스트는 일단 출연료 보고 다음 주에 다시 얘기해요.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_14",
+      "start_ms": 221000,
+      "end_ms": 230000,
+      "speaker": "p3",
+      "text": "회의록은 오늘 오후에 공유드릴게요.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_15",
+      "start_ms": 230000,
+      "end_ms": 242000,
+      "speaker": "p4",
+      "text": "혜연 작가가 큐시트 초안도 금요일까지 부탁해요.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_16",
+      "start_ms": 242000,
+      "end_ms": 247000,
+      "speaker": "p3",
+      "text": "네, 금요일까지 드릴게요.",
+      "uncertain": false
+    }
+  ],
+  "topics": [
+    {
+      "item_key": "t_opening_location",
+      "title": "오프닝 장소",
+      "intent": null,
+      "idea_changes": [
+        {
+          "from": null,
+          "to": "야외(한강 공원)",
+          "reason": null,
+          "evidence": [
+            {
+              "segment_id": "seg_02"
+            }
+          ]
+        },
+        {
+          "from": "야외(한강 공원)",
+          "to": "실내",
+          "reason": "촬영일 오후 비 예보",
+          "evidence": [
+            {
+              "segment_id": "seg_03"
+            },
+            {
+              "segment_id": "seg_04"
+            }
+          ]
+        },
+        {
+          "from": "실내",
+          "to": "스튜디오",
+          "reason": null,
+          "evidence": [
+            {
+              "segment_id": "seg_05"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "decisions": [
+    {
+      "item_key": "t_opening_location",
+      "title": "오프닝 장소",
+      "status": "confirmed",
+      "value": "스튜디오",
+      "hold_reason": null,
+      "revisit": null,
+      "evidence": [
+        {
+          "segment_id": "seg_04"
+        },
+        {
+          "segment_id": "seg_05"
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "item_key": "t_drone",
+      "title": "드론 촬영",
+      "status": "dropped",
+      "value": null,
+      "hold_reason": null,
+      "revisit": null,
+      "evidence": [
+        {
+          "segment_id": "seg_06"
+        },
+        {
+          "segment_id": "seg_07"
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "item_key": "t_opening_ment",
+      "title": "오프닝 멘트 톤",
+      "status": "confirmed",
+      "value": "밝은 여행 브이로그 톤",
+      "hold_reason": null,
+      "revisit": null,
+      "evidence": [
+        {
+          "segment_id": "seg_10"
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "item_key": "t_guest",
+      "title": "게스트 섭외",
+      "status": "on_hold",
+      "value": null,
+      "hold_reason": "출연료 확인 필요",
+      "revisit": "다음 주",
+      "evidence": [
+        {
+          "segment_id": "seg_13"
+        }
+      ],
+      "confidence": 0.9
+    }
+  ],
+  "action_items": [
+    {
+      "action_key": "a_studio",
+      "description": "스튜디오 대관 가능 여부 확인",
+      "assignee": "p5",
+      "due_at": null,
+      "evidence": [
+        {
+          "segment_id": "seg_08"
+        }
+      ]
+    },
+    {
+      "action_key": "a_minutes",
+      "description": "회의록 공유",
+      "assignee": "p3",
+      "due_at": "오늘 오후",
+      "evidence": [
+        {
+          "segment_id": "seg_14"
+        }
+      ]
+    },
+    {
+      "action_key": "a_cuesheet",
+      "description": "큐시트 초안 작성",
+      "assignee": "p3",
+      "due_at": "금요일",
+      "evidence": [
+        {
+          "segment_id": "seg_15"
+        }
+      ]
+    }
+  ],
+  "human_confirmed": [],
+  "format_issues": [],
+  "document": {
+    "sections": [
+      {
+        "field_id": "overview",
+        "label": "회의 개요",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "3회차 오프닝 구성 회의 · 2026-10-21 10:00",
+            "cells": null,
+            "refs": [],
+            "flags": []
+          },
+          {
+            "type": "paragraph",
+            "text": "참석: 한지수(메인 작가), 오다은(서브 작가), 이혜연(막내 작가), 박준호(메인 PD), 최민재(서브 PD), 윤하람(막내 PD)",
+            "cells": null,
+            "refs": [],
+            "flags": []
+          }
+        ]
+      },
+      {
+        "field_id": "decisions",
+        "label": "결정 사항",
+        "blocks": [
+          {
+            "type": "bullet",
+            "text": "오프닝 장소: 스튜디오 (변경: 야외(한강 공원) → 실내 → 스튜디오)",
+            "cells": null,
+            "refs": [
+              "d:t_opening_location"
+            ],
+            "flags": [
+              "changed"
+            ]
+          },
+          {
+            "type": "bullet",
+            "text": "오프닝 멘트 톤: 밝은 여행 브이로그 톤",
+            "cells": null,
+            "refs": [
+              "d:t_opening_ment"
+            ],
+            "flags": []
+          }
+        ]
+      },
+      {
+        "field_id": "changes",
+        "label": "아이디어 변화",
+        "blocks": [
+          {
+            "type": "bullet",
+            "text": "오프닝 장소: 야외(한강 공원) → 실내 — 촬영일 오후 비 예보",
+            "cells": null,
+            "refs": [
+              "t:t_opening_location"
+            ],
+            "flags": []
+          },
+          {
+            "type": "bullet",
+            "text": "오프닝 장소: 실내 → 스튜디오",
+            "cells": null,
+            "refs": [
+              "t:t_opening_location"
+            ],
+            "flags": []
+          }
+        ]
+      },
+      {
+        "field_id": "actions",
+        "label": "후속 업무",
+        "blocks": [
+          {
+            "type": "row",
+            "text": null,
+            "cells": [
+              "스튜디오 대관 가능 여부 확인",
+              "최민재",
+              "미정",
+              "seg_08"
+            ],
+            "refs": [
+              "a:a_studio"
+            ],
+            "flags": [
+              "missing_due"
+            ]
+          },
+          {
+            "type": "row",
+            "text": null,
+            "cells": [
+              "회의록 공유",
+              "이혜연",
+              "오늘 오후",
+              "seg_14"
+            ],
+            "refs": [
+              "a:a_minutes"
+            ],
+            "flags": []
+          },
+          {
+            "type": "row",
+            "text": null,
+            "cells": [
+              "큐시트 초안 작성",
+              "이혜연",
+              "금요일",
+              "seg_15"
+            ],
+            "refs": [
+              "a:a_cuesheet"
+            ],
+            "flags": []
+          }
+        ]
+      },
+      {
+        "field_id": "pending",
+        "label": "보류",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "해당 없음",
+            "cells": null,
+            "refs": [],
+            "flags": []
+          }
+        ]
+      },
+      {
+        "field_id": "dropped",
+        "label": "제외된 안",
+        "blocks": [
+          {
+            "type": "bullet",
+            "text": "드론 촬영",
+            "cells": null,
+            "refs": [
+              "d:t_drone"
+            ],
+            "flags": []
+          }
+        ]
+      }
+    ],
+    "unplaced": []
+  }
+}

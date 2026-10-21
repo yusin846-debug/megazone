@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "verify agent output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "verdict",
+    "findings"
+  ],
+  "properties": {
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "needs_fix",
+        "needs_human"
+      ]
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "severity",
+          "target",
+          "message",
+          "evidence",
+          "route_to"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "missing",
+              "conflict",
+              "added",
+              "unclear",
+              "format"
+            ]
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "critical",
+              "normal"
+            ]
+          },
+          "target": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "segment_id"
+              ],
+              "properties": {
+                "segment_id": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "route_to": {
+            "type": "string",
+            "enum": [
+              "context",
+              "decision",
+              "compose",
+              "human"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

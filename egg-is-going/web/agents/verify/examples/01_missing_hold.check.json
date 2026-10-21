@@ -1,0 +1,27 @@
+{
+  "note": "보류 1건을 일부러 뺀 문서",
+  "checks": [
+    {
+      "type": "find",
+      "path": "findings",
+      "where": {
+        "type": {
+          "eq": "missing"
+        },
+        "target": "t_guest",
+        "severity": {
+          "eq": "critical"
+        }
+      },
+      "label": "[중대] 보류 ‘게스트 섭외’ 누락을 찾음"
+    },
+    {
+      "type": "in",
+      "path": "verdict",
+      "values": [
+        "needs_fix"
+      ],
+      "label": "판정: 수정 필요"
+    }
+  ]
+}

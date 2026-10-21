@@ -1,0 +1,111 @@
+{
+  "meeting": {
+    "title": "미션 구성 회의",
+    "occurred_at": "2026-10-14 10:00",
+    "participants": [
+      {
+        "key": "p1",
+        "name": "한지수",
+        "role_label": "메인 작가",
+        "team": "writer"
+      },
+      {
+        "key": "p2",
+        "name": "오다은",
+        "role_label": "서브 작가",
+        "team": "writer"
+      },
+      {
+        "key": "p3",
+        "name": "이혜연",
+        "role_label": "막내 작가",
+        "team": "writer"
+      },
+      {
+        "key": "p4",
+        "name": "박준호",
+        "role_label": "메인 PD",
+        "team": "pd"
+      },
+      {
+        "key": "p5",
+        "name": "최민재",
+        "role_label": "서브 PD",
+        "team": "pd"
+      },
+      {
+        "key": "p6",
+        "name": "윤하람",
+        "role_label": "막내 PD",
+        "team": "pd"
+      }
+    ]
+  },
+  "segments": [
+    {
+      "segment_id": "seg_01",
+      "start_ms": 6000,
+      "end_ms": 14000,
+      "speaker": "p4",
+      "text": "미션 구성 얘기해요. 첫 미션은 시장 장보기로 가죠.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_02",
+      "start_ms": 14000,
+      "end_ms": 20000,
+      "speaker": "p1",
+      "text": "좋아요, 장보기로 정리할게요.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_03",
+      "start_ms": 20000,
+      "end_ms": 24000,
+      "speaker": null,
+      "text": "예산은 (겹침) 오만 원으로...",
+      "uncertain": true
+    },
+    {
+      "segment_id": "seg_04",
+      "start_ms": 24000,
+      "end_ms": 35000,
+      "speaker": null,
+      "text": "아니 삼만 원 (겹침)",
+      "uncertain": true
+    },
+    {
+      "segment_id": "seg_05",
+      "start_ms": 35000,
+      "end_ms": 50000,
+      "speaker": "p4",
+      "text": "예산은 숫자 다시 확인해서 정합시다.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_06",
+      "start_ms": 50000,
+      "end_ms": 62000,
+      "speaker": "p2",
+      "text": "두 번째 미션은 현지인 맛집 찾기 어때요?",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_07",
+      "start_ms": 62000,
+      "end_ms": 75000,
+      "speaker": "p4",
+      "text": "그건 이번 회차엔 시간상 안 하는 걸로 하죠.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_08",
+      "start_ms": 75000,
+      "end_ms": 80000,
+      "speaker": "p6",
+      "text": "장보기 동선 답사는 제가 이번 주 목요일에 다녀올게요.",
+      "uncertain": false
+    }
+  ],
+  "feedback": []
+}

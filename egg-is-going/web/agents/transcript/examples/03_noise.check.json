@@ -1,0 +1,20 @@
+{
+  "note": "잡담 속에 진짜 결정이 하나 숨어 있다. 커피 사기는 업무가 아니다.",
+  "checks": [
+    {
+      "type": "count",
+      "path": "segments",
+      "min": 9,
+      "max": 9,
+      "label": "발언 9개를 모두 나눔"
+    },
+    {
+      "type": "none",
+      "path": "segments",
+      "where": {
+        "speaker": "?"
+      },
+      "label": "화자를 '?' 문자열로 두지 않음"
+    }
+  ]
+}

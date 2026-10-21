@@ -1,0 +1,29 @@
+{
+  "decisions": [
+    {
+      "title": "자막",
+      "status": "confirmed",
+      "value": "둥근 고딕",
+      "critical": true,
+      "evidence": [
+        "00:24",
+        "00:30"
+      ]
+    },
+    {
+      "title": "썸네일",
+      "status": "on_hold",
+      "value": null,
+      "critical": true,
+      "evidence": [
+        "00:58"
+      ]
+    }
+  ],
+  "actions": [],
+  "not_actions": [
+    "커피"
+  ],
+  "uncertain": [],
+  "idea_changes": []
+}

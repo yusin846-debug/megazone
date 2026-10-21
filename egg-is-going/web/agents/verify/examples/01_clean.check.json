@@ -1,0 +1,45 @@
+{
+  "note": "문제 없는 문서 (거짓 경보 시험)",
+  "checks": [
+    {
+      "type": "none",
+      "path": "findings",
+      "where": {
+        "type": {
+          "eq": "missing"
+        }
+      },
+      "label": "정답 문서에 누락 경보 없음"
+    },
+    {
+      "type": "none",
+      "path": "findings",
+      "where": {
+        "type": {
+          "eq": "added"
+        }
+      },
+      "label": "정답 문서에 추가 경보 없음"
+    },
+    {
+      "type": "find",
+      "path": "findings",
+      "where": {
+        "type": {
+          "eq": "unclear"
+        },
+        "target": "a_studio"
+      },
+      "label": "‘스튜디오 대관’ 기한 없음을 사람 확인으로 알림"
+    },
+    {
+      "type": "in",
+      "path": "verdict",
+      "values": [
+        "pass",
+        "needs_human"
+      ],
+      "label": "판정: 통과 또는 사람 확인"
+    }
+  ]
+}

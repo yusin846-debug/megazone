@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "transcript agent output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "segments",
+    "uncertain_spans",
+    "unmatched_speakers"
+  ],
+  "properties": {
+    "segments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "segment_id",
+          "start_ms",
+          "end_ms",
+          "speaker",
+          "text",
+          "uncertain"
+        ],
+        "properties": {
+          "segment_id": {
+            "type": "string"
+          },
+          "start_ms": {
+            "type": "integer"
+          },
+          "end_ms": {
+            "type": "integer"
+          },
+          "speaker": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "text": {
+            "type": "string"
+          },
+          "uncertain": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "uncertain_spans": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "start_ms",
+          "end_ms",
+          "reason"
+        ],
+        "properties": {
+          "start_ms": {
+            "type": "integer"
+          },
+          "end_ms": {
+            "type": "integer"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "unmatched_speakers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

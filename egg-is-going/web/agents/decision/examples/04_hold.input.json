@@ -1,0 +1,124 @@
+{
+  "meeting": {
+    "title": "4회차 섭외·일정 회의",
+    "occurred_at": "2026-10-16 14:00",
+    "participants": [
+      {
+        "key": "p1",
+        "name": "한지수",
+        "role_label": "메인 작가",
+        "team": "writer"
+      },
+      {
+        "key": "p2",
+        "name": "오다은",
+        "role_label": "서브 작가",
+        "team": "writer"
+      },
+      {
+        "key": "p3",
+        "name": "이혜연",
+        "role_label": "막내 작가",
+        "team": "writer"
+      },
+      {
+        "key": "p4",
+        "name": "박준호",
+        "role_label": "메인 PD",
+        "team": "pd"
+      },
+      {
+        "key": "p5",
+        "name": "최민재",
+        "role_label": "서브 PD",
+        "team": "pd"
+      },
+      {
+        "key": "p6",
+        "name": "윤하람",
+        "role_label": "막내 PD",
+        "team": "pd"
+      }
+    ]
+  },
+  "segments": [
+    {
+      "segment_id": "seg_01",
+      "start_ms": 10000,
+      "end_ms": 18000,
+      "speaker": "p4",
+      "text": "4회차 게스트 섭외 상황 공유해 주세요.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_02",
+      "start_ms": 18000,
+      "end_ms": 30000,
+      "speaker": "p2",
+      "text": "두 분 다 회신 대기 중이에요.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_03",
+      "start_ms": 30000,
+      "end_ms": 45000,
+      "speaker": "p1",
+      "text": "그럼 섭외는 회신 오면 다시 보죠.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_04",
+      "start_ms": 45000,
+      "end_ms": 55000,
+      "speaker": "p4",
+      "text": "촬영 날짜는 25일 아니면 26일인데요.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_05",
+      "start_ms": 55000,
+      "end_ms": 70000,
+      "speaker": "p1",
+      "text": "날짜도 게스트 일정 확인하고 정해요.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_06",
+      "start_ms": 70000,
+      "end_ms": 78000,
+      "speaker": "p5",
+      "text": "장비 렌탈 업체는 새로 알아봐야 할 것 같아요.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_07",
+      "start_ms": 78000,
+      "end_ms": 85000,
+      "speaker": "p4",
+      "text": "렌탈 업체 알아보는 거 누가 할까요?",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_08",
+      "start_ms": 85000,
+      "end_ms": 100000,
+      "speaker": "p1",
+      "text": "그건 나중에 정하죠.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_09",
+      "start_ms": 100000,
+      "end_ms": 105000,
+      "speaker": "p2",
+      "text": "오프닝 내레이션 원고는 제가 써 볼게요.",
+      "uncertain": false
+    }
+  ],
+  "topics": [],
+  "locked": {
+    "items": [],
+    "actions": []
+  },
+  "feedback": []
+}

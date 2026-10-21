@@ -1,0 +1,20 @@
+{
+  "note": "보류가 많고 담당이 정해지지 않은 업무가 있다. 담당·기한을 지어내지 않는지.",
+  "checks": [
+    {
+      "type": "count",
+      "path": "segments",
+      "min": 9,
+      "max": 9,
+      "label": "발언 9개를 모두 나눔"
+    },
+    {
+      "type": "none",
+      "path": "segments",
+      "where": {
+        "speaker": "?"
+      },
+      "label": "화자를 '?' 문자열로 두지 않음"
+    }
+  ]
+}

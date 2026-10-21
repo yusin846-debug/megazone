@@ -1,0 +1,37 @@
+{
+  "note": "결정이 두 번 바뀐다. 최종값과 각 변경 이유를 정확히 잡는지.",
+  "checks": [
+    {
+      "type": "find",
+      "path": "topics[].idea_changes",
+      "parentWhere": {
+        "title": [
+          "엔딩"
+        ]
+      },
+      "where": {
+        "to": "테라스",
+        "reason": "일몰"
+      },
+      "label": "‘엔딩’: → 테라스 (이유에 ‘일몰’)"
+    },
+    {
+      "type": "find",
+      "path": "topics[].idea_changes",
+      "parentWhere": {
+        "title": [
+          "엔딩"
+        ]
+      },
+      "where": {
+        "to": "바닷가",
+        "reason": "소음"
+      },
+      "label": "‘엔딩’: → 바닷가 (이유에 ‘소음’)"
+    },
+    {
+      "type": "evidence_valid",
+      "label": "모든 근거가 원문 발언 id"
+    }
+  ]
+}

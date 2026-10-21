@@ -1,0 +1,127 @@
+{
+  "meeting": {
+    "title": "2회차 엔딩 구성 회의",
+    "occurred_at": "2026-10-20 15:30",
+    "participants": [
+      {
+        "key": "p1",
+        "name": "한지수",
+        "role_label": "메인 작가",
+        "team": "writer"
+      },
+      {
+        "key": "p2",
+        "name": "오다은",
+        "role_label": "서브 작가",
+        "team": "writer"
+      },
+      {
+        "key": "p3",
+        "name": "이혜연",
+        "role_label": "막내 작가",
+        "team": "writer"
+      },
+      {
+        "key": "p4",
+        "name": "박준호",
+        "role_label": "메인 PD",
+        "team": "pd"
+      },
+      {
+        "key": "p5",
+        "name": "최민재",
+        "role_label": "서브 PD",
+        "team": "pd"
+      },
+      {
+        "key": "p6",
+        "name": "윤하람",
+        "role_label": "막내 PD",
+        "team": "pd"
+      }
+    ]
+  },
+  "segments": [
+    {
+      "segment_id": "seg_01",
+      "start_ms": 8000,
+      "end_ms": 20000,
+      "speaker": "p4",
+      "text": "2회차 엔딩 장소 얘기해 봅시다. 바닷가 일몰 어때요?",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_02",
+      "start_ms": 20000,
+      "end_ms": 35000,
+      "speaker": "p2",
+      "text": "일몰 시간이 촬영 종료 시간이랑 안 맞아요.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_03",
+      "start_ms": 35000,
+      "end_ms": 41000,
+      "speaker": "p1",
+      "text": "그럼 숙소 테라스로 가죠.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_04",
+      "start_ms": 41000,
+      "end_ms": 90000,
+      "speaker": "p4",
+      "text": "테라스로 정리합시다.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_05",
+      "start_ms": 90000,
+      "end_ms": 105000,
+      "speaker": "p6",
+      "text": "숙소 측에서 테라스 촬영은 소음 때문에 안 된대요.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_06",
+      "start_ms": 105000,
+      "end_ms": 112000,
+      "speaker": "p4",
+      "text": "그럼 다시 바닷가로 가되 일몰 전 시간대로 가죠.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_07",
+      "start_ms": 112000,
+      "end_ms": 130000,
+      "speaker": "p1",
+      "text": "네, 바닷가 오후 네 시로 확정할게요.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_08",
+      "start_ms": 130000,
+      "end_ms": 150000,
+      "speaker": "p5",
+      "text": "바닷가 촬영 허가는 제가 내일까지 받아 올게요.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_09",
+      "start_ms": 150000,
+      "end_ms": 158000,
+      "speaker": "p2",
+      "text": "엔딩 BGM은 잔잔한 어쿠스틱이 좋겠어요.",
+      "uncertain": false
+    },
+    {
+      "segment_id": "seg_10",
+      "start_ms": 158000,
+      "end_ms": 163000,
+      "speaker": "p4",
+      "text": "음, BGM은 편집 보고 정하죠.",
+      "uncertain": false
+    }
+  ],
+  "feedback": []
+}

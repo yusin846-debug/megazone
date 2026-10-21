@@ -1,0 +1,24 @@
+{
+  "note": "원문에 없는 결정을 일부러 넣은 문서",
+  "checks": [
+    {
+      "type": "find",
+      "path": "findings",
+      "where": {
+        "type": {
+          "eq": "added"
+        },
+        "target": "fireworks"
+      },
+      "label": "[중대] 원문에 없는 ‘불꽃놀이’ 결정을 찾음"
+    },
+    {
+      "type": "in",
+      "path": "verdict",
+      "values": [
+        "needs_fix"
+      ],
+      "label": "판정: 수정 필요"
+    }
+  ]
+}

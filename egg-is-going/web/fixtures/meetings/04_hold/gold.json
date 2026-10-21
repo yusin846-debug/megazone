@@ -1,0 +1,37 @@
+{
+  "decisions": [
+    {
+      "title": "섭외|게스트",
+      "status": "on_hold",
+      "value": null,
+      "critical": true,
+      "evidence": [
+        "00:30"
+      ]
+    },
+    {
+      "title": "날짜|일정",
+      "status": "on_hold",
+      "value": null,
+      "critical": true,
+      "evidence": [
+        "00:55"
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "task": "렌탈",
+      "assignee": null,
+      "due": null
+    },
+    {
+      "task": "내레이션",
+      "assignee": "오다은",
+      "due": null
+    }
+  ],
+  "not_actions": [],
+  "uncertain": [],
+  "idea_changes": []
+}

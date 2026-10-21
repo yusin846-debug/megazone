@@ -1,0 +1,50 @@
+{
+  "note": "결정이 두 번 바뀐다. 최종값과 각 변경 이유를 정확히 잡는지.",
+  "checks": [
+    {
+      "type": "find",
+      "path": "decisions",
+      "where": {
+        "title": [
+          "엔딩"
+        ],
+        "status": {
+          "eq": "confirmed"
+        },
+        "value": "바닷가"
+      },
+      "label": "[중대] ‘엔딩’ = confirmed (바닷가)",
+      "critical": true
+    },
+    {
+      "type": "find",
+      "path": "decisions",
+      "where": {
+        "title": [
+          "BGM"
+        ],
+        "status": {
+          "eq": "on_hold"
+        }
+      },
+      "label": "‘BGM’ = on_hold",
+      "critical": false
+    },
+    {
+      "type": "find",
+      "path": "action_items",
+      "where": {
+        "description": "허가",
+        "assignee": {
+          "eq": "p5"
+        },
+        "due_at": "내일"
+      },
+      "label": "업무 ‘허가’ · 담당 최민재 · 기한 내일"
+    },
+    {
+      "type": "evidence_valid",
+      "label": "모든 근거가 원문 발언 id"
+    }
+  ]
+}

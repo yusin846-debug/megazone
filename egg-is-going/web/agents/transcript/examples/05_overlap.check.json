@@ -1,0 +1,46 @@
+{
+  "note": "말이 겹치는 구간에서 예산 숫자가 갈린다. 확정하지 말고 보류/확인 요청으로.",
+  "checks": [
+    {
+      "type": "count",
+      "path": "segments",
+      "min": 8,
+      "max": 8,
+      "label": "발언 8개를 모두 나눔"
+    },
+    {
+      "type": "find",
+      "path": "segments",
+      "where": {
+        "start_ms": {
+          "eq": 20000
+        },
+        "uncertain": {
+          "eq": true
+        }
+      },
+      "label": "00:20 구간을 불확실로 표시"
+    },
+    {
+      "type": "find",
+      "path": "segments",
+      "where": {
+        "start_ms": {
+          "eq": 24000
+        },
+        "uncertain": {
+          "eq": true
+        }
+      },
+      "label": "00:24 구간을 불확실로 표시"
+    },
+    {
+      "type": "none",
+      "path": "segments",
+      "where": {
+        "speaker": "?"
+      },
+      "label": "화자를 '?' 문자열로 두지 않음"
+    }
+  ]
+}

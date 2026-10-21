@@ -1,0 +1,387 @@
+// egg is going — 04_ERD v0.1 기준 논리 모델의 MVP 구현
+// SQLite에는 enum/Json이 없어 문자열로 저장한다. (JSON은 *Json 필드에 문자열로)
+// Postgres로 옮길 때 provider만 바꾸고 *Json 필드를 Json 타입으로 바꿔도 된다.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ───────── 조직 · 권한 ─────────
+model Organization {
+  id       String    @id @default(uuid())
+  name     String
+  users    User[]
+  programs Program[]
+}
+
+model User {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  authSubject    String
+  name           String
+  title          String // 표시용 직함 (막내 작가 등)
+  memberships    Membership[]
+
+  @@unique([organizationId, authSubject])
+}
+
+model Program {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  name           String
+  memberships    Membership[]
+  meetings       Meeting[]
+  templates      Template[]
+}
+
+/// role: writer(작성자) | reviewer(검토자) | approver(결재자) | program_admin | operator
+model Membership {
+  id        String  @id @default(uuid())
+  programId String
+  program   Program @relation(fields: [programId], references: [id])
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+  role      String
+
+  @@unique([programId, userId, role])
+}
+
+// ───────── 회의 · 원문 ─────────
+model Meeting {
+  id                String              @id @default(uuid())
+  programId         String
+  program           Program             @relation(fields: [programId], references: [id])
+  title             String
+  occurredAt        DateTime
+  createdById       String
+  templateVersionId String
+  fixtureKey        String? // 가상 회의 샘플에서 만든 경우
+  createdAt         DateTime            @default(now())
+  participants      Participant[]
+  recordings        Recording[]
+  items             DiscussionItem[]
+  actionItems       ActionItem[]
+  documents         Document[]
+  runs              Run[]
+  metrics           MetricObservation[]
+}
+
+/// team: writer | pd | external
+model Participant {
+  id          String       @id @default(uuid())
+  meetingId   String
+  meeting     Meeting      @relation(fields: [meetingId], references: [id])
+  userId      String?
+  displayName String
+  roleLabel   String
+  team        String
+  segments    Segment[]
+  actionItems ActionItem[]
+}
+
+/// kind: text(녹취록) | audio(음성 — 전사는 2단계)
+model Recording {
+  id          String              @id @default(uuid())
+  meetingId   String
+  meeting     Meeting             @relation(fields: [meetingId], references: [id])
+  kind        String
+  objectKey   String
+  hash        String
+  durationMs  Int
+  createdAt   DateTime            @default(now())
+  transcripts TranscriptVersion[]
+}
+
+model TranscriptVersion {
+  id          String              @id @default(uuid())
+  recordingId String
+  recording   Recording           @relation(fields: [recordingId], references: [id])
+  version     Int
+  parentId    String?
+  note        String?
+  createdBy   String // agent | user id
+  createdAt   DateTime            @default(now())
+  segments    Segment[]
+
+  @@unique([recordingId, version])
+}
+
+model Segment {
+  id                   String            @id @default(uuid())
+  transcriptVersionId  String
+  transcriptVersion    TranscriptVersion @relation(fields: [transcriptVersionId], references: [id])
+  segKey               String // seg_01 — 에이전트가 쓰는 안정적 키
+  speakerParticipantId String?
+  speaker              Participant?      @relation(fields: [speakerParticipantId], references: [id])
+  startMs              Int
+  endMs                Int
+  text                 String
+  uncertain            Boolean           @default(false)
+  evidence             EvidenceLink[]
+
+  @@unique([transcriptVersionId, segKey])
+}
+
+// ───────── 판단 · 근거 ─────────
+/// type: topic(안건)
+model DiscussionItem {
+  id        String         @id @default(uuid())
+  meetingId String
+  meeting   Meeting        @relation(fields: [meetingId], references: [id])
+  key       String // t_opening
+  type      String
+  title     String
+  revisions ItemRevision[]
+
+  @@unique([meetingId, key])
+}
+
+/// status: proposed | confirmed | on_hold | dropped | unknown
+model ItemRevision {
+  id                   String         @id @default(uuid())
+  itemId               String
+  item                 DiscussionItem @relation(fields: [itemId], references: [id])
+  revision             Int
+  status               String
+  contentJson          String // { value, intent, idea_changes, hold_reason, revisit, confidence }
+  supersedesRevisionId String?
+  createdBy            String // agent:decision | user id
+  locked               Boolean        @default(false) // 사람이 확정한 값 — 에이전트가 덮어쓰지 않음
+  runId                String?
+  createdAt            DateTime       @default(now())
+  evidence             EvidenceLink[]
+  actionItems          ActionItem[]
+
+  @@unique([itemId, revision])
+}
+
+model EvidenceLink {
+  id             String       @id @default(uuid())
+  itemRevisionId String
+  itemRevision   ItemRevision @relation(fields: [itemRevisionId], references: [id])
+  segmentId      String
+  segment        Segment      @relation(fields: [segmentId], references: [id])
+  relation       String       @default("supports")
+}
+
+model ActionItem {
+  id                    String        @id @default(uuid())
+  meetingId             String
+  meeting               Meeting       @relation(fields: [meetingId], references: [id])
+  sourceRevisionId      String?
+  sourceRevision        ItemRevision? @relation(fields: [sourceRevisionId], references: [id])
+  key                   String
+  description           String
+  assigneeParticipantId String?
+  assignee              Participant?  @relation(fields: [assigneeParticipantId], references: [id])
+  dueAt                 String? // 원문 표현 그대로 또는 YYYY-MM-DD. 미언급이면 null
+  evidenceJson          String        @default("[]")
+  locked                Boolean       @default(false)
+  runId                 String?
+  active                Boolean       @default(true)
+}
+
+// ───────── 템플릿 · 문서 · 결재 ─────────
+model Template {
+  id        String            @id @default(uuid())
+  programId String
+  program   Program           @relation(fields: [programId], references: [id])
+  name      String
+  versions  TemplateVersion[]
+}
+
+/// status: draft | approved — 승인 후 불변
+model TemplateVersion {
+  id           String            @id @default(uuid())
+  templateId   String
+  template     Template          @relation(fields: [templateId], references: [id])
+  version      Int
+  rulesJson    String
+  outputFormat String            @default("docx")
+  status       String            @default("approved")
+  createdAt    DateTime          @default(now())
+  documents    DocumentVersion[]
+
+  @@unique([templateId, version])
+}
+
+model Document {
+  id        String            @id @default(uuid())
+  meetingId String
+  meeting   Meeting           @relation(fields: [meetingId], references: [id])
+  kind      String            @default("meeting_minutes")
+  versions  DocumentVersion[]
+}
+
+/// status: draft | in_review | changes_requested | approved — approved는 불변
+model DocumentVersion {
+  id                String          @id @default(uuid())
+  documentId        String
+  document          Document        @relation(fields: [documentId], references: [id])
+  version           Int
+  templateVersionId String
+  templateVersion   TemplateVersion @relation(fields: [templateVersionId], references: [id])
+  contentJson       String // 문서 구성 에이전트의 sections
+  artifactPath      String? // 출력 도구가 만든 docx
+  status            String          @default("draft")
+  createdBy         String
+  runId             String?
+  createdAt         DateTime        @default(now())
+  reviewRequests    ReviewRequest[]
+
+  @@unique([documentId, version])
+}
+
+/// status: open | approved | changes_requested | superseded
+model ReviewRequest {
+  id                 String          @id @default(uuid())
+  documentVersionId  String
+  documentVersion    DocumentVersion @relation(fields: [documentVersionId], references: [id])
+  policySnapshotJson String // [{ step, role, userIds }]
+  currentStep        Int             @default(0)
+  status             String          @default("open")
+  createdAt          DateTime        @default(now())
+  actions            ReviewAction[]
+}
+
+/// action: submit | comment | forward | request_changes | approve — append-only
+model ReviewAction {
+  id              String        @id @default(uuid())
+  reviewRequestId String
+  reviewRequest   ReviewRequest @relation(fields: [reviewRequestId], references: [id])
+  actorId         String
+  action          String
+  comment         String?
+  createdAt       DateTime      @default(now())
+}
+
+// ───────── AI 실행 · 품질 추적 ─────────
+model WorkflowVersion {
+  id            String @id @default(uuid())
+  name          String
+  version       String
+  definitionRef String
+  runs          Run[]
+
+  @@unique([name, version])
+}
+
+/// status: queued | running | waiting_for_human | succeeded | failed | cancelled
+model Run {
+  id                String              @id @default(uuid())
+  meetingId         String
+  meeting           Meeting             @relation(fields: [meetingId], references: [id])
+  workflowVersionId String
+  workflowVersion   WorkflowVersion     @relation(fields: [workflowVersionId], references: [id])
+  parentRunId       String?
+  startStep         String              @default("transcript")
+  externalRunId     String?
+  inputManifestJson String
+  idempotencyKey    String              @unique
+  status            String              @default("queued")
+  cancelRequested   Boolean             @default(false)
+  error             String?
+  provider          String
+  createdAt         DateTime            @default(now())
+  finishedAt        DateTime?
+  steps             StepRun[]
+  humanTasks        HumanTask[]
+}
+
+model StepRun {
+  id         String              @id @default(uuid())
+  runId      String
+  run        Run                 @relation(fields: [runId], references: [id])
+  stepKey    String
+  attempt    Int
+  modelRef   String?
+  promptRef  String?
+  status     String              @default("running")
+  inputHash  String
+  note       String?
+  tokensIn   Int                 @default(0)
+  tokensOut  Int                 @default(0)
+  error      String?
+  startedAt  DateTime            @default(now())
+  endedAt    DateTime?
+  artifacts  Artifact[]
+  findings   ValidationFinding[]
+
+  @@unique([runId, stepKey, attempt])
+}
+
+model Artifact {
+  id            String   @id @default(uuid())
+  stepRunId     String
+  stepRun       StepRun  @relation(fields: [stepRunId], references: [id])
+  type          String // agent_output | docx
+  contentJson   String?
+  objectKey     String?
+  hash          String
+  schemaVersion String
+  createdAt     DateTime @default(now())
+}
+
+/// type: missing | conflict | added | unclear | format · severity: critical | normal
+model ValidationFinding {
+  id           String  @id @default(uuid())
+  stepRunId    String
+  stepRun      StepRun @relation(fields: [stepRunId], references: [id])
+  type         String
+  severity     String
+  target       String
+  message      String
+  evidenceJson String  @default("[]")
+  routeTo      String
+  resolution   String? // auto_rerun | human_task | resolved
+}
+
+/// status: open | answered | cancelled
+model HumanTask {
+  id           String    @id @default(uuid())
+  runId        String
+  run          Run       @relation(fields: [runId], references: [id])
+  stepRunId    String?
+  assigneeId   String?
+  status       String    @default("open")
+  kind         String // item_status | action_due | action_assignee | speaker | other
+  target       String
+  question     String
+  evidenceJson String    @default("[]")
+  optionsJson  String    @default("[]")
+  required     Boolean   @default(true)
+  responseJson String?
+  respondedBy  String?
+  inputVersion Int       @default(1)
+  createdAt    DateTime  @default(now())
+  answeredAt   DateTime?
+}
+
+model AuditEvent {
+  id             String   @id @default(uuid())
+  organizationId String
+  actorId        String
+  action         String
+  targetType     String
+  targetId       String
+  occurredAt     DateTime @default(now())
+}
+
+/// kind: human_work | ai_wait | review_wait
+model MetricObservation {
+  id              String   @id @default(uuid())
+  meetingId       String
+  meeting         Meeting  @relation(fields: [meetingId], references: [id])
+  userId          String?
+  kind            String
+  durationSeconds Int
+  source          String
+  createdAt       DateTime @default(now())
+}

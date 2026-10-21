@@ -1,0 +1,17 @@
+{
+  "note": "잡담 속에 진짜 결정이 하나 숨어 있다. 커피 사기는 업무가 아니다.",
+  "checks": [
+    {
+      "type": "none",
+      "path": "topics",
+      "where": {
+        "title": "커피"
+      },
+      "label": "잡담 ‘커피’을 안건으로 만들지 않음"
+    },
+    {
+      "type": "evidence_valid",
+      "label": "모든 근거가 원문 발언 id"
+    }
+  ]
+}

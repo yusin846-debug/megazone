@@ -1,0 +1,75 @@
+{
+  "decisions": [
+    {
+      "title": "오프닝",
+      "status": "confirmed",
+      "value": "스튜디오",
+      "critical": true,
+      "evidence": [
+        "00:48",
+        "00:51"
+      ]
+    },
+    {
+      "title": "드론",
+      "status": "dropped",
+      "value": null,
+      "critical": true,
+      "evidence": [
+        "01:05",
+        "01:12"
+      ]
+    },
+    {
+      "title": "멘트",
+      "status": "confirmed",
+      "value": "브이로그",
+      "critical": false,
+      "evidence": [
+        "01:52"
+      ]
+    },
+    {
+      "title": "게스트",
+      "status": "on_hold",
+      "value": null,
+      "critical": true,
+      "evidence": [
+        "03:20"
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "task": "대관",
+      "assignee": "최민재",
+      "due": null
+    },
+    {
+      "task": "회의록",
+      "assignee": "이혜연",
+      "due": "오늘"
+    },
+    {
+      "task": "큐시트",
+      "assignee": "이혜연",
+      "due": "금요일"
+    }
+  ],
+  "not_actions": [],
+  "uncertain": [
+    "02:05"
+  ],
+  "idea_changes": [
+    {
+      "title": "오프닝",
+      "to": "실내",
+      "reason": "비"
+    },
+    {
+      "title": "오프닝",
+      "to": "스튜디오",
+      "reason": null
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "decisions": [
+    {
+      "title": "엔딩",
+      "status": "confirmed",
+      "value": "바닷가",
+      "critical": true,
+      "evidence": [
+        "01:45",
+        "01:52"
+      ]
+    },
+    {
+      "title": "BGM",
+      "status": "on_hold",
+      "value": null,
+      "critical": false,
+      "evidence": [
+        "02:38"
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "task": "허가",
+      "assignee": "최민재",
+      "due": "내일"
+    }
+  ],
+  "not_actions": [],
+  "uncertain": [],
+  "idea_changes": [
+    {
+      "title": "엔딩",
+      "to": "테라스",
+      "reason": "일몰"
+    },
+    {
+      "title": "엔딩",
+      "to": "바닷가",
+      "reason": "소음"
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "note": "기본 예시 (제안서 06·07장). 번복·폐기·보류·담당만 있는 업무·불확실 구간이 모두 들어 있다.",
+  "checks": [
+    {
+      "type": "find",
+      "path": "decisions",
+      "where": {
+        "title": [
+          "오프닝"
+        ],
+        "status": {
+          "eq": "confirmed"
+        },
+        "value": "스튜디오"
+      },
+      "label": "[중대] ‘오프닝’ = confirmed (스튜디오)",
+      "critical": true
+    },
+    {
+      "type": "find",
+      "path": "decisions",
+      "where": {
+        "title": [
+          "드론"
+        ],
+        "status": {
+          "eq": "dropped"
+        }
+      },
+      "label": "[중대] ‘드론’ = dropped",
+      "critical": true
+    },
+    {
+      "type": "find",
+      "path": "decisions",
+      "where": {
+        "title": [
+          "멘트"
+        ],
+        "status": {
+          "eq": "confirmed"
+        },
+        "value": "브이로그"
+      },
+      "label": "‘멘트’ = confirmed (브이로그)",
+      "critical": false
+    },
+    {
+      "type": "find",
+      "path": "decisions",
+      "where": {
+        "title": [
+          "게스트"
+        ],
+        "status": {
+          "eq": "on_hold"
+        }
+      },
+      "label": "[중대] ‘게스트’ = on_hold",
+      "critical": true
+    },
+    {
+      "type": "find",
+      "path": "action_items",
+      "where": {
+        "description": "대관",
+        "assignee": {
+          "eq": "p5"
+        },
+        "due_at": null
+      },
+      "label": "업무 ‘대관’ · 담당 최민재 · 기한 null"
+    },
+    {
+      "type": "find",
+      "path": "action_items",
+      "where": {
+        "description": "회의록",
+        "assignee": {
+          "eq": "p3"
+        },
+        "due_at": "오늘"
+      },
+      "label": "업무 ‘회의록’ · 담당 이혜연 · 기한 오늘"
+    },
+    {
+      "type": "find",
+      "path": "action_items",
+      "where": {
+        "description": "큐시트",
+        "assignee": {
+          "eq": "p3"
+        },
+        "due_at": "금요일"
+      },
+      "label": "업무 ‘큐시트’ · 담당 이혜연 · 기한 금요일"
+    },
+    {
+      "type": "evidence_valid",
+      "label": "모든 근거가 원문 발언 id"
+    }
+  ]
+}

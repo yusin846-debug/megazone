@@ -1,0 +1,252 @@
+{
+  "meeting": {
+    "title": "3회차 오프닝 구성 회의",
+    "occurred_at": "2026-10-21 10:00",
+    "participants": [
+      {
+        "key": "p1",
+        "name": "한지수",
+        "role_label": "메인 작가",
+        "team": "writer"
+      },
+      {
+        "key": "p2",
+        "name": "오다은",
+        "role_label": "서브 작가",
+        "team": "writer"
+      },
+      {
+        "key": "p3",
+        "name": "이혜연",
+        "role_label": "막내 작가",
+        "team": "writer"
+      },
+      {
+        "key": "p4",
+        "name": "박준호",
+        "role_label": "메인 PD",
+        "team": "pd"
+      },
+      {
+        "key": "p5",
+        "name": "최민재",
+        "role_label": "서브 PD",
+        "team": "pd"
+      },
+      {
+        "key": "p6",
+        "name": "윤하람",
+        "role_label": "막내 PD",
+        "team": "pd"
+      }
+    ],
+    "program": "달걀 한 판 여행기"
+  },
+  "template": {
+    "name": "제작회의록",
+    "version": 3,
+    "fields": [
+      {
+        "id": "overview",
+        "label": "회의 개요",
+        "source": "meta",
+        "required": true,
+        "format": "paragraph",
+        "rule": "회의 이름·일시·참석자",
+        "columns": null
+      },
+      {
+        "id": "decisions",
+        "label": "결정 사항",
+        "source": "confirmed",
+        "required": true,
+        "format": "bullets",
+        "rule": "최종안 + 변경 이력 한 줄",
+        "columns": null
+      },
+      {
+        "id": "changes",
+        "label": "아이디어 변화",
+        "source": "topic_changes",
+        "required": false,
+        "format": "bullets",
+        "rule": "무엇이 왜 바뀌었는지. 이유가 원문에 없으면 쓰지 않음",
+        "columns": null
+      },
+      {
+        "id": "actions",
+        "label": "후속 업무",
+        "source": "actions",
+        "required": true,
+        "format": "table",
+        "rule": "담당·기한이 없으면 미정",
+        "columns": [
+          "업무",
+          "담당",
+          "기한",
+          "근거"
+        ]
+      },
+      {
+        "id": "pending",
+        "label": "보류",
+        "source": "on_hold",
+        "required": false,
+        "format": "bullets",
+        "rule": "사유·재논의 시점",
+        "columns": null
+      },
+      {
+        "id": "dropped",
+        "label": "제외된 안",
+        "source": "dropped",
+        "required": false,
+        "format": "bullets",
+        "rule": "이유가 있으면 함께",
+        "columns": null
+      }
+    ]
+  },
+  "topics": [
+    {
+      "item_key": "t_opening_location",
+      "title": "오프닝 장소",
+      "intent": null,
+      "idea_changes": [
+        {
+          "from": null,
+          "to": "야외(한강 공원)",
+          "reason": null,
+          "evidence": [
+            {
+              "segment_id": "seg_02"
+            }
+          ]
+        },
+        {
+          "from": "야외(한강 공원)",
+          "to": "실내",
+          "reason": "촬영일 오후 비 예보",
+          "evidence": [
+            {
+              "segment_id": "seg_03"
+            },
+            {
+              "segment_id": "seg_04"
+            }
+          ]
+        },
+        {
+          "from": "실내",
+          "to": "스튜디오",
+          "reason": null,
+          "evidence": [
+            {
+              "segment_id": "seg_05"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "decisions": [
+    {
+      "item_key": "t_opening_location",
+      "title": "오프닝 장소",
+      "status": "confirmed",
+      "value": "스튜디오",
+      "hold_reason": null,
+      "revisit": null,
+      "evidence": [
+        {
+          "segment_id": "seg_04"
+        },
+        {
+          "segment_id": "seg_05"
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "item_key": "t_drone",
+      "title": "드론 촬영",
+      "status": "dropped",
+      "value": null,
+      "hold_reason": null,
+      "revisit": null,
+      "evidence": [
+        {
+          "segment_id": "seg_06"
+        },
+        {
+          "segment_id": "seg_07"
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "item_key": "t_opening_ment",
+      "title": "오프닝 멘트 톤",
+      "status": "confirmed",
+      "value": "밝은 여행 브이로그 톤",
+      "hold_reason": null,
+      "revisit": null,
+      "evidence": [
+        {
+          "segment_id": "seg_10"
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "item_key": "t_guest",
+      "title": "게스트 섭외",
+      "status": "on_hold",
+      "value": null,
+      "hold_reason": "출연료 확인 필요",
+      "revisit": "다음 주",
+      "evidence": [
+        {
+          "segment_id": "seg_13"
+        }
+      ],
+      "confidence": 0.9
+    }
+  ],
+  "action_items": [
+    {
+      "action_key": "a_studio",
+      "description": "스튜디오 대관 가능 여부 확인",
+      "assignee": "p5",
+      "due_at": null,
+      "evidence": [
+        {
+          "segment_id": "seg_08"
+        }
+      ]
+    },
+    {
+      "action_key": "a_minutes",
+      "description": "회의록 공유",
+      "assignee": "p3",
+      "due_at": "오늘 오후",
+      "evidence": [
+        {
+          "segment_id": "seg_14"
+        }
+      ]
+    },
+    {
+      "action_key": "a_cuesheet",
+      "description": "큐시트 초안 작성",
+      "assignee": "p3",
+      "due_at": "금요일",
+      "evidence": [
+        {
+          "segment_id": "seg_15"
+        }
+      ]
+    }
+  ],
+  "feedback": []
+}

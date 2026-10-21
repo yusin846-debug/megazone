@@ -1,0 +1,45 @@
+{
+  "decisions": [
+    {
+      "title": "첫 미션|장보기",
+      "status": "confirmed",
+      "value": "장보기",
+      "critical": true,
+      "evidence": [
+        "00:06",
+        "00:14"
+      ]
+    },
+    {
+      "title": "예산",
+      "status": "on_hold",
+      "value": null,
+      "critical": true,
+      "evidence": [
+        "00:35"
+      ]
+    },
+    {
+      "title": "두 번째 미션|맛집",
+      "status": "dropped",
+      "value": null,
+      "critical": false,
+      "evidence": [
+        "01:02"
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "task": "답사",
+      "assignee": "윤하람",
+      "due": "목요일"
+    }
+  ],
+  "not_actions": [],
+  "uncertain": [
+    "00:20",
+    "00:24"
+  ],
+  "idea_changes": []
+}

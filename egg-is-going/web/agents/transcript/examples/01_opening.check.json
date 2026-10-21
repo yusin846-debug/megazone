@@ -1,0 +1,33 @@
+{
+  "note": "기본 예시 (제안서 06·07장). 번복·폐기·보류·담당만 있는 업무·불확실 구간이 모두 들어 있다.",
+  "checks": [
+    {
+      "type": "count",
+      "path": "segments",
+      "min": 16,
+      "max": 16,
+      "label": "발언 16개를 모두 나눔"
+    },
+    {
+      "type": "find",
+      "path": "segments",
+      "where": {
+        "start_ms": {
+          "eq": 125000
+        },
+        "uncertain": {
+          "eq": true
+        }
+      },
+      "label": "02:05 구간을 불확실로 표시"
+    },
+    {
+      "type": "none",
+      "path": "segments",
+      "where": {
+        "speaker": "?"
+      },
+      "label": "화자를 '?' 문자열로 두지 않음"
+    }
+  ]
+}

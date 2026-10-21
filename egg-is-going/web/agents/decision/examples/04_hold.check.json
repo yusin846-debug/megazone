@@ -1,0 +1,61 @@
+{
+  "note": "보류가 많고 담당이 정해지지 않은 업무가 있다. 담당·기한을 지어내지 않는지.",
+  "checks": [
+    {
+      "type": "find",
+      "path": "decisions",
+      "where": {
+        "title": [
+          "섭외",
+          "게스트"
+        ],
+        "status": {
+          "eq": "on_hold"
+        }
+      },
+      "label": "[중대] ‘섭외|게스트’ = on_hold",
+      "critical": true
+    },
+    {
+      "type": "find",
+      "path": "decisions",
+      "where": {
+        "title": [
+          "날짜",
+          "일정"
+        ],
+        "status": {
+          "eq": "on_hold"
+        }
+      },
+      "label": "[중대] ‘날짜|일정’ = on_hold",
+      "critical": true
+    },
+    {
+      "type": "find",
+      "path": "action_items",
+      "where": {
+        "description": "렌탈",
+        "assignee": null,
+        "due_at": null
+      },
+      "label": "업무 ‘렌탈’ · 담당 null · 기한 null"
+    },
+    {
+      "type": "find",
+      "path": "action_items",
+      "where": {
+        "description": "내레이션",
+        "assignee": {
+          "eq": "p2"
+        },
+        "due_at": null
+      },
+      "label": "업무 ‘내레이션’ · 담당 오다은 · 기한 null"
+    },
+    {
+      "type": "evidence_valid",
+      "label": "모든 근거가 원문 발언 id"
+    }
+  ]
+}
