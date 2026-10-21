@@ -25,7 +25,7 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
     include: { run: { include: { meeting: { include: { participants: true } } } } },
   });
   const selId = q(sp, "id") ?? tasks[0]?.id;
-  const task = selId ? await db.humanTask.findFirst({ where: { id: selId, run: { meeting: { program: { memberships: { some: { userId: user.id, role: {not: "operator"} } } } } } }, include: { run: { include: { meeting: { include: { participants: true } } } } } }) : null;
+  const task = selId ? await db.humanTask.findFirst({ where: { id: selId, run: { meeting: { programId: program.id, program: { memberships: { some: { userId: user.id, role: {not: "operator"} } } } } } }, include: { run: { include: { meeting: { include: { participants: true } } } } } }) : null;
   const readable = task ? await canReadContent(user.id, task.run.meeting.programId) : false;
   const tv = task && readable ? await latestTranscript(task.run.meetingId) : null;
   const evidence = task ? parse<{ segment_id: string }[]>(task.evidenceJson, []) : [];
@@ -45,13 +45,14 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
           <p>판단이 필요한 항목을 확인해 주세요. 필수 항목에 답하면 회의록 정리가 이어집니다.</p>
         </div>
       </div>
-      <div className="grid2" style={{ gridTemplateColumns: "minmax(0,.9fr) minmax(0,1.4fr)" }}>
-        <div className="card" style={{ alignSelf: "start" }}>
-          <div className="tabs">
+      <div className="task-workspace">
+        <section className="task-inbox" aria-label="확인 요청 목록">
+          <header className="task-inbox__header"><h2><Icon id="i-inbox"/>받은 요청 <span>{tasks.length}</span></h2><div className="tabs">
             <Link href={`/tasks${meetingId ? `?meeting=${meetingId}` : ""}`} className={show === "open" ? "on" : ""}>대기</Link>
             <Link href={`/tasks?show=answered${meetingId ? `&meeting=${meetingId}` : ""}`} className={show === "answered" ? "on" : ""}>답한 것</Link>
             {meetingId && <Link href="/tasks">모든 회의</Link>}
-          </div>
+          </div></header>
+          <div className="task-inbox__scroll">
           {tasks.length === 0 && (
             <div className="empty">
               <svg><use href="#egg" /></svg>
@@ -60,7 +61,7 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
             </div>
           )}
           {tasks.map((t) => (
-            <Link key={t.id} href={link({ id: t.id })} className={`tq${t.id === task?.id ? " on" : ""}`}>
+            <Link key={t.id} href={link({ id: t.id })} aria-current={t.id === task?.id ? "true" : undefined} className={`tq${t.id === task?.id ? " on" : ""}`}>
               <span style={{ display: "flex", gap: 6, alignItems: "center" }}>
                 <span className={`eg-chip ${t.required ? "eg-chip--human" : "eg-chip--plain"}`}>{t.required ? "필수" : "선택"}</span>
                 <span className="eg-chip eg-chip--plain">{KIND_LABEL[t.kind] ?? t.kind}</span>
@@ -70,15 +71,16 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
               <small>{t.run.meeting.title}</small>
             </Link>
           ))}
-        </div>
+          </div>
+        </section>
 
         {task ? (
-          <div className="card" style={{ alignSelf: "start" }}>
-            <div className="card-h">
+          <section className="task-detail" aria-label="요청 상세">
+            <header className="card-h task-detail__header">
               <h2>{KIND_LABEL[task.kind] ?? task.kind} 확인</h2>
               <span className="r"><Link href={`/meetings/${task.run.meetingId}/run`} className="eg-btn eg-btn--ghost eg-btn--sm">실행 상태<Icon id="i-arrow" /></Link></span>
-            </div>
-            <div className="card-b">
+            </header>
+            <div className="card-b task-detail__scroll">
               <p style={{ fontSize: 17, fontWeight: 700, letterSpacing: "-.02em", margin: "0 0 4px" }}>{task.question}</p>
               <p className="mono muted" style={{ margin: "0 0 14px" }}>{task.run.meeting.title}</p>
               <div className="eg-label">근거 발언</div>
@@ -139,9 +141,9 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
                 </div>
               )}
             </div>
-          </div>
+          </section>
         ) : (
-          <div />
+          <section className="task-detail task-detail--empty" aria-label="요청 상세"><Icon id="i-inbox"/><h2>확인할 요청을 선택해 주세요</h2><p>왼쪽 목록에서 근거와 응답 내용을 확인할 수 있어요.</p></section>
         )}
       </div>
     </Shell>

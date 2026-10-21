@@ -2,6 +2,7 @@ import { cache } from "react";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { db } from "./db";
+import { programCookieKey, resolveProgram } from "./programSelection";
 
 export const programsFor = cache((userId: string) => db.program.findMany({
   where: { memberships: { some: { userId } } }, orderBy: { name: "asc" },
@@ -9,7 +10,15 @@ export const programsFor = cache((userId: string) => db.program.findMany({
 }));
 export const activeProgram = cache(async (userId: string) => {
   const [programs, jar] = await Promise.all([programsFor(userId), cookies()]);
-  const p = programs.find(p => p.id === jar.get("eg_program")?.value) ?? programs.find(p => p.name === "달걀 한 판 여행기") ?? programs[0];
+  // Migrate the previous shared cookie only for the currently signed-in user.
+  const remembered = jar.get(programCookieKey(userId))?.value
+    ?? (jar.get("eg_user")?.value === userId ? jar.get("eg_program")?.value : undefined);
+  const saved = programs.find(p => p.id === remembered);
+  const recent = saved ? null : await db.meeting.findFirst({
+    where: { createdById: userId, programId: { in: programs.map(p => p.id) } },
+    orderBy: [{ createdAt: "desc" }, { id: "asc" }], select: { programId: true },
+  });
+  const p = resolveProgram(programs, remembered, recent?.programId);
   if (!p) notFound();
   return p;
 });

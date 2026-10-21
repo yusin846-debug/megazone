@@ -1,6 +1,7 @@
 "use server";
 // 화면에서 부르는 서버 동작. 모든 권한 검사는 여기(백엔드)에서 다시 한다. (FR-08)
 import { cookies } from "next/headers";
+import { programCookieKey } from "@/lib/programSelection";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { validateTemplateFields } from "@/lib/templateValidation";
@@ -32,7 +33,14 @@ const kst = (v: string) => (v ? new Date(/[zZ]|[+-]\d{2}:\d{2}$/.test(v) ? v : `
 
 export async function login(formData: FormData) {
   const id = String(formData.get("userId"));
-  (await cookies()).set("eg_user", id, { httpOnly: true, sameSite: "lax", path: "/" });
+  const jar = await cookies();
+  const previousUser = jar.get("eg_user")?.value;
+  const previousProgram = jar.get("eg_program")?.value;
+  if (previousUser && previousProgram && !jar.get(programCookieKey(previousUser))) {
+    jar.set(programCookieKey(previousUser), previousProgram, { httpOnly: true, sameSite: "lax", path: "/", maxAge: 31536000 });
+  }
+  jar.delete("eg_program");
+  jar.set("eg_user", id, { httpOnly: true, sameSite: "lax", path: "/" });
   redirect("/");
 }
 
@@ -234,6 +242,8 @@ export async function selectProgram(formData: FormData) {
   const id = String(formData.get("programId") ?? "");
   const member = await db.membership.findFirst({ where: { userId: user.id, programId: id } });
   if (!member) throw new Error("참여 중인 프로그램을 골라 주세요.");
-  (await cookies()).set("eg_program", id, { httpOnly: true, sameSite: "lax", path: "/" });
+  const jar = await cookies();
+  jar.set(programCookieKey(user.id), id, { httpOnly: true, sameSite: "lax", path: "/", maxAge: 31536000 });
+  jar.delete("eg_program");
   redirect("/");
 }
