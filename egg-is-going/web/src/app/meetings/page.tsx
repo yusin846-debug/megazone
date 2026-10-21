@@ -15,6 +15,7 @@ export default async function MeetingsPage({ searchParams }: { searchParams: SP 
   const program = await activeProgram(user.id);
   const term = (q(sp, "q") ?? "").trim().slice(0, 100);
   const status = q(sp, "status") ?? "";
+  const writer = user.memberships.some(m => m.programId === program.id && m.role === "writer");
   const [meetings, openTasks, inReview, approved] = await Promise.all([db.meeting.findMany({
     where: { programId: program.id, ...(term ? { OR: [
       { title: { contains: term, mode: "insensitive" as const } },
@@ -37,7 +38,7 @@ export default async function MeetingsPage({ searchParams }: { searchParams: SP 
   const filtered = meetings.filter(m => !status || m.runs[0]?.status === status);
 
   return (
-    <Shell user={user} nav="home" crumbs={["회의"]} right={<Link href="/meetings/new" className="eg-btn eg-btn--primary eg-btn--sm"><Icon id="i-plus" />회의 등록</Link>}>
+    <Shell user={user} nav="home" crumbs={["회의"]} right={writer && <Link href="/meetings/new" className="eg-btn eg-btn--primary eg-btn--sm"><Icon id="i-plus" />회의 등록</Link>}>
       <AutoRefresh active={running > 0} />
       <Flash error={q(sp, "error")} ok={q(sp, "ok")} />
       <div className="page-h">
@@ -62,8 +63,8 @@ export default async function MeetingsPage({ searchParams }: { searchParams: SP 
           <div className="empty">
             <svg><use href="#egg" /></svg>
             <h3>{term || status ? "검색 결과가 없어요" : "아직 등록한 회의가 없어요"}</h3>
-            <p>{term || status ? "다른 검색어를 입력하거나 필터를 초기화해 주세요." : "가상 회의 샘플로 바로 시작해 볼 수 있어요."}</p>
-            <Link href="/meetings/new" className="eg-btn eg-btn--primary"><Icon id="i-plus" />회의 등록</Link>
+            <p>{term || status ? "다른 검색어를 입력하거나 필터를 초기화해 주세요." : "샘플 회의로 시작해 볼 수 있어요."}</p>
+            {writer && <Link href="/meetings/new" className="eg-btn eg-btn--secondary"><Icon id="i-plus" />회의 등록</Link>}
           </div>
         ) : (
           <div style={{ overflowX: "auto" }}>

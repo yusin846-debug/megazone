@@ -33,10 +33,10 @@ export default function IntegrationHub({ items, storageKey }: { items: Integrati
   return <section className="integration-hub" aria-label="연결된 업무 도구 데모">
     <div className="section-title"><div><span className="eyebrow">CONNECTED WORKSPACE</span><h2>일정과 소식을 한곳에서</h2></div><span className="eg-chip eg-chip--plain">샘플 데이터</span></div>
     <p className="eg-help">샘플 일정과 메시지입니다. 실제 계정은 연결되지 않았어요.</p>
-    <div className="integration-sources">{SOURCES.map(s => <div className="integration-source" key={s.id}>
+    <details className="integration-settings"><summary>Google Calendar · Gmail · Slack <span>표시 설정</span></summary><div className="integration-sources">{SOURCES.map(s => <div className="integration-source" key={s.id}>
       <span className="source-icon" style={{ color:s.color }}>{s.initial}</span><div><b>{s.name}</b><small>{s.scope}</small><span className="source-state">{connected.includes(s.id) ? "● 샘플 표시 중" : "○ 표시 꺼짐"}</span></div>
       <button className="eg-btn eg-btn--ghost eg-btn--sm" onClick={() => toggle(s.id)} aria-pressed={connected.includes(s.id)} aria-label={`${s.name} 샘플 ${connected.includes(s.id) ? "표시 끄기" : "표시 켜기"}`}>{connected.includes(s.id) ? "표시 끄기" : "샘플 표시"}</button>
-    </div>)}</div>
+    </div>)}</div></details>
     <div className="card">
       <div className="feed-toolbar"><div className="feed-filters" role="group" aria-label="소식 필터">{(["all", ...INITIAL] as const).map(s => <button key={s} className={filter === s ? "on" : ""} aria-pressed={filter === s} onClick={() => setFilter(s)}>{s === "all" ? "전체" : s === "calendar" ? "예정된 회의" : s === "gmail" ? "메일" : "Slack"}</button>)}</div><button className="eg-btn eg-btn--ghost eg-btn--sm" onClick={sync} disabled={syncing || connected.length === 0}>{syncing ? <EggLoader /> : null}샘플 새로고침</button></div>
       <p className="sync-notice" role="status">{notice}</p>

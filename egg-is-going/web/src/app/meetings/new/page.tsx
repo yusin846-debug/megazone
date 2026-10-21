@@ -28,9 +28,11 @@ export default async function NewMeetingPage({ searchParams }: { searchParams: S
   const staff = [...new Map(program.memberships.filter((m) => m.role !== "operator").map((m) => [m.userId, m.user])).values()];
   const keys = readdirSync(fixtureDir(), { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name).sort();
   const sampleKey = q(sp, "sample");
+  const writer = user.memberships.some(m => m.programId === program.id && m.role === "writer");
   const sample = sampleKey && keys.includes(sampleKey) ? readFixture(sampleKey) : null;
   const picked = new Set(sample ? sample.meta.participants : []);
 
+  if (!writer) return <Shell user={user} nav="home" crumbs={[["회의", "/meetings"], "회의 등록"]}><div className="callout y"><Icon id="i-lock"/><div>회의 등록은 작성자만 할 수 있어요. <Link href="/meetings">회의 목록 보기</Link></div></div></Shell>;
   return (
     <Shell user={user} nav="home" crumbs={[["회의", "/meetings"], "회의 등록"]}>
       <Flash error={q(sp, "error")} ok={q(sp, "ok")} />
@@ -41,7 +43,7 @@ export default async function NewMeetingPage({ searchParams }: { searchParams: S
         </div>
       </div>
       <div className="grid2">
-        <form action={newMeeting} className="card">
+        <form key={`${program.id}:${sampleKey ?? ""}:${q(sp,"title") ?? ""}:${q(sp,"at") ?? ""}`} action={newMeeting} className="card">
           <div className="card-h"><h2>회의 정보</h2></div>
           <div className="card-b">
             <input type="hidden" name="programId" value={program.id} />
@@ -108,12 +110,7 @@ export default async function NewMeetingPage({ searchParams }: { searchParams: S
             <Icon id="i-alert" />
             <div>체험 공간입니다. 샘플 녹취록을 사용해 주세요.</div>
           </div>
-          {sample && (
-            <div className="callout b">
-              <Icon id="i-help" />
-              <div>{sample.meta.note}</div>
-            </div>
-          )}
+
         </div>
       </div>
     </Shell>
