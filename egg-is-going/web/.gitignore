@@ -7,3 +7,7 @@ data/artifacts/
 data/uploads/
 next-env.d.ts
 *.tsbuildinfo
+
+.env.*
+!.env.example
+.vercel/

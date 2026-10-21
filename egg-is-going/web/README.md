@@ -8,7 +8,10 @@
 ```bash
 cd egg-is-going/web
 npm install
-npm run setup        # .env 생성 → 디자인 토큰 동기화 → DB 생성 → 가상 제작진 7명·템플릿 시드
+cp .env.example .env # 전용 PostgreSQL 연결 주소 설정 (실제 값은 커밋하지 않기)
+npm run sync:tokens
+npm run db:migrate   # 새 전용 DB에만 실행
+npm run db:seed      # 가상 제작진 7명·템플릿 시드
 npm run dev          # http://localhost:3000
 ```
 
@@ -57,7 +60,7 @@ npm run run:fixture 01_opening -- --answer             # 화면 없이 처음부
 ```
 agents/                  에이전트별 prompt·schema·baseline·examples (+ _baseline 공용 신호 규칙)
 fixtures/meetings/       가상 회의 5개 (녹취록·참석자·정답지)
-prisma/                  ERD를 옮긴 스키마(SQLite) + 시드
+prisma/                  ERD를 옮긴 스키마(PostgreSQL) + 시드
 src/lib/agents/          runAgent (호출·계약 검사·1회 재시도), provider(mock/anthropic)
 src/lib/orchestrator/    파이프라인(전사→맥락→결정→구성→출력→검증 → 통과/자동 수정/사람 확인), 실행 어댑터
 src/lib/render/docx.ts   서식 검사 + docx 출력
@@ -93,3 +96,17 @@ src/app/                 화면 S1~S9 + 서버 동작(actions.ts) + docx 내려�
 - 결재 순서(순차/공동)는 현업 확인 전 가정입니다.
 
 DB를 처음 상태로 되돌리려면 `npm run db:reset` (개발 DB 전용).
+
+
+## 6. Vercel 배포 준비
+
+- Vercel 프로젝트: `egg-is-going`, Root Directory: `egg-is-going/web`.
+- 빌드 명령: `npm run vercel-build`. Node.js 24.
+- 전용 PostgreSQL을 연결하고 `DATABASE_URL`을 배포 환경에 설정해야 합니다. 기존 다른 제품의 DB를 재사용하거나 초기화하지 않습니다.
+- DB 연결 후 마이그레이션과 시드를 한 번 실행합니다. 빌드마다 DB를 초기화하지 않습니다.
+- 녹취록은 Recording.contentText, DOCX는 DocumentVersion.artifactBytes에 저장하여 인스턴스 교체·재배포 후에도 보존합니다. 텍스트 녹취록 중심 MVP이며 큰 음성 파일은 별도 오브젝트 저장소로 확장합니다.
+- 실행을 요청 내에서 await하여 응답 후 작업이 중단되는 문제를 방지합니다. 현재 최대 300초이며, 긴 LLM 실행·장애 후 자동 재개는 별도 durable worker/AIR Studio 어댑터가 필요합니다.
+- API 키를 연결하지 않으면 `mock` 기준선 모드입니다. 실제 LLM 품질 검증을 의미하지 않습니다.
+- 개발용 역할 선택 로그인은 유지했습니다. 현재 Vercel Deployment Protection을 유지하고, 사내 실사용 전에 SSO를 구현해야 합니다.
+
+검증 상태: mock 테스트는 기존 기준선과 동일하게 17 통과·2 실패(번복 이유, 겹침 구간 폐기 판단). DB 연결 전에는 PostgreSQL 실행·재배포 후 보존 검증을 완료할 수 없습니다.

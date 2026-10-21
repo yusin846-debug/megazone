@@ -40,7 +40,7 @@ export function formatCheck(doc: ComposeOutput, tpl: TemplateRules, meeting: Mee
 }
 
 export async function renderDocx(opts: {
-  outPath: string;
+  outPath?: string;
   program: string;
   templateLabel: string;
   docVersion: number;
@@ -110,7 +110,9 @@ export async function renderDocx(opts: {
     sections: [{ children }],
   });
   const buf = await Packer.toBuffer(docx);
-  mkdirSync(path.dirname(opts.outPath), { recursive: true });
-  writeFileSync(opts.outPath, buf);
-  return buf.length;
+  if (opts.outPath) {
+    mkdirSync(path.dirname(opts.outPath), { recursive: true });
+    writeFileSync(opts.outPath, buf);
+  }
+  return buf;
 }

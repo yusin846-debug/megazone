@@ -9,13 +9,16 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "db:push": "prisma db push",
-    "db:seed": "tsx prisma/seed.ts",
+    "db:seed": "node --import tsx prisma/seed.ts",
     "db:reset": "prisma db push --force-reset && tsx prisma/seed.ts",
     "setup": "cp -n .env.example .env; node scripts/sync-tokens.mjs && prisma db push && tsx prisma/seed.ts",
     "sync:tokens": "node scripts/sync-tokens.mjs",
     "agent:examples": "tsx scripts/make-examples.ts",
     "agent:test": "tsx scripts/agent-test.ts",
-    "run:fixture": "tsx scripts/run-fixture.ts"
+    "run:fixture": "tsx scripts/run-fixture.ts",
+    "postinstall": "prisma generate",
+    "vercel-build": "prisma generate && next build",
+    "db:migrate": "prisma migrate deploy"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.131.0",

@@ -3,6 +3,8 @@ import "../styles/tokens.css";
 import "../styles/app.css";
 import Sprite from "@/components/Sprite";
 
+export const maxDuration = 300;
+
 export const metadata: Metadata = {
   title: "egg is going 제작회의 워크스페이스",
   description: "가상 제작사 대상 교육 프로젝트",

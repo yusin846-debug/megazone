@@ -1,6 +1,6 @@
 // 회의 등록 (T01·T02, FR-01): 권한 검증 → 회의·참석자·녹취록·템플릿 버전 기록
 import { createHash } from "node:crypto";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { db } from "./db";
 import { requireRole } from "./auth";
@@ -53,11 +53,9 @@ export async function createMeeting(actorId: string, m: NewMeeting) {
       },
     },
   });
-  mkdirSync(uploadDir(), { recursive: true });
-  const objectKey = path.join(uploadDir(), `${meeting.id}.txt`);
-  writeFileSync(objectKey, m.transcript);
+  const objectKey = `db:recording:${meeting.id}`;
   await db.recording.create({
-    data: { meetingId: meeting.id, kind: "text", objectKey, hash: createHash("sha256").update(m.transcript).digest("hex"), durationMs },
+    data: { meetingId: meeting.id, kind: "text", objectKey, contentText: m.transcript, hash: createHash("sha256").update(m.transcript).digest("hex"), durationMs },
   });
   return meeting;
 }

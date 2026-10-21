@@ -1,13 +1,12 @@
 // egg is going — 04_ERD v0.1 기준 논리 모델의 MVP 구현
-// SQLite에는 enum/Json이 없어 문자열로 저장한다. (JSON은 *Json 필드에 문자열로)
-// Postgres로 옮길 때 provider만 바꾸고 *Json 필드를 Json 타입으로 바꿔도 된다.
+// PostgreSQL 배포 스키마. 에이전트 계약 호환을 위해 *Json 필드는 문자열로 유지한다.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -93,6 +92,7 @@ model Recording {
   meeting     Meeting             @relation(fields: [meetingId], references: [id])
   kind        String
   objectKey   String
+  contentText String? // 텍스트 녹취록 영구 저장
   hash        String
   durationMs  Int
   createdAt   DateTime            @default(now())
@@ -229,6 +229,7 @@ model DocumentVersion {
   templateVersionId String
   templateVersion   TemplateVersion @relation(fields: [templateVersionId], references: [id])
   contentJson       String // 문서 구성 에이전트의 sections
+  artifactBytes     Bytes? // 서버리스 인스턴스와 무관하게 보존
   artifactPath      String? // 출력 도구가 만든 docx
   status            String          @default("draft")
   createdBy         String

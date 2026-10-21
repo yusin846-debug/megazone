@@ -100,7 +100,7 @@ async function runStep(ctx: Ctx, step: StepKey) {
         const rec = await db.recording.findFirstOrThrow({ where: { meetingId: ctx.meetingId }, orderBy: { createdAt: "desc" } });
         if (rec.kind !== "text") throw new Error("음성 전사는 2단계 기능입니다. 녹취록(텍스트)을 올려 주세요.");
         const { readFileSync } = await import("node:fs");
-        const raw = readFileSync(rec.objectKey, "utf8");
+        const raw = rec.contentText ?? readFileSync(rec.objectKey, "utf8");
         const meeting = await meetingIn(ctx.meetingId);
         const input = { meeting, raw_text: raw };
         const r = await runAgent("transcript", input);
@@ -159,10 +159,10 @@ async function runStep(ctx: Ctx, step: StepKey) {
         const doc = JSON.parse(dv.contentJson) as ComposeOutput;
         const issues = formatCheck(doc, tpl, meeting);
         ctx.formatIssues = issues;
-        const outPath = path.join(artifactDir(), `${dv.id}.docx`);
-        const bytes = await renderDocx({ outPath, program: meeting.program, templateLabel: `${tpl.name} v${tpl.version}`, docVersion: dv.version, meeting, tpl, doc, segments: await segmentsIn(ctx.meetingId) });
-        await db.documentVersion.update({ where: { id: dv.id }, data: { artifactPath: outPath } });
-        await db.artifact.create({ data: { stepRunId: sr.id, type: "docx", objectKey: outPath, hash: String(bytes), schemaVersion: "docx" } });
+        const outPath = `db:document:${dv.id}`;
+        const bytes = await renderDocx({ program: meeting.program, templateLabel: `${tpl.name} v${tpl.version}`, docVersion: dv.version, meeting, tpl, doc, segments: await segmentsIn(ctx.meetingId) });
+        await db.documentVersion.update({ where: { id: dv.id }, data: { artifactPath: outPath, artifactBytes: new Uint8Array(bytes) } });
+        await db.artifact.create({ data: { stepRunId: sr.id, type: "docx", objectKey: outPath, hash: createHash("sha256").update(bytes).digest("hex"), schemaVersion: "docx" } });
         await done({ inputHash: hash(doc), modelRef: "rules", note: `docx · 서식 검사 ${issues.length ? `문제 ${issues.length}` : "통과"}` }, { format_issues: issues });
         return issues;
       }

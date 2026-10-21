@@ -41,8 +41,8 @@ class DevExecutionAdapter implements ExecutionAdapter {
     const run = await db.run.create({
       data: { meetingId, workflowVersionId: wf.id, parentRunId: opts.parentRunId ?? null, startStep, inputManifestJson: JSON.stringify({ ...manifest, reason: opts.reason }), idempotencyKey: key, provider: manifest.provider },
     });
-    // 개발용: 같은 프로세스에서 백그라운드 실행. (서버리스 배포에서는 큐/워커로 바꿔야 한다)
-    void executeRun(run.id);
+    // 요청이 끝나기 전에 실행을 완료한다. 긴 모델 실행은 추후 durable worker로 이전.
+    await executeRun(run.id);
     return { runId: run.id, duplicate: false };
   }
   async getRun(runId: string) {
