@@ -38,7 +38,7 @@ export default async function Shell({
           <span className="eg-wordmark" style={{ fontSize: 19 }}>egg is going<i /></span>
         </Link>
         <ProgramSwitcher programs={programs} activeId={program.id} homeLink={item("dashboard", "/", "i-home", "홈")} />
-        {item("home", "/meetings", "i-home", "회의")}
+        {item("home", "/meetings", "i-users", "회의")}
         {item("tasks", "/tasks", "i-inbox", "확인 요청", openTasks)}
         {item("review", "/review", "i-send", "검토·결재", myReviews)}
         <div className="grp">관리</div>
