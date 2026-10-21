@@ -1,31 +1,64 @@
 import Link from "@/components/NavigationLink";
 import Shell from "@/components/Shell";
-import RoleAvatar from "@/components/RoleAvatar";
+import ProgramThumbnail from "@/components/ProgramThumbnail";
 import IntegrationHub from "@/components/IntegrationHub";
+import { Icon } from "@/components/ui";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { activeProgram } from "@/lib/programs";
+import { PROGRAM_CATALOG } from "@/lib/programCatalog";
 import { demoItems } from "@/lib/integrations/demo";
 import { fmtKst } from "@/lib/state";
+
 export default async function Home() {
   const user = await requireUser();
   const program = await activeProgram(user.id);
-  const [tasks, reviews, recent] = await Promise.all([
-    db.humanTask.count({ where:{status:"open", run:{meeting:{programId:program.id}}} }),
-    db.reviewRequest.findMany({ where:{status:"open",documentVersion:{document:{meeting:{programId:program.id}}}},select:{policySnapshotJson:true,currentStep:true} }),
-    db.meeting.findMany({where:{programId:program.id},orderBy:{createdAt:"desc"},take:3,select:{id:true,title:true,occurredAt:true}}),
+  const now = new Date();
+  const [tasks, reviews, recent, upcoming] = await Promise.all([
+    db.humanTask.count({ where: { status: "open", run: { meeting: { programId: program.id } } } }),
+    db.reviewRequest.findMany({ where: { status: "open", documentVersion: { document: { meeting: { programId: program.id } } } }, select: { policySnapshotJson: true, currentStep: true } }),
+    db.meeting.findMany({ where: { programId: program.id }, orderBy: { createdAt: "desc" }, take: 4, select: { id: true, title: true, occurredAt: true } }),
+    db.meeting.findFirst({ where: { programId: program.id, occurredAt: { gte: now } }, orderBy: [{ occurredAt: "asc" }, { id: "asc" }], select: { id: true, title: true, occurredAt: true } }),
   ]);
-  const mine = reviews.filter(r => { const p = JSON.parse(r.policySnapshotJson) as {userIds:string[]}[]; return p[r.currentStep]?.userIds.includes(user.id); }).length;
+  const mine = reviews.filter(r => { const p = JSON.parse(r.policySnapshotJson) as { userIds: string[] }[]; return p[r.currentStep]?.userIds.includes(user.id); }).length;
   const writer = user.memberships.some(m => m.programId === program.id && m.role === "writer");
+  const items = demoItems(program.name, now).map(item => writer ? item : { ...item, prepareUrl: undefined });
+  const demoMeeting = items.find(item => item.source === "calendar")!;
+  const nextMeeting = upcoming ? {
+    title: upcoming.title, time: upcoming.occurredAt, href: `/meetings/${upcoming.id}/run`, location: null,
+  } : {
+    title: demoMeeting.title, time: new Date(demoMeeting.time), href: demoMeeting.prepareUrl ?? "/meetings", location: demoMeeting.location,
+  };
+  const year = PROGRAM_CATALOG.find(p => p.name === program.name)?.year;
+  const nextTime = new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul", month: "long", day: "numeric", weekday: "short", hour: "2-digit", minute: "2-digit" }).format(nextMeeting.time);
   return <Shell user={user} nav="dashboard" crumbs={["홈"]}>
-    <div className="home-greeting"><div><span className="eyebrow">EGG IS GOING.</span><h1>{user.name}님, 반가워요.</h1><p>오늘의 제작 일정과 먼저 확인할 일을 모았어요.</p></div><div className="brand-crew" aria-hidden="true"><i className="brand-crew__orbit"/><RoleAvatar title="메인 PD" size={120}/><RoleAvatar title="막내 작가" size={132}/><span className="brand-crew__spark">✳</span></div></div>
-    <div className="home-grid">
-      <div className="stack"><div className="home-priority card"><span className="eyebrow">먼저 확인해 주세요</span><h2>{tasks + mine ? `확인할 일이 ${tasks + mine}건 있어요` : "지금은 밀린 확인이 없어요"}</h2><p>{program.name}</p><div className="priority-links"><Link href="/tasks"><b>{tasks}</b><span>확인 요청 →</span></Link><Link href="/review"><b>{mine}</b><span>내 검토·결재 →</span></Link></div></div>
-      <IntegrationHub key={`${user.id}:${program.id}`} items={demoItems(program.name,new Date()).map(item => writer ? item : {...item,prepareUrl:undefined})} storageKey={`eg.integrations.v1.${user.id}.${program.id}`}/></div>
-      <aside className="stack"><div className="card quick-start"><span className="eyebrow">READY, SET, RECORD.</span><h2>회의가 끝났나요?</h2><p>녹취록에서 결정과 할 일을 정리해요. 모호한 판단은 사람에게 물어봐요.</p>{writer ? <Link href="/meetings/new" className="eg-btn eg-btn--primary">새 회의 등록</Link> : <Link href="/meetings" className="eg-btn eg-btn--ink">회의 목록 보기</Link>}</div>
-      <div className="card"><div className="card-h"><h2>최근 회의</h2><Link className="r" href="/meetings">전체 보기</Link></div>{recent.length ? recent.map(m => <Link className="recent-meeting" href={`/meetings/${m.id}/run`} key={m.id}><b>{m.title}</b><small>{fmtKst(m.occurredAt)} →</small></Link>) : <div className="card-b muted">아직 회의가 없어요. 첫 회의를 등록해 보세요.</div>}</div>
-      <Link href="/programs" className="catalog-callout"><span className="eyebrow">OUR PROGRAMS.</span><b>어떤 프로그램과 함께할까요?</b><span>공식 WORKS에서 가져온 72개 프로그램 →</span></Link>
-      <p className="eg-help">체험 공간 · 샘플 팀원과 일정</p></aside>
+    <div className="home-editorial">
+      <section className="program-hero" aria-labelledby="home-program-title">
+        <div className="program-hero__copy">
+          <p className="program-hero__greeting">{user.name}님,</p>
+          <h1 id="home-program-title" className={program.name.length > 24 ? "is-long" : undefined}>{program.name}</h1>
+          <p className="program-hero__edition">{year ? `${year} 프로그램` : "내 프로그램"}</p>
+          <Link href={nextMeeting.href} className="program-hero__meeting">
+            <Icon id="i-clock"/>
+            <span><small>다음 회의{!upcoming ? <span className="program-hero__sample">샘플 일정</span> : null}</small><b>{nextMeeting.title}</b><span>{nextTime}{nextMeeting.location ? ` · ${nextMeeting.location}` : ""}</span></span>
+            <Icon id="i-arrow"/>
+          </Link>
+        </div>
+        <div className="program-hero__image"><ProgramThumbnail key={program.id} name={program.name} priority/></div>
+      </section>
+      <nav className="home-action-band" aria-label="프로그램 업무 바로가기">
+        <Link href="/tasks" className="home-action-band__item"><Icon id="i-inbox"/><span>확인 요청 <b>{tasks}건</b></span><Icon id="i-arrow"/></Link>
+        <Link href="/review" className="home-action-band__item"><Icon id="i-send"/><span>내 검토·결재 <b>{mine}건</b></span><Icon id="i-arrow"/></Link>
+        {writer ? <Link href="/meetings/new" className="eg-btn eg-btn--ink home-action-band__new"><Icon id="i-plus"/>새 회의 등록</Link> : <Link href="/meetings" className="eg-btn eg-btn--ink home-action-band__new">회의 목록 보기<Icon id="i-arrow"/></Link>}
+      </nav>
+      <div className="home-editorial__columns">
+        <IntegrationHub key={`${user.id}:${program.id}`} items={items} storageKey={`eg.integrations.v1.${user.id}.${program.id}`}/>
+        <aside className="home-recent" aria-labelledby="home-recent-title">
+          <header><h2 id="home-recent-title">최근 회의</h2><Link href="/meetings">전체 보기 <Icon id="i-arrow"/></Link></header>
+          {recent.length ? recent.map(m => <Link className="home-recent__item" href={`/meetings/${m.id}/run`} key={m.id}><Icon id="i-doc"/><span><b>{m.title}</b><small>{fmtKst(m.occurredAt)}</small></span><Icon id="i-arrow"/></Link>) : <p className="home-recent__empty">아직 등록된 회의가 없습니다.</p>}
+          <Link href="/programs" className="home-recent__catalog">프로그램 둘러보기 <Icon id="i-arrow"/></Link>
+        </aside>
+      </div>
     </div>
   </Shell>;
 }
