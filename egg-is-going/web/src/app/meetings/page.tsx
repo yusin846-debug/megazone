@@ -62,7 +62,7 @@ export default async function MeetingsPage({ searchParams }: { searchParams: SP 
       <div className="card">
         {filtered.length === 0 ? (
           <div className="empty">
-            <svg><use href="#egg" /></svg>
+            <img className="empty-crew" src="/brand/writer-mid.webp" alt="" width={100} height={112}/>
             <h3>{term || status ? "검색 결과가 없어요" : "아직 등록한 회의가 없어요"}</h3>
             <p>{term || status ? "다른 검색어를 입력하거나 필터를 초기화해 주세요." : "샘플 회의로 시작해 볼 수 있어요."}</p>
             {writer && <Link href="/meetings/new" className="eg-btn eg-btn--secondary"><Icon id="i-plus" />회의 등록</Link>}

@@ -1,0 +1,41 @@
+{
+  "generator": "built-in image_gen",
+  "style": "stylized-concept · tactile ivory egg studio crew · transparent · yellow/navy/sage",
+  "assets": [
+    {
+      "id": "writer-lead",
+      "prompt": "Use case: stylized-concept. Asset type: production-ready 3D profile avatar for a Korean entertainment production workspace. Create ONE cute egg-shaped little studio crew character, full body centered with generous margin, front-facing three-quarter view. Smooth ivory egg body, tiny dark navy bead eyes, small smiling mouth, subtle pink cheeks, short rounded arms and feet, no hair. Premium tactile matte vinyl collectible toy, real 3D volume, soft studio key light upper-left, subtle ambient occlusion, crisp readable silhouette at 40px. White ivory #fffdf4, butter yellow #F8E950, black/navy details, sage only for PD crew. Isolated on genuinely transparent background. No text, no letters, no watermark, no scene, no frame, no other characters. Keep egg body dominant and accessories small but clearly recognizable. A senior head writer egg wearing round dark navy glasses, holding a small butter-yellow script folder.",
+      "path": "public/brand/writer-lead.webp"
+    },
+    {
+      "id": "writer-mid",
+      "prompt": "Use case: stylized-concept. Asset type: production-ready 3D profile avatar for a Korean entertainment production workspace. Create ONE cute egg-shaped little studio crew character, full body centered with generous margin, front-facing three-quarter view. Smooth ivory egg body, tiny dark navy bead eyes, small smiling mouth, subtle pink cheeks, short rounded arms and feet, no hair. Premium tactile matte vinyl collectible toy, real 3D volume, soft studio key light upper-left, subtle ambient occlusion, crisp readable silhouette at 40px. White ivory #fffdf4, butter yellow #F8E950, black/navy details, sage only for PD crew. Isolated on genuinely transparent background. No text, no letters, no watermark, no scene, no frame, no other characters. Keep egg body dominant and accessories small but clearly recognizable. A staff writer egg holding an open navy notebook and a yellow pen, no glasses or headgear.",
+      "path": "public/brand/writer-mid.webp"
+    },
+    {
+      "id": "writer-junior",
+      "prompt": "Use case: stylized-concept. Asset type: production-ready 3D profile avatar for a Korean entertainment production workspace. Create ONE cute egg-shaped little studio crew character, full body centered with generous margin, front-facing three-quarter view. Smooth ivory egg body, tiny dark navy bead eyes, small smiling mouth, subtle pink cheeks, short rounded arms and feet, no hair. Premium tactile matte vinyl collectible toy, real 3D volume, soft studio key light upper-left, subtle ambient occlusion, crisp readable silhouette at 40px. White ivory #fffdf4, butter yellow #F8E950, black/navy details, sage only for PD crew. Isolated on genuinely transparent background. No text, no letters, no watermark, no scene, no frame, no other characters. Keep egg body dominant and accessories small but clearly recognizable. A junior writer egg holding one oversized butter-yellow pencil diagonally at its side, no glasses or headgear.",
+      "path": "public/brand/writer-junior.webp"
+    },
+    {
+      "id": "pd-lead",
+      "prompt": "Use case: stylized-concept. Asset type: production-ready 3D profile avatar for a Korean entertainment production workspace. Create ONE cute egg-shaped little studio crew character, full body centered with generous margin, front-facing three-quarter view. Smooth ivory egg body, tiny dark navy bead eyes, small smiling mouth, subtle pink cheeks, short rounded arms and feet, no hair. Premium tactile matte vinyl collectible toy, real 3D volume, soft studio key light upper-left, subtle ambient occlusion, crisp readable silhouette at 40px. White ivory #fffdf4, butter yellow #F8E950, black/navy details, sage only for PD crew. Isolated on genuinely transparent background. No text, no letters, no watermark, no scene, no frame, no other characters. Keep egg body dominant and accessories small but clearly recognizable. A senior director egg wearing a professional sage green over-ear headset with a small microphone boom, holding a tiny clapperboard.",
+      "path": "public/brand/pd-lead.webp"
+    },
+    {
+      "id": "pd-mid",
+      "prompt": "Use case: stylized-concept. Asset type: production-ready 3D profile avatar for a Korean entertainment production workspace. Create ONE cute egg-shaped little studio crew character, full body centered with generous margin, front-facing three-quarter view. Smooth ivory egg body, tiny dark navy bead eyes, small smiling mouth, subtle pink cheeks, short rounded arms and feet, no hair. Premium tactile matte vinyl collectible toy, real 3D volume, soft studio key light upper-left, subtle ambient occlusion, crisp readable silhouette at 40px. White ivory #fffdf4, butter yellow #F8E950, black/navy details, sage only for PD crew. Isolated on genuinely transparent background. No text, no letters, no watermark, no scene, no frame, no other characters. Keep egg body dominant and accessories small but clearly recognizable. An assistant director egg wearing a sage green baseball cap and holding a rolled white call sheet.",
+      "path": "public/brand/pd-mid.webp"
+    },
+    {
+      "id": "pd-junior",
+      "prompt": "Use case: stylized-concept. Asset type: production-ready 3D profile avatar for a Korean entertainment production workspace. Create ONE cute egg-shaped little studio crew character, full body centered with generous margin, front-facing three-quarter view. Smooth ivory egg body, tiny dark navy bead eyes, small smiling mouth, subtle pink cheeks, short rounded arms and feet, no hair. Premium tactile matte vinyl collectible toy, real 3D volume, soft studio key light upper-left, subtle ambient occlusion, crisp readable silhouette at 40px. White ivory #fffdf4, butter yellow #F8E950, black/navy details, sage only for PD crew. Isolated on genuinely transparent background. No text, no letters, no watermark, no scene, no frame, no other characters. Keep egg body dominant and accessories small but clearly recognizable. A junior production assistant egg holding a sage and black clapperboard with both hands, no cap, no headset.",
+      "path": "public/brand/pd-junior.webp"
+    },
+    {
+      "id": "operator",
+      "prompt": "Use case: stylized-concept. Asset type: production-ready 3D profile avatar for a Korean entertainment production workspace. Create ONE cute egg-shaped little studio crew character, full body centered with generous margin, front-facing three-quarter view. Smooth ivory egg body, tiny dark navy bead eyes, small smiling mouth, subtle pink cheeks, short rounded arms and feet, no hair. Premium tactile matte vinyl collectible toy, real 3D volume, soft studio key light upper-left, subtle ambient occlusion, crisp readable silhouette at 40px. White ivory #fffdf4, butter yellow #F8E950, black/navy details, sage only for PD crew. Isolated on genuinely transparent background. No text, no letters, no watermark, no scene, no frame, no other characters. Keep egg body dominant and accessories small but clearly recognizable. An AI operations egg wearing chunky dark navy rounded rectangular goggles, holding a small lavender laptop with no logo.",
+      "path": "public/brand/operator.webp"
+    }
+  ]
+}

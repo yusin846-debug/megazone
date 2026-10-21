@@ -1,7 +1,6 @@
 import RoleAvatar from "./RoleAvatar";
-import SubmitButton from "./SubmitButton";
+import ProgramSwitcher from "./ProgramSwitcher";
 import { activeProgram, programsFor } from "@/lib/programs";
-import { selectProgram } from "@/app/actions";
 import Link from "@/components/NavigationLink";
 import type { ReactNode } from "react";
 import { db } from "@/lib/db";
@@ -38,13 +37,7 @@ export default async function Shell({
         <Link href="/" className="brand">
           <span className="eg-wordmark" style={{ fontSize: 19 }}>egg is going<i /></span>
         </Link>
-        <form action={selectProgram} className="prog program-switch">
-          <label htmlFor="active-program">프로그램</label>
-          <select id="active-program" name="programId" className="eg-select" defaultValue={program.id}>{programs.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}</select>
-          <SubmitButton className="eg-btn eg-btn--ghost eg-btn--sm" pendingLabel="전환 중…">이 프로그램 열기</SubmitButton>
-        </form>
-        {item("dashboard", "/", "i-home", "홈")}
-        {item("programs", "/programs", "i-template", "프로그램") }
+        <ProgramSwitcher programs={programs} activeId={program.id} homeLink={item("dashboard", "/", "i-home", "홈")} />
         {item("home", "/meetings", "i-home", "회의")}
         {item("tasks", "/tasks", "i-inbox", "확인 요청", openTasks)}
         {item("review", "/review", "i-send", "검토·결재", myReviews)}

@@ -15,7 +15,7 @@ export default async function LoginPage() {
       <div className="card" style={{ width: "min(560px,100%)" }}>
         <div className="card-b" style={{ padding: "28px 28px 8px" }}>
           <span className="eg-wordmark" style={{ fontSize: 26 }}>egg is going<i /></span>
-          <h1 style={{ fontSize: 20, margin: "18px 0 4px", letterSpacing: "-.03em" }}>누구로 들어갈까요?</h1>
+          <div className="login-crew" aria-hidden="true"><RoleAvatar title="막내 작가" size={82}/><RoleAvatar title="메인 PD" size={78}/></div><h1 style={{ fontSize: 20, margin: "18px 0 4px", letterSpacing: "-.03em" }}>누구로 들어갈까요?</h1>
           <p className="muted" style={{ margin: 0, fontSize: 13.5 }}>
             체험할 팀원을 선택해 주세요.
           </p>

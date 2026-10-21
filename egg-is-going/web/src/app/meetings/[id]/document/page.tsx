@@ -76,7 +76,7 @@ export default async function DocumentPage({ params, searchParams }: { params: I
       {!dv || !tpl || !doc ? (
         <div className="card">
           <div className="empty">
-            <svg><use href="#egg" /></svg>
+            <img className="empty-crew" src="/brand/writer-mid.webp" alt="" width={100} height={112}/>
             <h3>아직 문서가 없어요</h3>
             <p>AI 실행이 문서 구성 단계까지 끝나면 초안이 생겨요.</p>
             <Link href={`/meetings/${id}/run`} className="eg-btn eg-btn--secondary">실행 상태 보기</Link>
