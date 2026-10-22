@@ -332,7 +332,7 @@ button[aria-busy="true"]{cursor:wait;opacity:.8;display:inline-flex;align-items:
 
 /* Home A: program photography, one yellow action band, and editorial lists. */
 .home-editorial{padding-top:3px}
-.program-hero{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.35fr);min-height:350px;background:#fff}
+.program-hero{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.35fr);min-height:350px;background:transparent}
 .program-hero__copy{display:flex;flex-direction:column;align-items:flex-start;min-width:0;padding:28px 28px 22px 0}
 .program-hero__greeting{font-size:16px;font-weight:600;letter-spacing:-.025em;margin:0 0 12px}
 .program-hero h1{font-size:clamp(32px,3.25vw,49px);line-height:1.25;letter-spacing:-.06em;font-weight:900;word-break:keep-all;overflow-wrap:anywhere;margin:0 0 15px;max-width:100%}
