@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { activeProgram } from "@/lib/programs";
 import { PROGRAM_CATALOG } from "@/lib/programCatalog";
+import programDescriptions from "@/lib/programDescriptions.json";
 import { demoItems } from "@/lib/integrations/demo";
 import { fmtKst } from "@/lib/state";
 
@@ -30,6 +31,7 @@ export default async function Home() {
     title: demoMeeting.title, time: new Date(demoMeeting.time), href: demoMeeting.prepareUrl ?? "/meetings", location: demoMeeting.location,
   };
   const year = PROGRAM_CATALOG.find(p => p.name === program.name)?.year;
+  const description = (programDescriptions as Record<string, string>)[program.name];
   const nextTime = new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul", month: "long", day: "numeric", weekday: "short", hour: "2-digit", minute: "2-digit" }).format(nextMeeting.time);
   return <Shell user={user} nav="dashboard" crumbs={["홈"]}>
     <div className="home-editorial">
@@ -38,6 +40,7 @@ export default async function Home() {
           <p className="program-hero__greeting">{user.name}님,</p>
           <h1 id="home-program-title" className={program.name.length > 24 ? "is-long" : undefined}>{program.name}</h1>
           <p className="program-hero__edition">{year ? `${year} 프로그램` : "내 프로그램"}</p>
+          {description ? <p className="program-hero__description">{description}</p> : null}
           <Link href={nextMeeting.href} className="program-hero__meeting">
             <Icon id="i-clock"/>
             <span><small>다음 회의{!upcoming ? <span className="program-hero__sample">샘플 일정</span> : null}</small><b>{nextMeeting.title}</b><span>{nextTime}{nextMeeting.location ? ` · ${nextMeeting.location}` : ""}</span></span>
