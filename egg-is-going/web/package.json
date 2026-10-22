@@ -10,6 +10,8 @@
     "typecheck": "tsc --noEmit",
     "db:push": "prisma db push",
     "db:seed": "node --import tsx prisma/seed.ts",
+    "poc:seed": "node --import tsx scripts/seed-poc.ts",
+    "poc:test": "node --import tsx --test scripts/poc.test.ts scripts/program-selection.test.ts",
     "db:reset": "prisma db push --force-reset && tsx prisma/seed.ts",
     "setup": "cp -n .env.example .env; node scripts/sync-tokens.mjs && prisma db push && tsx prisma/seed.ts",
     "sync:tokens": "node scripts/sync-tokens.mjs",

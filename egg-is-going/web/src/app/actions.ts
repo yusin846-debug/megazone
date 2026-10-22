@@ -1,7 +1,7 @@
 "use server";
 // 화면에서 부르는 서버 동작. 모든 권한 검사는 여기(백엔드)에서 다시 한다. (FR-08)
 import { cookies } from "next/headers";
-import { programCookieKey } from "@/lib/programSelection";
+import { loginProgramFor, programCookieKey } from "@/lib/programSelection";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { validateTemplateFields } from "@/lib/templateValidation";
@@ -33,6 +33,7 @@ const kst = (v: string) => (v ? new Date(/[zZ]|[+-]\d{2}:\d{2}$/.test(v) ? v : `
 
 export async function login(formData: FormData) {
   const id = String(formData.get("userId"));
+  const user = await db.user.findUniqueOrThrow({ where: { id }, include: { memberships: { include: { program: true } } } });
   const jar = await cookies();
   const previousUser = jar.get("eg_user")?.value;
   const previousProgram = jar.get("eg_program")?.value;
@@ -40,6 +41,8 @@ export async function login(formData: FormData) {
     jar.set(programCookieKey(previousUser), previousProgram, { httpOnly: true, sameSite: "lax", path: "/", maxAge: 31536000 });
   }
   jar.delete("eg_program");
+  const initial = loginProgramFor(user.memberships.filter(m => m.role !== "operator").map(m => m.program), user.authSubject);
+  if (initial) jar.set(programCookieKey(id), initial.id, { httpOnly: true, sameSite: "lax", path: "/", maxAge: 31536000 });
   jar.set("eg_user", id, { httpOnly: true, sameSite: "lax", path: "/" });
   redirect("/");
 }
