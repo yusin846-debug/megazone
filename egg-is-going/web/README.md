@@ -12,10 +12,13 @@ cp .env.example .env # 전용 PostgreSQL 연결 주소 설정 (실제 값은 커
 npm run sync:tokens
 npm run db:migrate   # 새 전용 DB에만 실행
 npm run db:seed      # 가상 제작진 7명·템플릿 시드
+npm run auth:seed    # EGG_DEMO_LOGIN=true일 때 가상 계정만 추가
 npm run dev          # http://localhost:3000
 ```
 
-로그인 화면에서 사람을 고르면 그 역할로 들어갑니다 (개발용 로그인).
+로그인 화면 하단에서 테스트 계정을 고르면 ID·비밀번호가 입력됩니다. 로그인 버튼을 누르면 서버에서 검증하고 24시간 세션을 발급합니다. 기존 사용자 ID 쿠키와 `/demo-login?u=...` 주소만으로는 로그인되지 않습니다.
+
+로컬 `.env`에 `BETTER_AUTH_SECRET`(32자 이상 무작위 값)과 `BETTER_AUTH_URL`을 설정하세요. 가상 계정 시연에만 `EGG_DEMO_LOGIN=true`를 사용합니다. 실제 직원 환경은 false로 유지합니다.
 
 | 사람 | 역할 | 해 볼 일 |
 |---|---|---|

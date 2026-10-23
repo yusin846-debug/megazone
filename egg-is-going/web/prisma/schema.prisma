@@ -26,6 +26,7 @@ model User {
   name           String
   title          String // 표시용 직함 (막내 작가 등)
   memberships    Membership[]
+  authIdentity   AuthUser?
 
   @@unique([organizationId, authSubject])
 }
@@ -100,14 +101,14 @@ model Recording {
 }
 
 model TranscriptVersion {
-  id          String              @id @default(uuid())
+  id          String    @id @default(uuid())
   recordingId String
-  recording   Recording           @relation(fields: [recordingId], references: [id])
+  recording   Recording @relation(fields: [recordingId], references: [id])
   version     Int
   parentId    String?
   note        String?
   createdBy   String // agent | user id
-  createdAt   DateTime            @default(now())
+  createdAt   DateTime  @default(now())
   segments    Segment[]
 
   @@unique([recordingId, version])
@@ -276,44 +277,44 @@ model WorkflowVersion {
 
 /// status: queued | running | waiting_for_human | succeeded | failed | cancelled
 model Run {
-  id                String              @id @default(uuid())
+  id                String          @id @default(uuid())
   meetingId         String
-  meeting           Meeting             @relation(fields: [meetingId], references: [id])
+  meeting           Meeting         @relation(fields: [meetingId], references: [id])
   workflowVersionId String
-  workflowVersion   WorkflowVersion     @relation(fields: [workflowVersionId], references: [id])
+  workflowVersion   WorkflowVersion @relation(fields: [workflowVersionId], references: [id])
   parentRunId       String?
-  startStep         String              @default("transcript")
+  startStep         String          @default("transcript")
   externalRunId     String?
   inputManifestJson String
-  idempotencyKey    String              @unique
-  status            String              @default("queued")
-  cancelRequested   Boolean             @default(false)
+  idempotencyKey    String          @unique
+  status            String          @default("queued")
+  cancelRequested   Boolean         @default(false)
   error             String?
   provider          String
-  createdAt         DateTime            @default(now())
+  createdAt         DateTime        @default(now())
   finishedAt        DateTime?
   steps             StepRun[]
   humanTasks        HumanTask[]
 }
 
 model StepRun {
-  id         String              @id @default(uuid())
-  runId      String
-  run        Run                 @relation(fields: [runId], references: [id])
-  stepKey    String
-  attempt    Int
-  modelRef   String?
-  promptRef  String?
-  status     String              @default("running")
-  inputHash  String
-  note       String?
-  tokensIn   Int                 @default(0)
-  tokensOut  Int                 @default(0)
-  error      String?
-  startedAt  DateTime            @default(now())
-  endedAt    DateTime?
-  artifacts  Artifact[]
-  findings   ValidationFinding[]
+  id        String              @id @default(uuid())
+  runId     String
+  run       Run                 @relation(fields: [runId], references: [id])
+  stepKey   String
+  attempt   Int
+  modelRef  String?
+  promptRef String?
+  status    String              @default("running")
+  inputHash String
+  note      String?
+  tokensIn  Int                 @default(0)
+  tokensOut Int                 @default(0)
+  error     String?
+  startedAt DateTime            @default(now())
+  endedAt   DateTime?
+  artifacts Artifact[]
+  findings  ValidationFinding[]
 
   @@unique([runId, stepKey, attempt])
 }
@@ -385,4 +386,71 @@ model MetricObservation {
   durationSeconds Int
   source          String
   createdAt       DateTime @default(now())
+}
+
+// Authentication identities are separate from existing production-team users.
+model AuthUser {
+  id            String        @id
+  name          String
+  email         String        @unique
+  emailVerified Boolean       @default(false)
+  image         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  appUserId     String?       @unique
+  appUser       User?         @relation(fields: [appUserId], references: [id], onDelete: Restrict)
+  sessions      AuthSession[]
+  accounts      AuthAccount[]
+}
+
+model AuthSession {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model AuthAccount {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  AuthUser  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@unique([providerId, accountId])
+  @@index([userId])
+}
+
+model AuthVerification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+}
+
+model AuthRateLimit {
+  id          String @id
+  key         String @unique
+  count       Int
+  lastRequest BigInt
 }

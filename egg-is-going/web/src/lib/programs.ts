@@ -10,9 +10,7 @@ export const programsFor = cache((userId: string) => db.program.findMany({
 }));
 export const activeProgram = cache(async (userId: string) => {
   const [programs, jar] = await Promise.all([programsFor(userId), cookies()]);
-  // Migrate the previous shared cookie only for the currently signed-in user.
-  const remembered = jar.get(programCookieKey(userId))?.value
-    ?? (jar.get("eg_user")?.value === userId ? jar.get("eg_program")?.value : undefined);
+  const remembered = jar.get(programCookieKey(userId))?.value;
   const saved = programs.find(p => p.id === remembered);
   const recent = saved ? null : await db.meeting.findFirst({
     where: { createdById: userId, programId: { in: programs.map(p => p.id) } },
