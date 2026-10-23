@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "../styles/tokens.css";
 import "../styles/app.css";
 import Sprite from "@/components/Sprite";
+import ChatbotWidget from "@/components/chatbot/ChatbotWidget";
 
 export const maxDuration = 300;
 
@@ -16,6 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Sprite />
         {children}
+        <ChatbotWidget />
       </body>
     </html>
   );
