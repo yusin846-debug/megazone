@@ -53,6 +53,9 @@ try {
     const session = await (await request("/get-session", undefined, cookie)).json();
     assert.equal(session.user.email, sample.email);
     assert.ok(session.user.appUserId);
+    assert.ok(new Date(session.session.expiresAt).getTime() - Date.now() <= 24 * 60 * 60 * 1000);
+    const tampered = cookie.replace(/(session_token=)[^;]+/, "$1tampered");
+    assert.equal(await (await request("/get-session", undefined, tampered)).json(), null);
     await request("/sign-out", {}, cookie);
     assert.equal(await (await request("/get-session", undefined, cookie)).json(), null);
     check(`${sample.subject}: sign-in → mapped session → sign-out → replay rejected`);
