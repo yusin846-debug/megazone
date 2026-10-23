@@ -16,7 +16,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
           <p className="lg-lead">녹취부터 회의록 확인·결재까지.</p>
         </div>
         <div className="lg-art" aria-hidden="true">
-          <img src="/brand/login-studio-v3.webp" width={1800} height={1350} alt="" fetchPriority="high" decoding="async" />
+          <img src="/brand/login-studio-v3.webp" width={1800} height={1225} alt="" fetchPriority="high" decoding="async" />
         </div>
       </section>
       <section className="lg-side" aria-label="로그인">
