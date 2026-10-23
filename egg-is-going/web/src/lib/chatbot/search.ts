@@ -36,6 +36,7 @@ const STOP = new Set([
   "얘기", "이야기", "회의", "관련", "관련된", "내용", "말", "거", "것", "건", "그", "이", "저", "우리", "전부", "모두", "다",
   "알려줘", "알려", "찾아줘", "찾아", "보여줘", "정리해줘", "있어", "있었어", "있나", "대해", "대한", "대해서", "나온", "나왔던", "했던", "했나", "좀",
   "안", "못", "되는", "되나", "됐는지", "했는지", "정했는지", "이유", "얼마", "얼마나", "어때", "어땠어", "상황", "무슨", "결론", "결과", "혹시",
+  "누구야", "언제야", "어디야", "하기", "되기",
 ]);
 // 질문 끝의 서술어 (정했어?, 됐어요?, 하기로 했나 …)
 const PREDICATE = /(했|됐|였|였었|하기로|되기로|하자고|한다고|했다고)(어|나|니|지|죠|요|어요|나요|습니까|냐|대|대요)?$/;
@@ -49,7 +50,8 @@ function stripJosa(w: string) {
 /** 규칙 기반 키워드 추출 + 사전 동의어 */
 export function keywordsOf(question: string): Keyword[] {
   const words = question.split(/[\s,.!?~·"'“”‘’()]+/).map(w => w.trim()).filter(Boolean);
-  const all = [...new Set(words.map(stripJosa).map(w => w.toLocaleLowerCase()))]
+  // 서술어는 조사를 떼기 전 모양으로도 본다 ("하기로" → "하기"가 검색어로 남아 "중단하고" 같은 말과 묶이지 않게)
+  const all = [...new Set(words.filter(w => !PREDICATE.test(w)).map(stripJosa).map(w => w.toLocaleLowerCase()))]
     .filter(w => !STOP.has(w) && !PREDICATE.test(w) && compact(w).length >= 1 && !/^\d+$/.test(w));
   // 한 글자 한글은 거의 모든 문장에 걸리므로 다른 단어가 있으면 뺀다
   const longer = all.filter(w => !/^[가-힣]$/.test(compact(w)));

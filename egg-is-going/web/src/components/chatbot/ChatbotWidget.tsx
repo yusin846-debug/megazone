@@ -20,8 +20,6 @@ type Msg =
   | { role: "bot"; text: string; hits: Hit[]; note?: string }
   | { role: "error"; text: string };
 
-const SUGGESTIONS = ["엔딩 장소 어디로 정했어?", "게스트 섭외 어떻게 됐어?", "예산 얘기 나온 거 다 찾아줘"];
-
 const fmtDay = (iso: string) =>
   new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul", month: "long", day: "numeric", weekday: "short" }).format(new Date(iso));
 const fmtClock = (iso: string) =>
@@ -59,6 +57,7 @@ export default function ChatbotWidget() {
   const [available, setAvailable] = useState(false);
   const [program, setProgram] = useState<Program | null>(null);
   const [readable, setReadable] = useState(true);
+  const [suggestions, setSuggestions] = useState<{ programId: string; list: string[] } | null>(null);
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
@@ -80,6 +79,17 @@ export default function ChatbotWidget() {
 
   useEffect(() => { if (!hidden) void refresh(); }, [hidden, pathname, refresh]);
   useEffect(() => { if (open) { void refresh(); field.current?.focus(); } }, [open, refresh]);
+  // 제안 질문은 서버가 이 프로그램 원문에서 답이 나오는지 확인한 것만 받는다. 패널을 열 때 프로그램마다 한 번
+  useEffect(() => {
+    if (!open || !program || !readable || suggestions?.programId === program.id) return;
+    let alive = true;
+    void fetch("/api/chatbot?suggest=1", { cache: "no-store" })
+      .then(r => (r.ok ? r.json() : null))
+      .then((d: { program: Program; suggestions?: string[] } | null) => { if (alive && d?.program.id === program.id) setSuggestions({ programId: program.id, list: d.suggestions ?? [] }); })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, [open, program, readable, suggestions]);
+  const suggested = suggestions?.programId === program?.id ? suggestions?.list ?? [] : [];
   useEffect(() => { list.current?.scrollTo({ top: list.current.scrollHeight, behavior: "smooth" }); }, [msgs, busy]);
   useEffect(() => {
     if (!open) return;
@@ -168,9 +178,11 @@ export default function ChatbotWidget() {
               <div className="cb-empty">
                 <span className="cb-empty__over">회의 원문에서 찾기</span>
                 <p>다른 날 회의에서 나온 얘기도 한 번에 찾아 드려요.<br />받아쓰기가 조금 틀린 표현이나 뜻이 비슷한 말까지 함께 찾아요.</p>
-                <div className="cb-suggest">
-                  {SUGGESTIONS.map(s => <button key={s} type="button" onClick={() => void ask(s)}>{s}</button>)}
-                </div>
+                {suggested.length > 0 && (
+                  <div className="cb-suggest" aria-label="이 프로그램에서 바로 답할 수 있는 질문">
+                    {suggested.map(s => <button key={s} type="button" onClick={() => void ask(s)}>{s}</button>)}
+                  </div>
+                )}
               </div>
             )}
             {msgs.map((m, i) => {

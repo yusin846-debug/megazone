@@ -5,6 +5,7 @@ import { canReadContent, currentUser } from "@/lib/auth";
 import { audit } from "@/lib/orchestrator/human";
 import { activeProgram } from "@/lib/programs";
 import { answerQuestion } from "@/lib/chatbot/answer";
+import { suggestionsFor } from "@/lib/chatbot/suggestions";
 
 async function scope() {
   const user = await currentUser();
@@ -15,10 +16,13 @@ async function scope() {
   return { user, program, readable };
 }
 
-export async function GET() {
+// ?suggest=1 일 때만 제안 질문을 만든다 (원문 전체를 읽으므로 화면 이동마다 부르지 않는다)
+export async function GET(req: Request) {
   const s = await scope();
   if (s.error) return s.error;
-  return Response.json({ program: s.program, readable: s.readable });
+  const wantSuggest = new URL(req.url).searchParams.get("suggest") === "1";
+  const suggestions = wantSuggest && s.readable ? await suggestionsFor(s.program) : undefined;
+  return Response.json({ program: s.program, readable: s.readable, suggestions });
 }
 
 export async function POST(req: Request) {
