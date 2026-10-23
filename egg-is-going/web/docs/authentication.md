@@ -46,3 +46,7 @@ Google Cloud OAuth 승인된 리디렉션 URI: `https://egg-is-going.vercel.app/
 `npm run auth:test`는 비밀번호 해시 검증을, `npm run auth:integration`은 운영 DB와 분리한 임시 SQLite DB에서 동일한 인증 설정을 실행합니다. 7명 로그인·세션 조회·로그아웃·이전 세션 재사용 차단, 틀린 비밀번호, 구형 사용자 쿠키, 공개 가입 차단, 다른 출처 요청 차단, 데모 비활성화, DB 요청 제한을 확인합니다. PostgreSQL 배포는 별도로 브라우저에서 검증합니다.
 
 커스텀 인증 모델을 사용할 때 Prisma 어댑터의 JOIN 관계 이름은 모델명의 소문자를 따르므로 `authaccounts`, `authsessions`, `authuser`로 맞춰야 합니다. 이 변경은 Prisma 관계명만 바꾸며 기존 DB 컬럼을 변경하지 않습니다.
+
+`DATABASE_URL`은 실행 중인 앱의 풀 연결, `DATABASE_URL_UNPOOLED`는 마이그레이션의 직접 연결입니다. Prisma 6의 directUrl을 지정해 배포 중 스키마 잠금이 풀 연결에 남지 않도록 합니다. Vercel에 이미 제공된 직접 연결 환경 변수를 사용하며 연결 문자열은 저장소에 넣지 않습니다.
+
+![로그인 화면](screenshots/login-desktop.png)

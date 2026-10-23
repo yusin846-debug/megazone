@@ -19,8 +19,9 @@ try {
   await symlink(resolve("node_modules"), join(dir, "node_modules"));
   const schema = (await readFile("prisma/schema.prisma", "utf8"))
     .replace('provider = "prisma-client-js"', `provider = "prisma-client-js"\n output = "${dir}/client"`)
-    .replace('provider = "postgresql"', 'provider = "sqlite"')
-    .replace('url      = env("DATABASE_URL")', `url = "file:${dir}/test.sqlite"`);
+    .replace(/provider\s*=\s*"postgresql"/, 'provider = "sqlite"')
+    .replace(/\s*directUrl\s*=\s*env\("DATABASE_URL_UNPOOLED"\)/, "")
+    .replace(/\burl\s*=\s*env\("DATABASE_URL"\)/, `url = "file:${dir}/test.sqlite"`);
   await writeFile(join(dir, "schema.prisma"), schema);
   const result = spawnSync(process.execPath, ["node_modules/prisma/build/index.js", "db", "push", "--schema", join(dir, "schema.prisma")], { env: { ...process.env, PRISMA_GENERATE_SKIP_AUTOINSTALL: "1" }, encoding: "utf8" });
   if (result.status !== 0) throw new Error(result.stderr || result.stdout);
