@@ -7,13 +7,13 @@ export function ssoConfigured() {
   return Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && process.env.GOOGLE_WORKSPACE_DOMAIN);
 }
 
-function createAuth() {
+export function createAuth(client = db, provider: "postgresql" | "sqlite" = "postgresql") {
   if (!process.env.BETTER_AUTH_SECRET) throw new Error("BETTER_AUTH_SECRET is required");
   return betterAuth({
     appName: "egg is going",
     baseURL: process.env.BETTER_AUTH_URL,
     secret: process.env.BETTER_AUTH_SECRET,
-    database: prismaAdapter(db, { provider: "postgresql" }),
+    database: prismaAdapter(client, { provider }),
     user: { modelName: "authUser", additionalFields: { appUserId: { type: "string", required: false, input: false } } },
     account: { modelName: "authAccount", accountLinking: { enabled: true, trustedProviders: ["google"] } },
     verification: { modelName: "authVerification" },
@@ -32,7 +32,7 @@ function createAuth() {
     advanced: { database: { joins: true }, ipAddress: { ipAddressHeaders: ["x-real-ip"] } },
     databaseHooks: {
       session: { create: { before: async session => {
-        const identity = await db.authUser.findUnique({ where: { id: session.userId }, select: { appUserId: true, email: true } });
+        const identity = await client.authUser.findUnique({ where: { id: session.userId }, select: { appUserId: true, email: true } });
         if (!identity?.appUserId || (identity.email.endsWith("@egg.test") && process.env.EGG_DEMO_LOGIN !== "true")) return false;
       } } },
     },

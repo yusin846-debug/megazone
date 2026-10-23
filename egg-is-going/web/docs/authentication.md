@@ -40,3 +40,9 @@ Google Cloud OAuth 승인된 리디렉션 URI: `https://egg-is-going.vercel.app/
 ## 배포
 
 새 인증 마이그레이션은 AuthUser/AuthSession/AuthAccount/AuthVerification/AuthRateLimit 다섯 테이블과 제약·인덱스만 추가합니다. `npx prisma migrate deploy` 후 `npm run auth:seed`, `npm run build` 순서입니다. 기존 초기 마이그레이션 이력이 없는 DB라면 먼저 이력을 확인하고 올바르게 baseline해야 하며 reset이나 force push를 실행하지 않습니다. 재배포 시 시드는 기존 비밀번호·회의 데이터를 덮어쓰지 않습니다.
+
+## 검증
+
+`npm run auth:test`는 비밀번호 해시 검증을, `npm run auth:integration`은 운영 DB와 분리한 임시 SQLite DB에서 동일한 인증 설정을 실행합니다. 7명 로그인·세션 조회·로그아웃·이전 세션 재사용 차단, 틀린 비밀번호, 구형 사용자 쿠키, 공개 가입 차단, 다른 출처 요청 차단, 데모 비활성화, DB 요청 제한을 확인합니다. PostgreSQL 배포는 별도로 브라우저에서 검증합니다.
+
+커스텀 인증 모델을 사용할 때 Prisma 어댑터의 JOIN 관계 이름은 모델명의 소문자를 따르므로 `authaccounts`, `authsessions`, `authuser`로 맞춰야 합니다. 이 변경은 Prisma 관계명만 바꾸며 기존 DB 컬럼을 변경하지 않습니다.

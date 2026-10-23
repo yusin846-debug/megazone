@@ -22,7 +22,8 @@
     "vercel-build": "prisma generate && next build",
     "db:migrate": "prisma migrate deploy",
     "auth:seed": "node --import tsx scripts/seed-auth.ts",
-    "auth:test": "node --import tsx --test scripts/auth.test.ts"
+    "auth:test": "node --import tsx --test scripts/auth.test.ts",
+    "auth:integration": "node --import tsx scripts/auth-integration.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.131.0",

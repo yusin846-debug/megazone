@@ -399,8 +399,8 @@ model AuthUser {
   updatedAt     DateTime      @updatedAt
   appUserId     String?       @unique
   appUser       User?         @relation(fields: [appUserId], references: [id], onDelete: Restrict)
-  sessions      AuthSession[]
-  accounts      AuthAccount[]
+  authsessions  AuthSession[]
+  authaccounts  AuthAccount[]
 }
 
 model AuthSession {
@@ -412,7 +412,7 @@ model AuthSession {
   ipAddress String?
   userAgent String?
   userId    String
-  user      AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  authuser  AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
@@ -422,7 +422,7 @@ model AuthAccount {
   accountId             String
   providerId            String
   userId                String
-  user                  AuthUser  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  authuser              AuthUser  @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
   idToken               String?

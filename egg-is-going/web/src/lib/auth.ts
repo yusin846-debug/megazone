@@ -5,7 +5,8 @@ import { db } from "./db";
 import { getAuth } from "./authServer";
 
 export const currentUser = cache(async () => {
-  const session = await getAuth().api.getSession({ headers: await headers() });
+  const requestHeaders = await headers();
+  const session = await getAuth().api.getSession({ headers: requestHeaders });
   if (!session?.user.appUserId) return null;
   if (session.user.email.endsWith("@egg.test") && process.env.EGG_DEMO_LOGIN !== "true") return null;
   return db.user.findUnique({ where: { id: session.user.appUserId }, include: { memberships: true } });

@@ -51,7 +51,8 @@ export default function LoginForm({ demoEnabled, ssoEnabled, initialSample, ssoE
     try {
       const result = await authClient.signIn.email({ email: normalized, password, rememberMe: false });
       if (result.error) {
-        setError(result.error.status === 429 ? "로그인 시도가 많아요. 잠시 후 다시 시도해 주세요." : "아이디 또는 비밀번호를 확인해 주세요.");
+        console.warn("Sign-in rejected", { status: result.error.status, code: result.error.code });
+        setError(result.error.status === 429 ? "로그인 시도가 많아요. 잠시 후 다시 시도해 주세요." : result.error.status >= 500 ? "로그인 연결에 문제가 있어요. 잠시 후 다시 시도해 주세요." : "아이디 또는 비밀번호를 확인해 주세요.");
         setPending(null); passwordRef.current?.focus(); return;
       }
       try { if (rememberId) localStorage.setItem("eg.savedId", normalized); else localStorage.removeItem("eg.savedId"); } catch { /* Login still works without storage. */ }
