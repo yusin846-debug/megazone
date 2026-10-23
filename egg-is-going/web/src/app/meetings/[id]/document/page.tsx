@@ -46,7 +46,7 @@ export default async function DocumentPage({ params, searchParams }: { params: I
       right={dv && <DocBadge status={dv.status} version={dv.version} />}
       footer={
         dv && isLatest ? (
-          <div className="reviewbar">
+          <div className="reviewbar" data-chatbot-obstacle>
             <div className="msg">
               {dv.status === "approved" ? (
                 <><Icon id="i-lock" />승인본입니다. 변경 사항은 새 버전으로 작성해 주세요.</>

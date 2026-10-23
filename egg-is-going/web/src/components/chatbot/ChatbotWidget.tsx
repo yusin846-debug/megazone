@@ -65,7 +65,43 @@ export default function ChatbotWidget() {
   const audio = useRef<HTMLAudioElement | null>(null);
   const list = useRef<HTMLDivElement>(null);
   const field = useRef<HTMLInputElement>(null);
+  const launcher = useRef<HTMLButtonElement>(null);
   const hidden = pathname === "/login";
+
+  // Keep the launcher above action bars, including bars that wrap on narrow screens.
+  useEffect(() => {
+    if (hidden || !available || open) return;
+    let frame = 0;
+    let obstacle: Element | null = null;
+    const measure = () => {
+      frame = 0;
+      const next = document.querySelector("[data-chatbot-obstacle]");
+      if (next !== obstacle) {
+        if (obstacle) resize.unobserve(obstacle);
+        obstacle = next;
+        if (obstacle) resize.observe(obstacle);
+      }
+      const bounds = obstacle?.getBoundingClientRect();
+      const height = bounds && bounds.bottom > 0 && bounds.top < window.innerHeight
+        ? Math.max(0, window.innerHeight - bounds.top) : 0;
+      launcher.current?.style.setProperty("--cb-obstacle-height", `${height}px`);
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(measure); };
+    const resize = new ResizeObserver(schedule);
+    const mutations = new MutationObserver(schedule);
+    // Route content can stream in after the pathname has already changed.
+    mutations.observe(document.body, { childList: true, subtree: true });
+    window.addEventListener("resize", schedule);
+    window.addEventListener("scroll", schedule, true);
+    measure();
+    return () => {
+      cancelAnimationFrame(frame);
+      resize.disconnect();
+      mutations.disconnect();
+      window.removeEventListener("resize", schedule);
+      window.removeEventListener("scroll", schedule, true);
+    };
+  }, [hidden, available, open, pathname]);
 
   const refresh = useCallback(async () => {
     const r = await fetch("/api/chatbot", { cache: "no-store" }).catch(() => null);
@@ -158,7 +194,7 @@ export default function ChatbotWidget() {
   return (
     <>
       {!open && (
-        <button type="button" className="cb-fab" aria-expanded={false} aria-controls="cb-sheet" onClick={() => setOpen(true)}>
+        <button ref={launcher} type="button" className="cb-fab" aria-expanded={false} aria-controls="cb-sheet" onClick={() => setOpen(true)}>
           <Icon id="i-search" />AI 챗봇
         </button>
       )}

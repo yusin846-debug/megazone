@@ -19,7 +19,7 @@
 .crumb a{color:var(--muted);text-decoration:none}
 .crumb b{color:var(--ink);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bar .sp{flex:1}
-.body{padding:24px 28px 40px;max-width:1280px;width:100%}
+.body{padding:24px 28px calc(112px + env(safe-area-inset-bottom,0px));max-width:1280px;width:100%}
 .page-h{display:flex;align-items:flex-end;gap:16px;margin-bottom:20px;flex-wrap:wrap}
 .page-h h1{margin:0;font-size:24px;font-weight:800;letter-spacing:-.03em;line-height:1.25}
 .page-h p{margin:4px 0 0;font-size:13.5px;color:var(--muted)}
@@ -186,7 +186,7 @@ details.raw pre{white-space:pre-wrap;font:500 11.5px/1.6 var(--font-mono);backgr
   .grid2,.grid2e{grid-template-columns:1fr}
   .board{grid-template-columns:repeat(2,minmax(0,1fr))}
   .stats{grid-template-columns:repeat(2,1fr)}
-  .body{padding:20px 16px 40px}
+  .body{padding:20px 16px calc(112px + env(safe-area-inset-bottom,0px))}
   .bar{padding:0 16px}
   .people,.fg-row{grid-template-columns:1fr}
 }
